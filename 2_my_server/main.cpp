@@ -15,6 +15,7 @@
 
 int main()
 {
+    //./webserv [configuration file]  //de ejecutarse con esta linea de comandos
     Server  server(8080);
 
     //std::cout << s.get_fd() << std::endl;

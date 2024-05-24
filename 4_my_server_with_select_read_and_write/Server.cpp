@@ -40,6 +40,12 @@ void	Server::my_select()
 	fd_set readyfdsRead, activefdsRead;
 	fd_set readyfdsWrite, activefdsWrite;
 	t_client clients[100];
+
+	FD_ZERO(&readyfdsRead);
+	FD_ZERO(&activefdsRead);
+	FD_ZERO(&readyfdsWrite);
+	FD_ZERO(&activefdsWrite);
+
 	
 	(void) clients;
 	int	maxfd = sock;

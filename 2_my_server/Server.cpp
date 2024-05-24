@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+//cheackea el read y nbytes
 
 Server::Server(int prt): port (prt)
 {
@@ -35,7 +36,7 @@ Server::Server(int prt): port (prt)
 		std::cout << "Escuchandolooo" << std::endl;
 		new_socket = accept(sock, (sockaddr *)&ad, (socklen_t *)&addrlen);
 		std::cout << "----escuchao-----" << std::endl;
-		read(new_socket, buffer, 30000);
+		read(new_socket, buffer, 30000);//
 		std::cout << buffer << std::endl;
 		respond();
 	}

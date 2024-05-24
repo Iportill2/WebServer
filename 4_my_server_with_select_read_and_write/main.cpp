@@ -11,11 +11,28 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Config.hpp"
 #include "dependences.hpp"
+#include <string>
 
-int main()
+int main(int ac, char **av)
 {
-    Server  server(8080);
+    (void)av;
+    //Server  server(8080);
+    //if(ac == 2 && av[1] == "server.conf")
+    if(ac == 2 )
+    {
+    //std::cout << "patata" << std::endl;
+    std::string filename (av[1]);
+    std::cout << "El string es: " << filename << std::endl;
+    Config a(filename);
+    return(1);
+    }
+    else
+    {
+        std::cout << "Error: No se ha encontrado el archivo de configuración" << std::endl;
+        return(0);
+    }
 
-    //std::cout << s.get_fd() << std::endl;
+    return(0);
 }

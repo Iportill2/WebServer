@@ -2,7 +2,8 @@ NAME = my_server
 CPP = c++
 CFLAGS = -Wall -Werror -Wextra #-std=c++98 -g3 -fsanitize=address
 SRC_FILES = main.cpp \
-			Server.cpp
+			Server.cpp \
+			Config.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

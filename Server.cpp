@@ -114,7 +114,7 @@ void	Server::respond(int i)
 	std::string request(buffer);
 	if (request.find("GET /goat.jpg") != std::string::npos)
 	{
-		std::ifstream file("goat.jpg", std::ios::binary);
+		std::ifstream file("pagina1/goat.jpg", std::ios::binary);
     	if (!file.is_open()) 
 		{
 			std::cout << RED <<"goat.jpg NOT FOUND" << WHITE <<std::endl; 
@@ -138,8 +138,15 @@ void	Server::respond(int i)
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::ifstream file("42.png", std::ios::binary);
-    	std::ostringstream oss;
+		std::ifstream file("pagina1/42.png", std::ios::binary);
+    	if (!file.is_open()) 
+		{
+			std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 
+       // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
+   		} 
+   		else 
+		{
+		std::ostringstream oss;
     	oss << file.rdbuf();
 		std::string favi = oss.str();
 	
@@ -149,6 +156,7 @@ void	Server::respond(int i)
         httpResponse += favi;
 
         write(i, httpResponse.c_str(), httpResponse.size());
+		}
 	}
     else
 	{
@@ -157,17 +165,25 @@ void	Server::respond(int i)
     	httpResponse += "\r\n"; // Línea en blanco
 
     	// Código HTML como cuerpo de la respuesta
-	std::cout << "Config::DirectoryIndex:" << Config::DirectoryIndex << std::endl;
-    file.open(Config::DirectoryIndex.c_str(), std::ios::in); ///LE METEMOS EL HTML...
-    std::stringstream buffer;
-    buffer << file.rdbuf();
+		std::cout << "Config::DirectoryIndex:" << Config::DirectoryIndex << std::endl;
+    	file.open(Config::DirectoryIndex.c_str(), std::ios::in); ///LE METEMOS EL HTML...
+    	if (!file.is_open()) 
+		{
+			std::cout << RED << Config::DirectoryIndex <<" NOT FOUND" << WHITE <<std::endl; 
+       // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
+   		} 
+   		else 
+		{
+		std::stringstream buffer;
+    	buffer << file.rdbuf();
 
-    // Convertir el contenido del stringstream en un string
-    httpResponse += buffer.str();
-    //std::cout << this->Config_data << std::endl;//para printear el contenido del archivo
-    file.close();
+    	// Convertir el contenido del stringstream en un string
+    	httpResponse += buffer.str();
+    	//std::cout << this->Config_data << std::endl;//para printear el contenido del archivo
+    	file.close();
    
     	write(i, httpResponse.c_str(), httpResponse.size());
+		}
 	}
 }
 

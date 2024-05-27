@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "dependences.hpp"
 
 Server::Server(std::string configName) : Config (configName)
 {
@@ -34,6 +34,7 @@ Server::Server(std::string configName) : Config (configName)
 	
 	my_select();
 }
+
 
 void	Server::my_select()
 {

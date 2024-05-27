@@ -1,6 +1,5 @@
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
-#include <iostream>
 #include "dependences.hpp"
 class Config
 {
@@ -35,6 +34,9 @@ class Config
 	std::string SSLCertificateFile;
 	std::string SSLCertificateKeyFile;
 
+//Id en binario para el hton
+	unsigned long decimalIp;
+
 
 public:
 	//CANONICAL
@@ -47,8 +49,28 @@ public:
 	void saveData();
 	void printData();
 
+	unsigned long ipToDecimal(const std::string& ip);
 	//GETTERS
-	int getPort() const;
+
+	//std::ifstream 	getfile() const ;
+	std::string 	getConfig_data()const ;//
+	int 			getPort() const;//
+
+    std::string		getHost() const;
+    std::string	getDocumentRoot()const ;
+	std::string getLogFile()const ;
+	int			getMaxRequestSize()const ;
+	int			getTimeout()const ;
+	std::string	getDirectoryIndex()const ;
+	std::string getErrorDocument_404()const ;
+	std::string getErrorDocument_500()const ;
+	std::string getServerSignature_Off()const ;
+	std::string getServerTokens_Prod()const ;
+	std::string getSSLEngine_on()const ;
+	std::string getSSLCertificateFile()const ;
+	std::string getSSLCertificateKeyFile()const ;
+
+	unsigned long getdecimalIp()const ;
 
 };
 

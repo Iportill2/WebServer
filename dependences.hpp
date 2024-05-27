@@ -41,3 +41,10 @@
 # include <unistd.h>
 # include <sys/select.h>
 # include <stdbool.h>
+
+# include <iostream>
+# include <sstream>
+# include <vector>
+
+# include "Config.hpp"
+# include "Server.hpp"

@@ -1,10 +1,10 @@
-#include "Config.hpp"
+
 #include "dependences.hpp"
 
 
 //false 0
 //true 1
-#include <iostream>
+
 /*
  open:
 
@@ -37,6 +37,10 @@ Config::Config(std::string configName)
 	{
         saveData();
 	}
+    else
+    {
+        return;
+    }
 	printData();
 }
 
@@ -48,7 +52,7 @@ Config::~Config()
 
 bool Config::openFile()
 {
-    this->file.open(this->Config_data, std::ios::in);
+    this->file.open(this->Config_data.c_str(), std::ios::in);
     if (this->file.is_open() == false) 
     {
         std::cerr << RED << "No se pudo abrir el archivo." << WHITE << std::endl;
@@ -86,9 +90,7 @@ void Config::saveData()
                 std::istringstream iss(line.substr(line.find(" ") + 1));
                 int num;
                 iss >> num;
-
                 this->Port = num;
-
             }
 			else if(key == "Host")
 			{
@@ -149,12 +151,12 @@ void Config::saveData()
 
         }
     }
+    decimalIp = ipToDecimal(Host);
 }
 void Config::printData()
 {
 	std::cout << GREEN << "Port: " << YELLOW << this->Port << WHITE << std::endl;
 	std::cout << GREEN << "Host: " << YELLOW << this->Host << WHITE << std::endl;
-
 	std::cout << GREEN << "DocumentRoot: " << YELLOW << this->DocumentRoot << WHITE << std::endl;
 	std::cout << GREEN << "LogFile: " << YELLOW << this->LogFile << WHITE << std::endl;
 	std::cout << GREEN << "MaxRequestSize: " << YELLOW << this->MaxRequestSize << WHITE << std::endl;
@@ -167,13 +169,104 @@ void Config::printData()
 	std::cout << GREEN << "SSLEngine_on: " << YELLOW << this->SSLEngine_on << WHITE << std::endl;
 	std::cout << GREEN << "SSLCertificateFile: " << YELLOW << this->SSLCertificateFile << WHITE << std::endl;
 	std::cout << GREEN << "SSLCertificateKeyFile: " << YELLOW << this->SSLCertificateKeyFile << WHITE << std::endl;
-/*
-*/
+    std::cout << GREEN << "decimalIp: " << YELLOW << this->decimalIp << WHITE << std::endl;
+}
+
+unsigned long Config::ipToDecimal(const std::string& ip) 
+{
+    std::vector<int> octets;
+    std::stringstream ss(ip);
+    std::string item;
+
+    // Separar la IP por los puntos
+    while (std::getline(ss, item, '.')) 
+    {
+        int num;
+        std::istringstream(item) >> num;
+        octets.push_back(num);
+    }
+
+    // Verificar que tengamos exactamente cuatro octetos
+    if (octets.size() != 4) {
+        std::cerr << "Error: Dirección IP no válida." << std::endl;
+        return 0;  // O alguna otra señal de error
+    }
+
+    // Combinar los octetos en un solo número
+    this->decimalIp = 0;
+    this->decimalIp += (octets[0] << 24);
+    this->decimalIp += (octets[1] << 16);
+    this->decimalIp += (octets[2] << 8);
+    this->decimalIp += octets[3];
+    return this->decimalIp;
+}
+
+//GETTERS
+/* std::ifstream Config::getfile() const
+{
+    return this->file;
+} */
+std::string  Config::getConfig_data() const
+{
+    return this->Config_data;
 }
 int Config::getPort() const
 {
     return this->Port;
 }
-
-
-
+std::string Config::getHost() const
+{
+    return this->Host;
+}
+std::string Config::getDocumentRoot() const
+{
+    return this->DocumentRoot;
+}
+std::string Config::getLogFile() const
+{
+    return this->LogFile;
+}
+int Config::getMaxRequestSize() const
+{
+    return this->MaxRequestSize;
+}
+int Config::getTimeout() const
+{
+    return this->Timeout;
+}
+std::string Config::getDirectoryIndex() const
+{
+    return this->DirectoryIndex;
+}
+std::string Config::getErrorDocument_404() const
+{
+    return this->ErrorDocument_404;
+}
+std::string Config::getErrorDocument_500() const
+{
+    return this->ErrorDocument_500;
+}
+std::string Config::getServerSignature_Off() const
+{
+    return this->ServerSignature_Off;
+}
+std::string Config::getServerTokens_Prod() const
+{
+    return this->ServerTokens_Prod;
+}
+std::string Config::getSSLEngine_on() const
+{
+    return this->SSLEngine_on;
+}
+std::string Config::getSSLCertificateFile() const
+{
+    return this->SSLCertificateFile;
+}
+std::string Config::getSSLCertificateKeyFile() const
+{
+    return this->SSLCertificateKeyFile;
+}
+unsigned long Config::getdecimalIp() const
+{
+    return this->decimalIp;
+}

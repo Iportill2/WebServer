@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/24 19:00:03 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:57:27 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,25 @@ Server::Server(int prt): port (prt)
 	id = 0;
 
 	signal(SIGINT, signalHandler);
-	//signal(SIGTERM, &signalHandler)
+	signal(SIGTERM, &signalHandler);
 	
 	sock = socket(AF_INET, SOCK_STREAM, 0);
+
+	int option = 1;
+	
+	//(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) == -1); // el de iban
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
 	
 	std::cout << "Server constructor called! PORT: " << port;
-	std::cout << " sock:" << sock << std::endl;
-	sockaddr_in	ad;
+	std::cout << " sockfd: " << sock << std::endl;
+	
 	ad.sin_family = AF_INET;
     ad.sin_port = htons(port);
     ad.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    while (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
-	{
+    if (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
 		std::cout << "Puerto ocupau atontau" << std::endl;
-		exit(1);
-	}
 	
-	//int addrlen = sizeof(ad);
 	
 	listen(sock, 10);
 	
@@ -49,6 +50,8 @@ void	Server::my_select()
 	fd_set readyfdsRead, activefdsRead;
 	fd_set readyfdsWrite, activefdsWrite;
 	t_client clients[100];
+	
+	int addrlen = sizeof(ad);
 	
 	FD_ZERO(&readyfdsRead);
 	FD_ZERO(&activefdsRead);
@@ -62,15 +65,15 @@ void	Server::my_select()
 
 	while(sign)
 	{
-		//std::cout << "sign = " << sign << std::endl;
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
 		int s = select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
 
+		std::cout << "sign = " << sign << std::endl;
 		std::cout << "select = " << s << std::endl;
-		if (s == -1)
-			exit(1);
+		if (!sign)
+			break;
 
 		for (int i = 0; i <= maxfd; i++)
 		{
@@ -80,7 +83,7 @@ void	Server::my_select()
 			{
 				if (i == sock)
 				{
-					new_socket = accept(sock, NULL,NULL);
+					new_socket = accept(sock, (struct sockaddr *)&ad, (socklen_t*)&addrlen);
 					FD_SET (new_socket, &activefdsRead);
 				
 					if (new_socket > maxfd)
@@ -123,7 +126,13 @@ void	Server::my_select()
 			}
 		}
 	}
-	
+	for (int i = 3; i <= maxfd; ++i)
+	{
+		std::cout << "cerrando fd: " << i << std::endl;
+		int  stat = close(i);
+
+		std::cout << "status fd " << i << " = " <<  stat << std::endl;
+	}
 }			
 
 void	Server::respond(int i)
@@ -208,6 +217,5 @@ void	Server::signalHandler(int i)
 {
 	(void)i;
 	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
-	close(3);
-    //exit(1);
+	sign = 0;
 }

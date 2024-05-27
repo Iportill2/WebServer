@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "dependences.hpp"
+#include "Server.hpp"
 
 Server::Server(std::string configName) : Config (configName)
 {
@@ -23,7 +23,7 @@ Server::Server(std::string configName) : Config (configName)
 	sockaddr_in	ad;
 	ad.sin_family = AF_INET;
     ad.sin_port = htons(Config::getPort());
-    ad.sin_addr.s_addr = htonl(INADDR_ANY);//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
+    ad.sin_addr.s_addr = htonl(Config::getdecimalIp());//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
 
     int binding = bind (sock, (sockaddr *)&ad, sizeof(ad));
 	std::cout << "bind = " << binding << std::endl;
@@ -34,7 +34,6 @@ Server::Server(std::string configName) : Config (configName)
 	
 	my_select();
 }
-
 
 void	Server::my_select()
 {
@@ -113,9 +112,9 @@ void	Server::my_select()
 void	Server::respond(int i)
 {
 	std::string request(buffer);
-	if (request.find("GET /fary.jpg") != std::string::npos)
+	if (request.find("GET /goat.jpg") != std::string::npos)
 	{
-		std::ifstream file("rey.jpg", std::ios::binary);
+		std::ifstream file("goat.jpg", std::ios::binary);
     	std::ostringstream oss;
     	oss << file.rdbuf();
 		std::string fary = oss.str();
@@ -148,30 +147,14 @@ void	Server::respond(int i)
     	httpResponse += "\r\n"; // Línea en blanco
 
     	// Código HTML como cuerpo de la respuesta
-   		httpResponse += "<!DOCTYPE html>\n";
-    	httpResponse += "<html lang=\"es\">\n";
-   		httpResponse += "<head>\n";
-   		httpResponse += "    <meta charset=\"UTF-8\">\n";
-    	httpResponse += "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    	httpResponse += "    <title>Respuesta del Servidor</title>\n";
-    	httpResponse += "</head>\n";
-    	httpResponse += "<body>\n";
-    	httpResponse += "    <header>\n";
-    	httpResponse += "        <h1>Buenas tarde y biesvenido a mis pagina güe </h1>\n";
-   		httpResponse += "    </header>\n";
-    	httpResponse += "    <main>\n";
-    	httpResponse += "        <section>\n";
-    	httpResponse += "            <h2>Mensaje de Dios:</h2>\n";
-    	httpResponse += "            <p>Hello, hijos de puta insinceros,</p>\n";
-    	httpResponse += "            <p>me cago en todo lo que se menea.</p>\n";
-		httpResponse += "            <img src=\"fary.jpg\" alt=\"Dios en la tierra\">\n";
-    	httpResponse += "        </section>\n";
-    	httpResponse += "    </main>\n";
-    	httpResponse += "    <footer>\n";
-    	httpResponse += "        <p>&copy; 2024. Todos los derechos reservados.</p>\n";
-    	httpResponse += "    </footer>\n";
-    	httpResponse += "</body>\n";
-    	httpResponse += "</html>\n";
+    file.open(std::string("index.html").c_str(), std::ios::in);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+
+    // Convertir el contenido del stringstream en un string
+    httpResponse += buffer.str();
+    //std::cout << this->Config_data << std::endl;//para printear el contenido del archivo
+    file.close();
    
     	write(i, httpResponse.c_str(), httpResponse.size());
 	}

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/23 12:33:04 by jgoikoet         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
 
 Server::Server(std::string configName) : Config (configName)
@@ -112,9 +100,11 @@ void	Server::my_select()
 void	Server::respond(int i)
 {
 	std::string request(buffer);
-	if (request.find("GET /goat.jpg") != std::string::npos)
+	if (request.find("GET /rey.jpg") != std::string::npos)
+	//if (request.find("GET /rey.jpg") != std::string::npos)
 	{
-		std::ifstream file("pagina1/goat.jpg", std::ios::binary);
+		std::ifstream file("pagina2/rey.jpg", std::ios::binary);
+		//std::ifstream file("pagina2/rey.jpg", std::ios::binary);
     	if (!file.is_open()) 
 		{
 			std::cout << RED <<"goat.jpg NOT FOUND" << WHITE <<std::endl; 
@@ -138,7 +128,8 @@ void	Server::respond(int i)
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::ifstream file("pagina1/42.png", std::ios::binary);
+		std::ifstream file("anarchy.png", std::ios::binary);
+		//std::ifstream file("pagina2/anarchy.png", std::ios::binary);
     	if (!file.is_open()) 
 		{
 			std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 

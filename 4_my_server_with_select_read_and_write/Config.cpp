@@ -78,7 +78,6 @@ void Config::saveData()
             std::istringstream lineStream(line);
 			std::string key;
         	int value;
-            int count = 0;
 
             lineStream >> key >> value;
             if (key == "Port") 
@@ -87,7 +86,7 @@ void Config::saveData()
             }
 			else if(key == "Host")
 			{
-                this->Host = std::stoi(line.substr(line.find(" ") + 1));
+                this->Host = line.substr(line.find(" ") + 1);
 			}
             else if(key == "DocumentRoot")
             {
@@ -109,12 +108,11 @@ void Config::saveData()
             {
                 this->DirectoryIndex = line.substr(line.find(" ") + 1);
             }
-            else if(key == "ErrorDocument" && count == 0)
+            else if(key == "ErrorDocument404")
             {
                 this->ErrorDocument_404 = line.substr(line.find(" ") + 1);
-                count++;
             }
-            else if(key == "ErrorDocument" && count == 1)
+            else if(key == "ErrorDocument500")
             {
                 this->ErrorDocument_500 = line.substr(line.find(" ") + 1);
             }

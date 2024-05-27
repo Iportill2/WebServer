@@ -6,27 +6,36 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/23 12:33:04 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/05/24 19:00:03 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
+int Server::sign = 1;
+
 Server::Server(int prt): port (prt)
 {
-	std::cout << "Server constructor called!" << std::endl;
 	
-	id = 0; 
+	id = 0;
 
+	signal(SIGINT, signalHandler);
+	//signal(SIGTERM, &signalHandler)
+	
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	
+	std::cout << "Server constructor called! PORT: " << port;
+	std::cout << " sock:" << sock << std::endl;
 	sockaddr_in	ad;
 	ad.sin_family = AF_INET;
     ad.sin_port = htons(port);
     ad.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    int binding = bind (sock, (sockaddr *)&ad, sizeof(ad));
-	std::cout << "bind = " << binding << std::endl;
+    while (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
+	{
+		std::cout << "Puerto ocupau atontau" << std::endl;
+		exit(1);
+	}
 	
 	//int addrlen = sizeof(ad);
 	
@@ -41,17 +50,27 @@ void	Server::my_select()
 	fd_set readyfdsWrite, activefdsWrite;
 	t_client clients[100];
 	
+	FD_ZERO(&readyfdsRead);
+	FD_ZERO(&activefdsRead);
+	FD_ZERO(&readyfdsWrite);
+	FD_ZERO(&activefdsWrite);
+	
 	(void) clients;
 	int	maxfd = sock;
 
 	FD_SET (sock, &activefdsRead);
 
-	while(1)
+	while(sign)
 	{
+		//std::cout << "sign = " << sign << std::endl;
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+		int s = select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+
+		std::cout << "select = " << s << std::endl;
+		if (s == -1)
+			exit(1);
 
 		for (int i = 0; i <= maxfd; i++)
 		{
@@ -65,31 +84,34 @@ void	Server::my_select()
 					FD_SET (new_socket, &activefdsRead);
 				
 					if (new_socket > maxfd)
+					{
 						maxfd = new_socket;
+						//maxFD = new_socket;
+					}
 					
 					clients[id++].fd = new_socket;
 					std::cout  << std::endl << ">>>>>   New Client just arrived; " << "ID: " << id - 1 << "; FD: " << new_socket << std::endl; 
 				}
 				else
 				{
-					//int bytes = read(i, buffer, sizeof(buffer));
-					read(i, buffer, sizeof(buffer));
+					int bytes = read(i, buffer, sizeof(buffer));
+					//read(i, buffer, sizeof(buffer));
 					std::cout << std::endl;
 					std::cout << "---BUFFER---" << std::endl;
 					std::cout << buffer << std::endl;
 					std::cout << "---BUFFER END ---" << std::endl << std::endl;
-					/* if (bytes <= 0)
+					if (bytes <= 0)
 					{
 						std::cout << "Client ID: " << id - 1 << " went \"a tomar por culo\"" << std::endl << std::endl;
 						FD_CLR(i, &activefdsRead);
             			close(i);
 					}
 					else
-					{ */
+					{ 
 						std::cout << "Client ID: " << id - 1 << " pasa a la cola de WRITE!!!" << std::endl;
 						FD_SET(i, &activefdsWrite);
 						FD_CLR(i, &activefdsRead);
-					//}
+					}
 				}
 			}	
 			else if (FD_ISSET(i, &readyfdsWrite))
@@ -100,7 +122,8 @@ void	Server::my_select()
 				FD_CLR(i, &activefdsWrite);
 			}
 		}
-	}	
+	}
+	
 }			
 
 void	Server::respond(int i)
@@ -174,4 +197,17 @@ Server::~Server()
 {
 	close (sock);
 	std::cout << "Server destructor called!" << std::endl;
+}
+
+int  Server::get_maxfd()
+{
+	return id;
+}
+
+void	Server::signalHandler(int i)
+{
+	(void)i;
+	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
+	close(3);
+    //exit(1);
 }

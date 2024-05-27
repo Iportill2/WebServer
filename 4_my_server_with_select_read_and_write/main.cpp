@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:00:00 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/22 18:46:35 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/05/24 18:57:55 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,4 @@ int main()
 {
     Server  server(8080);
 
-    //std::cout << s.get_fd() << std::endl;
 }

@@ -12,18 +12,18 @@
 
 #include "Server.hpp"
 
-Server::Server(int prt): port (prt)
+Server::Server(std::string configName) : Config (configName)
 {
 	std::cout << "Server constructor called!" << std::endl;
-	
+
 	id = 0; 
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	
 	sockaddr_in	ad;
 	ad.sin_family = AF_INET;
-    ad.sin_port = htons(port);
-    ad.sin_addr.s_addr = htonl(INADDR_ANY);
+    ad.sin_port = htons(Config::getPort());
+    ad.sin_addr.s_addr = htonl(INADDR_ANY);//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
 
     int binding = bind (sock, (sockaddr *)&ad, sizeof(ad));
 	std::cout << "bind = " << binding << std::endl;
@@ -181,3 +181,4 @@ Server::~Server()
 	close (sock);
 	std::cout << "Server destructor called!" << std::endl;
 }
+

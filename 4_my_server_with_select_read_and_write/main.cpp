@@ -25,8 +25,8 @@ int main(int ac, char **av)
     //std::cout << "patata" << std::endl;
     std::string filename (av[1]);
     std::cout << "El string es: " << filename << std::endl;
-    Config a(filename);
-    Server c (8080);
+    //Config a(filename);
+    Server c (filename);
     return(1);
     }
     else

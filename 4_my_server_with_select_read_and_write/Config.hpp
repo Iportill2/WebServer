@@ -4,7 +4,7 @@
 #include "dependences.hpp"
 class Config
 {
-private:
+	protected:
 //ifstream de donde leeremos el archivo server.conf
 	std::ifstream file;
 //string donde guardaremos los datos leidos del archivo server.conf
@@ -46,6 +46,9 @@ public:
 	bool openFile();
 	void saveData();
 	void printData();
+
+	//GETTERS
+	int getPort() const;
 
 };
 

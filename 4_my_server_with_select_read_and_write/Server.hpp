@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #include "dependences.hpp"
-
+#include "Config.hpp"
 
 class Socket;
 
-class Server
+class Server : public Config
 {
     private:
 
@@ -32,10 +32,11 @@ class Server
 
     public:
 
-        Server(int prt);
+        Server(std::string configName);
         ~Server();
         
         
         void    respond(int i);
         void    my_select();
+
 };

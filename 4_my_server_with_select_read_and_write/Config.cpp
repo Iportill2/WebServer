@@ -82,7 +82,13 @@ void Config::saveData()
             lineStream >> key >> value;
             if (key == "Port") 
             {
-                this->Port = std::stoi(line.substr(line.find(" ") + 1));
+                //this->Port = std::stoi(line.substr(line.find(" ") + 1));
+                std::istringstream iss(line.substr(line.find(" ") + 1));
+                int num;
+                iss >> num;
+
+                this->Port = num;
+
             }
 			else if(key == "Host")
 			{
@@ -163,6 +169,10 @@ void Config::printData()
 	std::cout << GREEN << "SSLCertificateKeyFile: " << YELLOW << this->SSLCertificateKeyFile << WHITE << std::endl;
 /*
 */
+}
+int Config::getPort() const
+{
+    return this->Port;
 }
 
 

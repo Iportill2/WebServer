@@ -53,10 +53,10 @@ public:
 	//GETTERS
 
 	//std::ifstream 	getfile() const ;
-	std::string 	getConfig_data()const ;//
-	int 			getPort() const;//
+	std::string getConfig_data()const ;//
+	int 		getPort() const;//
 
-    std::string		getHost() const;
+    std::string	getHost() const;
     std::string	getDocumentRoot()const ;
 	std::string getLogFile()const ;
 	int			getMaxRequestSize()const ;

@@ -115,20 +115,30 @@ void	Server::respond(int i)
 	if (request.find("GET /goat.jpg") != std::string::npos)
 	{
 		std::ifstream file("goat.jpg", std::ios::binary);
-    	std::ostringstream oss;
+    	if (!file.is_open()) 
+		{
+			std::cout << RED <<"goat.jpg NOT FOUND" << WHITE <<std::endl; 
+       // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
+   		} 
+   		else 
+		{
+       // Proceder con la lectura del archivo y la creación de la respuesta HTTP
+		std::ostringstream oss;
     	oss << file.rdbuf();
-		std::string fary = oss.str();
+		std::string foto = oss.str();
 	
 		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/jpeg\r\n";
+        httpResponse += "Content-Type: image/jpg\r\n";
         httpResponse += "\r\n";
-        httpResponse += fary;
+        httpResponse += foto;
 
         write(i, httpResponse.c_str(), httpResponse.size());
+		//close(file);
+   		}
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::ifstream file("anarchy.png", std::ios::binary);
+		std::ifstream file("42.png", std::ios::binary);
     	std::ostringstream oss;
     	oss << file.rdbuf();
 		std::string favi = oss.str();
@@ -147,7 +157,8 @@ void	Server::respond(int i)
     	httpResponse += "\r\n"; // Línea en blanco
 
     	// Código HTML como cuerpo de la respuesta
-    file.open(std::string("index.html").c_str(), std::ios::in);
+	std::cout << "Config::DirectoryIndex:" << Config::DirectoryIndex << std::endl;
+    file.open(Config::DirectoryIndex.c_str(), std::ios::in); ///LE METEMOS EL HTML...
     std::stringstream buffer;
     buffer << file.rdbuf();
 

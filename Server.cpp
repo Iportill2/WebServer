@@ -145,105 +145,111 @@ void	Server::my_select()
 
 void	Server::respond(int i)
 {
-	std::string request(buffer);
-	if (request.find("GET /rey.jpg") != std::string::npos)
-	//if (request.find("GET /rey.jpg") != std::string::npos)
+
+	std::string temp = "GET /"; //temporal para buscar el GET
+	std::string request(buffer);//buffer es 30000
+	if (request.find(temp + this->Imagen) != std::string::npos)
 	{
-		std::ifstream file("pagina2/rey.jpg", std::ios::binary);
-		//std::ifstream file("pagina2/rey.jpg", std::ios::binary);
+		std::ifstream file;
+			file.open(this->Ruta_imagen.c_str(), std::ios::binary);
     	if (!file.is_open()) 
 		{
-			std::cout << RED <<"goat.jpg NOT FOUND" << WHITE <<std::endl; 
+			std::ifstream error;
+			error.open(this->ErrorDocument_404.c_str(), std::ios::binary);
+			std::cout << RED <<"jpg NOT FOUND" << WHITE <<std::endl; 
+			std::ostringstream oss;
+    		oss << error.rdbuf();
+			std::string ERROR = oss.str();
+	
+			std::string httpResponse = "HTTP/1.1 200 OK\r\n";
+        	httpResponse += "Content-Type: image/jpg\r\n";
+        	httpResponse += "\r\n";
+        	httpResponse += ERROR;
+        	write(i, httpResponse.c_str(), httpResponse.size());
+		}
        // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
-   		} 
    		else 
 		{
        // Proceder con la lectura del archivo y la creación de la respuesta HTTP
-		std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string foto = oss.str();
+			std::ostringstream oss;
+    		oss << file.rdbuf();
+			std::string foto = oss.str();
 	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/jpg\r\n";
-        httpResponse += "\r\n";
-        httpResponse += foto;
-
-        write(i, httpResponse.c_str(), httpResponse.size());
+			std::string httpResponse = "HTTP/1.1 200 OK\r\n";
+        	httpResponse += "Content-Type: image/jpg\r\n";
+        	httpResponse += "\r\n";
+        	httpResponse += foto;
+        	write(i, httpResponse.c_str(), httpResponse.size());
 		//close(file);
    		}
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::cout << "\"" << this->def_or_conf << "\"" << std::endl;
-
-
 		std::ifstream file; // Declare file outside the if-else blocks
 
-		if(this->def_or_conf == "conf")
-		{
-		    file.open("./pagina2/anarchy.png", std::ios::binary); // Open file inside the if block
+		file.open(this->Ruta_favicon.c_str(), std::ios::binary); // Open file inside the if block
+	 	if (!file.is_open()) 
+	 		std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 
+   	    // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
+   	 	else 
+	 	{
+			std::ostringstream oss;
+    		oss << file.rdbuf();
+			std::string favi = oss.str();
+			std::string httpResponse = "HTTP/1.1 200 OK\r\n";
+        	httpResponse += "Content-Type: image/png\r\n";
+        	httpResponse += "\r\n";
+        	httpResponse += favi;
+        	write(i, httpResponse.c_str(), httpResponse.size());
+		//close(file);
 		}
-		else  if(this->def_or_conf == "def")
-		{
- 		   file.open("./pagina2/anarchi.png", std::ios::binary); // Open file inside the else block
-		}
-
-		/* if(this->def_or_conf == "conf")
-		{
-			std::cout << "es igual a conf" << std::endl;
-			std::ifstream file("./pagina2/anarchy.png", std::ios::binary);
-		}
-		else if(this->def_or_conf == "def")
-		{
-			std::cout << "es igual a def" << std::endl;
-			std::ifstream file("./pagina2/anarchy.png", std::ios::binary);
-		}  */
-    	 
-	// 	if (!file.is_open()) 
-	// 	{
-	// 		std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 
-    //    // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
-   	// 	} 
-   	// 	else 
-	// 	{
-		std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string favi = oss.str();
-	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/png\r\n";
-        httpResponse += "\r\n";
-        httpResponse += favi;
-
-        write(i, httpResponse.c_str(), httpResponse.size());
-		//}
 	}
     else
 	{
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
-   		httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
-    	httpResponse += "\r\n"; // Línea en blanco
+    	std::string httpResponse;
+    	std::ifstream file(Config::DirectoryIndex.c_str(), std::ios::in); // Intenta abrir el archivo HTML
 
-    	// Código HTML como cuerpo de la respuesta
-		std::cout << "Config::DirectoryIndex:" << Config::DirectoryIndex << std::endl;
-    	file.open(Config::DirectoryIndex.c_str(), std::ios::in); ///LE METEMOS EL HTML...
     	if (!file.is_open()) 
-		{
-			std::cout << RED << Config::DirectoryIndex <<" NOT FOUND" << WHITE <<std::endl; 
-       // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
-   		} 
-   		else 
-		{
-		std::stringstream buffer;
-    	buffer << file.rdbuf();
+    	{
+        	std::cout << RED << Config::DirectoryIndex << " NOT FOUND" << WHITE << std::endl;
+        	// Configurar la respuesta HTTP para 404 Not Found
+        	httpResponse = "HTTP/1.1 404 Not Found\r\n";
+        	httpResponse += "Content-Type: text/html\r\n";
+        	httpResponse += "\r\n";
 
-    	// Convertir el contenido del stringstream en un string
-    	httpResponse += buffer.str();
-    	//std::cout << this->Config_data << std::endl;//para printear el contenido del archivo
-    	file.close();
-   
+			const char *s404 = Config::ErrorDocument_404.c_str();
+        	// Intentar abrir el archivo de error 404
+        	std::ifstream errorFile(s404, std::ios::in);
+        	if (!errorFile.is_open()) 
+        	{
+            	// Si el archivo 404.html tampoco se encuentra, enviar un mensaje de error simple
+        		httpResponse += "<html><body><h1>404 Not Found</h1></body></html>";
+        	} 
+        	else 
+        	{
+            	// Si el archivo 404.html se encuentra, leer su contenido y enviarlo
+            	std::stringstream buffer;
+            	buffer << errorFile.rdbuf();
+            	httpResponse += buffer.str();
+            	errorFile.close();
+        	}
+    	} 
+    	else 
+    	{
+        	// Si el archivo se abre correctamente, configurar la respuesta HTTP para 200 OK
+        	httpResponse = "HTTP/1.1 200 OK\r\n";
+        	httpResponse += "Content-Type: text/html\r\n";
+        	httpResponse += "\r\n";
+
+        // Leer el contenido del archivo y añadirlo a la respuesta
+        	std::stringstream buffer;
+        	buffer << file.rdbuf();
+        	httpResponse += buffer.str();
+        	file.close();
+    	}
+
+    	// Enviar la respuesta HTTP
     	write(i, httpResponse.c_str(), httpResponse.size());
-		}
 	}
 }
 

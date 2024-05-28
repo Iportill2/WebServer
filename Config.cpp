@@ -32,7 +32,7 @@ Config::Config()
     std::cout << "Default Config Constructor" << std::endl;
     this->Config_data = "";
     this->Port = 8080;
-    this->Host = "127.0.0.1"; //0.0.0.0 //significa que el servidor es accesible en todas las interfaces de red
+    this->Host = "0.0.0.0"; // 127.0.0.1   0.0.0.0 //significa que el servidor es accesible en todas las interfaces de red
     this->DocumentRoot = "./pagina1";
     this->LogFile = "/var/log/myserver.log";
     this->MaxRequestSize = 1048576;
@@ -46,6 +46,12 @@ Config::Config()
     this->SSLCertificateFile = "/etc/ssl/certs/myserver.crt";
     this->SSLCertificateKeyFile = "/etc/ssl/private/myserver.key";
     this->decimalIp = ipToDecimal(this->Host);
+
+    this->Favicon = "42.png";
+    this->Ruta_favicon = "./pagina1/42.png";
+    this->Imagen = "goat.jpg";
+    this->Ruta_imagen = "./pagina1/goat.jpg";
+
 	printData();
 }
 
@@ -162,6 +168,26 @@ void Config::saveData()
             {
                 this->SSLCertificateKeyFile = line.substr(line.find(" ") + 1);
             }
+
+
+            else if(key == "Favicon")
+            {
+                this->Favicon = line.substr(line.find(" ") + 1);
+            }
+            else if(key == "Ruta_favicon")
+            {
+                this->Ruta_favicon = line.substr(line.find(" ") + 1);
+            }
+            else if(key == "Imagen")
+            {
+                this->Imagen = line.substr(line.find(" ") + 1);
+            }
+            else if(key == "Ruta_imagen")
+            {
+                this->Ruta_imagen = line.substr(line.find(" ") + 1);
+            }
+
+
             else
             {
                 std::cerr <<  RED << "Error: Configuración no válida." << WHITE << std::endl;
@@ -188,6 +214,11 @@ void Config::printData()
 	std::cout << GREEN << "SSLCertificateFile: " << YELLOW << this->SSLCertificateFile << WHITE << std::endl;
 	std::cout << GREEN << "SSLCertificateKeyFile: " << YELLOW << this->SSLCertificateKeyFile << WHITE << std::endl;
     std::cout << GREEN << "decimalIp: " << YELLOW << this->decimalIp << WHITE << std::endl;
+
+	std::cout << GREEN << "Favicon: " << YELLOW << this->Favicon << WHITE << std::endl;
+	std::cout << GREEN << "Ruta_favicon: " << YELLOW << this->Ruta_favicon << WHITE << std::endl;
+	std::cout << GREEN << "Imagen: " << YELLOW << this->Imagen << WHITE << std::endl;
+    std::cout << GREEN << "Ruta_imagen: " << YELLOW << this->Ruta_imagen << WHITE << std::endl;
 }
 
 unsigned long Config::ipToDecimal(const std::string& ip) 

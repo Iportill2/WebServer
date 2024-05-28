@@ -37,6 +37,11 @@ class Config
 //Id en binario para el hton
 	unsigned long decimalIp;
 
+	std::string Favicon;
+	std::string Ruta_favicon;
+	std::string Imagen;
+	std::string Ruta_imagen;
+
 
 public:
 	//CANONICAL

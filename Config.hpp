@@ -12,7 +12,7 @@ class Config
     int 		Port;
 //Especifica la dirección IP en la que el servidor aceptará conexiones
 //Usar 0.0.0.0 significa que el servidor es accesible en todas las interfaces de red
-    std::string			Host;
+    std::string	Host;
 //Directorio raíz desde donde el servidor servirá los archivos
     std::string	DocumentRoot;
 //Define la ubicación del archivo de registro del servidor

@@ -42,6 +42,10 @@
 # include <sys/select.h>
 # include <stdbool.h>
 
+#include <signal.h>
+# include <sys/socket.h>
+# include <sys/types.h>
+# include <string>
 # include <iostream>
 # include <sstream>
 # include <vector>

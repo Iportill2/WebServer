@@ -21,6 +21,8 @@ class Server : public Config
         char    buffer[30000];
         sockaddr_in	ad;
 
+        std::string def_or_conf;
+
     public:
 
 		static int sign;

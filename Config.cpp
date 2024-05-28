@@ -32,14 +32,14 @@ Config::Config()
     std::cout << "Default Config Constructor" << std::endl;
     this->Config_data = "";
     this->Port = 8080;
-    this->Host = "127.0.0.1";
+    this->Host = "127.0.0.1"; //0.0.0.0 //significa que el servidor es accesible en todas las interfaces de red
     this->DocumentRoot = "./pagina1";
     this->LogFile = "/var/log/myserver.log";
     this->MaxRequestSize = 1048576;
     this->Timeout = 30;
     this->DirectoryIndex = "./pagina1/index.html";
-    this->ErrorDocument_404 = "/errors/404.html ";
-    this->ErrorDocument_500 = "/errors/500.html";
+    this->ErrorDocument_404 = "./errors/404.html ";
+    this->ErrorDocument_500 = "./errors/500.html";
     this->ServerSignature_Off = "Off";
     this->ServerTokens_Prod = "Prod";
     this->SSLEngine_on = "on";

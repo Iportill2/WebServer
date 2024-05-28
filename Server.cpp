@@ -6,7 +6,7 @@ int Server::sign = 1;
 Server::Server() : Config()
 {
 	std::cout << "Default Server constructor called!" << std::endl;
-
+	this->def_or_conf = "def";
 	id = 0; 
 
 	signal(SIGINT, signalHandler);
@@ -33,7 +33,7 @@ Server::Server() : Config()
 Server::Server(std::string configName) : Config (configName)
 {
 	std::cout << "Server constructor called!" << std::endl;
-
+	this->def_or_conf = "conf";
 	id = 0; 
 
 	signal(SIGINT, signalHandler);
@@ -174,9 +174,14 @@ void	Server::respond(int i)
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::ifstream file("anarchy.png", std::ios::binary);
-		//std::ifstream file("pagina2/anarchy.png", std::ios::binary);
-    	if (!file.is_open()) 
+		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXX "<< this->def_or_conf << std::endl;
+		if(this->def_or_conf == "conf")
+			std::ifstream file("./pagina2/anarcha.png", std::ios::binary);
+		else if(this->def_or_conf == "def")
+			std::ifstream file("./pagina2/anarcho.png", std::ios::binary);
+    	int l = file.is_open();
+		std::cout << "l = " << l << std::endl;
+		if (file.is_open() == true) 
 		{
 			std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 
        // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found

@@ -33,11 +33,11 @@ Config::Config()
     this->Config_data = "";
     this->Port = 8080;
     this->Host = "127.0.0.1";
-    this->DocumentRoot = "/home/iportill/ws/pagina1";
+    this->DocumentRoot = "./pagina1";
     this->LogFile = "/var/log/myserver.log";
     this->MaxRequestSize = 1048576;
     this->Timeout = 30;
-    this->DirectoryIndex = "/home/iportill/ws/pagina1/index.html";
+    this->DirectoryIndex = "./pagina1/index.html";
     this->ErrorDocument_404 = "/errors/404.html ";
     this->ErrorDocument_500 = "/errors/500.html";
     this->ServerSignature_Off = "Off";

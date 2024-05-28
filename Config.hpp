@@ -40,10 +40,11 @@ class Config
 
 public:
 	//CANONICAL
-	Config(std::string configName);
+	Config();//constructor por defecto
+	Config(std::string configName);//constructor con parametro
 	//copy;
 	//operator=;
-    ~Config();
+    ~Config();//destructor
 
 	bool openFile();
 	void saveData();

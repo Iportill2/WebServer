@@ -27,12 +27,33 @@ su contenido se trunca antes de abrir el archivo
 (es decir, se borra el contenido existente)
 */
 
+Config::Config()
+{
+    std::cout << "Default Config Constructor" << std::endl;
+    this->Config_data = "";
+    this->Port = 8080;
+    this->Host = "127.0.0.1";
+    this->DocumentRoot = "/home/iportill/ws/pagina1";
+    this->LogFile = "/var/log/myserver.log";
+    this->MaxRequestSize = 1048576;
+    this->Timeout = 30;
+    this->DirectoryIndex = "/home/iportill/ws/pagina1/index.html";
+    this->ErrorDocument_404 = "/errors/404.html ";
+    this->ErrorDocument_500 = "/errors/500.html";
+    this->ServerSignature_Off = "Off";
+    this->ServerTokens_Prod = "Prod";
+    this->SSLEngine_on = "on";
+    this->SSLCertificateFile = "/etc/ssl/certs/myserver.crt";
+    this->SSLCertificateKeyFile = "/etc/ssl/private/myserver.key";
+    this->decimalIp = ipToDecimal(this->Host);
+	printData();
+}
+
 Config::Config(std::string configName)
 {
-    this->Config_data = configName;
     std::cout << "Config Constructor" << std::endl;
+    this->Config_data = configName;
     std::cout << "Config_data: " << this->Config_data << std::endl;
-    std::cout << false << std::endl;
     if(openFile() == true)
 	{
         saveData();
@@ -70,8 +91,6 @@ bool Config::openFile()
 }
 void Config::saveData()
 {
-    //std::cout << "saveData" << std::endl;
-   // std::cout << this->Config_data << std::endl;
     std::string line;
     std::istringstream file(this->Config_data);
     std::string a = "Port";
@@ -86,7 +105,6 @@ void Config::saveData()
             lineStream >> key >> value;
             if (key == "Port") 
             {
-                //this->Port = std::stoi(line.substr(line.find(" ") + 1));
                 std::istringstream iss(line.substr(line.find(" ") + 1));
                 int num;
                 iss >> num;

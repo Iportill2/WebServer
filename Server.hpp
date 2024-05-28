@@ -24,9 +24,9 @@ class Server : public Config
     public:
 
 		static int sign;
-
-        Server(std::string configName);
-        ~Server();
+        Server();//constructor por defecto
+        Server(std::string configName);//constructor con parametro
+        ~Server();//destructor
         
         
         void    respond(int i);
@@ -37,38 +37,3 @@ class Server : public Config
 
 };
 #endif
-
-/*
-#include "dependences.hpp"
-
-class Socket;
-
-class Server
-{
-    private:
-
-        typedef struct s_client
-        {
-            int fd;
-        }   t_client;
-        
-        sockaddr_in	ad;
-        int     id;
-        int     sock;
-        int     new_socket;
-        int     port;
-        char    buffer[30000];
-
-    public:
-
-        Server(int prt);
-        ~Server();
-        
-        
-        void			respond(int i);
-        void			my_select();
-
-		static int sign;
-		static void	signalHandler(int i);
-};
-*/

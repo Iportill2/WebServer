@@ -174,20 +174,38 @@ void	Server::respond(int i)
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXX "<< this->def_or_conf << std::endl;
+		std::cout << "\"" << this->def_or_conf << "\"" << std::endl;
+
+
+		std::ifstream file; // Declare file outside the if-else blocks
+
 		if(this->def_or_conf == "conf")
-			std::ifstream file("./pagina2/anarcha.png", std::ios::binary);
+		{
+		    file.open("./pagina2/anarchy.png", std::ios::binary); // Open file inside the if block
+		}
+		else  if(this->def_or_conf == "def")
+		{
+ 		   file.open("./pagina2/anarchi.png", std::ios::binary); // Open file inside the else block
+		}
+
+		/* if(this->def_or_conf == "conf")
+		{
+			std::cout << "es igual a conf" << std::endl;
+			std::ifstream file("./pagina2/anarchy.png", std::ios::binary);
+		}
 		else if(this->def_or_conf == "def")
-			std::ifstream file("./pagina2/anarcho.png", std::ios::binary);
-    	int l = file.is_open();
-		std::cout << "l = " << l << std::endl;
-		if (file.is_open() == true) 
 		{
-			std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 
-       // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
-   		} 
-   		else 
-		{
+			std::cout << "es igual a def" << std::endl;
+			std::ifstream file("./pagina2/anarchy.png", std::ios::binary);
+		}  */
+    	 
+	// 	if (!file.is_open()) 
+	// 	{
+	// 		std::cout << RED <<"favicon.ico NOT FOUND" << WHITE <<std::endl; 
+    //    // Manejar el error, por ejemplo, enviar una respuesta 404 Not Found
+   	// 	} 
+   	// 	else 
+	// 	{
 		std::ostringstream oss;
     	oss << file.rdbuf();
 		std::string favi = oss.str();
@@ -198,7 +216,7 @@ void	Server::respond(int i)
         httpResponse += favi;
 
         write(i, httpResponse.c_str(), httpResponse.size());
-		}
+		//}
 	}
     else
 	{

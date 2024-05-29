@@ -1,7 +1,13 @@
-#include "dependences.hpp"
-
+//#include "dependences.hpp"
+#include "Server.hpp"
 
 int Server::sign = 1;
+void validate()
+{
+	std::cout << "validate" << std::endl;
+}
+
+
 
 Server::Server() : Config()
 {
@@ -20,8 +26,8 @@ Server::Server() : Config()
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
 
 	ad.sin_family = AF_INET;
-    ad.sin_port = htons(Config::getPort());
-    ad.sin_addr.s_addr = htonl(Config::getdecimalIp());//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
+    ad.sin_port = htons(this->getPort());
+    ad.sin_addr.s_addr = htonl(this->getdecimalIp());//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
 
 	if (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
 		std::cout << "Puerto ocupau atontau" << std::endl;
@@ -47,8 +53,8 @@ Server::Server(std::string configName) : Config (configName)
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
 
 	ad.sin_family = AF_INET;
-    ad.sin_port = htons(Config::getPort());
-    ad.sin_addr.s_addr = htonl(Config::getdecimalIp());//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
+    ad.sin_port = htons(this->getPort());
+    ad.sin_addr.s_addr = htonl(this->getdecimalIp());//servaddr.sin_addr.s_addr = htonl(2130706433); //127.0.0.1
 
 	if (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
 		std::cout << "Puerto ocupau atontau" << std::endl;
@@ -145,8 +151,8 @@ void	Server::my_select()
 
 void	Server::respond(int i)
 {
-
-	std::string temp = "GET /"; //temporal para buscar el GET
+	(void)i;
+	/* std::string temp = "GET /"; //temporal para buscar el GET
 	std::string request(buffer);//buffer es 30000
 	if (request.find(temp + this->Imagen) != std::string::npos)
 	{
@@ -250,7 +256,7 @@ void	Server::respond(int i)
 
     	// Enviar la respuesta HTTP
     	write(i, httpResponse.c_str(), httpResponse.size());
-	}
+	} */
 }
 
 Server::~Server()
@@ -267,3 +273,51 @@ void	Server::signalHandler(int i)
 	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
 	sign = 0;
 }
+
+unsigned long Server::getdecimalIp()
+{
+	return this->Config::decimalIp;
+}
+
+int Server::getPort()
+{
+	return this->Config::port;
+}
+
+
+/* void Server::abind() {
+	sockaddr_in servaddr = {};
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_addr.s_addr = htonl(custom_inet_addr(_address));
+
+	if (_port <= 1024 || _port > 65535)
+		throw std::runtime_error("Invalid port number on server " + _server_name);
+	servaddr.sin_port = htons(_port);
+
+	((_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+		? throw std::runtime_error("Socket creation failed\n")
+		: Logger::debug("Socket successfully created");
+
+	// set socket as reusable
+	int option = 1;
+	((setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) == -1))
+		? throw std::runtime_error("Setting to reusable failed\n")
+		: Logger::debug("Socket options successfully setted");
+
+	// https://man7.org/linux/man-pages/man2/bind.2.html
+	(::bind(_fd, reinterpret_cast<struct sockaddr *>(&servaddr), sizeof(servaddr)) == -1)
+		? throw std::runtime_error("Binding failed\n")
+		: Logger::debug("Socket successfully binded");
+
+	// https://man7.org/linux/man-pages/man2/listen.2.html
+	listen(_fd, 256);
+	Logger::info("Server listening on port " + Utils::toString(_port));
+
+	// setting socket as non blocking
+	(fcntl(_fd, F_SETFL, O_NONBLOCK, FD_CLOEXEC) == -1)
+		? throw std::runtime_error("Setting to nonblocking failed")
+		: Logger::debug("Socket setted to non blocking");
+
+	Logger::info("Server " + _server_name + " listening in port " + Utils::toString(_port));
+} */
+

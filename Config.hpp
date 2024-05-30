@@ -25,6 +25,8 @@ public:
     void createvector(std::vector<std::map<std::string, std::string> > servers, const std::map<std::string, std::string>& new_content);
     void setKeyValue(const std::string& key, const std::string& value) ;
     std::map<std::string, std::string> setHostFromContent(const std::string& file_content) ;
+
+	size_t size(const char *s);
 };
 
 #endif

@@ -80,54 +80,64 @@ void Config::createvector(std::vector<std::map<std::string, std::string> > serve
     }
 }
 
+size_t Config::size(const char *s)
+{
+	size_t i = 0;
+	if (s == NULL)
+		return 0;
+	while (s[i] != '\0')
+		++i;
+	return i;
+}
 std::map<std::string, std::string> Config::setHostFromContent(const std::string& file_content) 
 {
-    std::string keyword = "listen";
-    size_t pos = file_content.find(keyword);
 
-    if (pos != std::string::npos) {
-        size_t space_pos = file_content.find(" ", pos + keyword.size());
 
-        if (space_pos != std::string::npos) 
-        {
-            std::string host = file_content.substr(space_pos + 1);
+    std::map<std::string, std::string> result;
 
-            if (!servers.empty()) 
-            {
-                servers[0]["host"] = host;
+    std::string::size_type pos;
 
-            }
-        }
+	const char *listen = "listen";
+    pos = file_content.find(listen);
+    if (pos != std::string::npos) 
+	{
+        pos += size(listen);  // 7 Skip "listen "
+        std::string::size_type end = file_content.find(";", pos);
+        std::string host_port = file_content.substr(pos, end - pos);
+        std::string::size_type colon = host_port.find(":");
+        result["Host"] = host_port.substr(0, colon);
+        result["Port"] = host_port.substr(colon + 1);
     }
-    return servers[0];
+	const char *body_size = "body_size";
+    pos = file_content.find(body_size);
+    if (pos != std::string::npos) 
+	{
+        pos += size(body_size);  //10 Skip "body_size "
+        std::string::size_type end = file_content.find(";", pos);
+        result["body_size"] = file_content.substr(pos, end - pos);
+    }
+	const char *root = "root";
+    pos = file_content.find(root);
+    if (pos != std::string::npos) 
+	{
+        pos += size(root);  //5 Skip "root "
+        std::string::size_type end = file_content.find(";", pos);
+        result["root"] = file_content.substr(pos, end - pos);
+    }
+
+    return result;
+
 }
+
+
 
 /*
 void Config::saveData()
 {
-    std::string line;
-    std::istringstream file(this->Config_data);
-    std::string a = "Port";
-    while (std::getline(file, line)) 
+ 
     {
-        if (!line.empty() && line[0] != '#') 
-        {
-            std::istringstream lineStream(line);
-			std::string key;
-        	int value;
+        
 
-            lineStream >> key >> value;
-            if (key == "Port") 
-            {
-                std::istringstream iss(line.substr(line.find(" ") + 1));
-                int num;
-                iss >> num;
-                this->Port = num;
-            }
-			else if(key == "Host")
-			{
-                this->Host = line.substr(line.find(" ") + 1);
-			}
             else if(key == "DocumentRoot")
             {
                 this->DocumentRoot = line.substr(line.find(" ") + 1);

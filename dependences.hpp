@@ -49,6 +49,7 @@
 # include <iostream>
 # include <sstream>
 # include <vector>
+# include <map>
 
 # include "Config.hpp"
 # include "Server.hpp"

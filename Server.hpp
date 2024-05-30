@@ -1,50 +1,36 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
-//# include "dependences.hpp"
-# include "Config.hpp"
+# include "dependences.hpp"
 
-class Socket;
 
-class Server : public Config 
+class Config;
+
+class Server 
 {
+    private:
+
+    std::string Host;
+    std::string Port;
+    std::string ServerName;
+    int body_size;
+    std::string root;
+    std::string Location;
+    std::string redirect_302;
+    std::map<std::string, std::string> keyValue; // Variable de tipo clave-valor
+
+
+
     public:
 
 		static int sign;
         Server();//constructor por defecto
         Server(std::string configName);//constructor con parametro
         ~Server();//destructor
-        
-        
-        void    respond(int i);
-        void    my_select();
+      //std::string Host, std::string Port, std::string ServerName, int body_size, std::string root, std::string Location, std::string redirect_302
+      void set_data();
 
-        int get_maxfd();
-		static void	signalHandler(int i);
-
-
-	    int fd() const;
-	    int port() const;
-	    int body_size() const;
-        void abind();
-
-            int getPort();
-            unsigned long getdecimalIp();
-
-    void validate();
-    private:
-
-        typedef struct s_client
-        {
-            int fd;
-        }   t_client;
-        
-        int     id;
-        int     sock;
-        int     new_socket;
-        //int     port;
-        char    buffer[30000];
-        sockaddr_in	ad;
-
-        std::string def_or_conf;
+        // Métodos para trabajar con la variable keyValue
+        void setKeyValue(const std::string& key, const std::string& value);
+        std::string getValue(const std::string& key) const ;
 };
 #endif

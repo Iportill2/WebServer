@@ -1,7 +1,7 @@
 
 #include "dependences.hpp"
 #include "Server.hpp"
-
+#include "location.hpp"
 
 
 Config::Config()
@@ -73,21 +73,18 @@ void Config::config_routine(std::string configName)
     }
 }
 
-class Location {
-    // Asumiendo que tienes una clase Location definida
-};
 
-void createLocations(const srv& newServer) 
+
+void Config::createLocations(const srv& newServer) 
 {
-    std::vector<Location> locations;
+	std::vector<location> array_of_location;
+	//array_of_location.push_back(location());
     for(int i = 0; i < newServer.locationCount; ++i) 
-	{
-        locations.push_back(Location());
-
-		std::cout << MAGENTA << "Location: " << i << WHITE << std::endl;
+    {
+        //std::cout << "X" << std::endl;
+        array_of_location.push_back(location());
+        std::cout << MAGENTA << "Location: " << YELLOW << i << WHITE << std::endl;
     }
-    // Ahora tienes un vector de instancias de Location
-    // Hacer algo con las instancias de Location...
 }
 
 void Config::createSrv()
@@ -99,20 +96,27 @@ void Config::createSrv()
     {
         if(line.find("server") != std::string::npos) 
         {
-            srv newServer;
+			 while(std::getline(f, line) && line.find("}}")  == std::string::npos) 
+            {
+				std::string serverBlock;
+                serverBlock += line;
+				srv newServer(serverBlock);
+				array_of_srv.push_back(newServer);
+            }
+/*             srv *newServer = new srv();
             std::string serverBlock;
             while(std::getline(f, line) && line.find("}}")  == std::string::npos) 
             {
                 serverBlock += line;
             }
-            newServer.locationCount = countSubstring(serverBlock, "location");
-			createLocations(newServer);
-            array_of_srv.push_back(newServer);
-            std::cout << GREEN << "Server: " << RED << i << GREEN << ", Locations: " << RED << newServer.locationCount << WHITE << std::endl;
-            i++;
+            newServer->locationCount = countSubstring(serverBlock, "location");
+			
+            createLocations(*newServer);
+            array_of_srv.push_back(*newServer);
+            std::cout << GREEN << "Server: " << RED << i << GREEN << ", Locations: " << RED << newServer->locationCount << WHITE << std::endl;
+            i++; */
         }
     }
-	//std::cout << YELLOW << array_of_srv.location.name
 }
 
 

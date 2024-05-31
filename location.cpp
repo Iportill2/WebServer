@@ -2,11 +2,12 @@
 
 location::location()
 {
-    std::cout << "Default location Constructor" << std::endl;
+    //std::cout << "Default location Constructor" << std::endl;
+    //std::cout << "name: " << _name << std::endl;
 }
 location::~location()
 {
-    std::cout << "location Destructor" << std::endl;
+    //std::cout << "location Destructor" << std::endl;
 }
 /* void createLocations(const srv& newServer) 
 {

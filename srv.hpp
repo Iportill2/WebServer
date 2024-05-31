@@ -16,8 +16,12 @@ class srv
 
     int locationCount;
     std::vector<location> array_of_location;
-    srv();
+
+
+    srv(std::string serverBlock);
     ~srv();
 
+   void instanceLocations();
+   void parseServer(std::string serverBlock);
 };
 #endif

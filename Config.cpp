@@ -42,12 +42,11 @@ void Config::config_routine(std::string configName)
     if(openFile(configName) == true)
     {
         std::cout << "Archivo abierto" << std::endl;
-        this->serverCount = getServerCount();
-        std::cout << "Cantidad de servidores: " << this->serverCount << std::endl;
+        if(getServerCount()  == 0)
+            return;
+        std::cout << RED << "Cantidad de servidores: " << YELLOW <<this->serverCount << WHITE << std::endl;
         this->servers = std::vector<std::map<std::string, std::string> >(this->serverCount);
         std::map<std::string, std::string> new_content;
-/*         new_content["host"] ;
-        new_content["port"] ; */
         new_content = setHostFromContent(file_content);
         createvector(this->servers, new_content);
     }
@@ -91,36 +90,51 @@ size_t Config::size(const char *s)
 }
 std::map<std::string, std::string> Config::setHostFromContent(const std::string& file_content) 
 {
-
+/*
+std::string::npos` es una constante estática de la clase `std::string` en C++. Se utiliza para
+ representar una posición no encontrada en una cadena de texto.
+Cuando usas la función `std::string::find`, esta devuelve la posición de la primera ocurrencia 
+de la subcadena que estás buscando. Si la subcadena no se encuentra en la cadena de texto, `find`
+ devuelve `std::string::npos`.
+En tu código, `std::string::npos` se utiliza para comprobar si las cadenas "listen", "body_size"
+ y "root" se encontraron en `file_content`. Si `find` devuelve `std::string::npos`, eso significa
+  que la cadena no se encontró, y el código dentro del bloque `if` no se ejecuta.	
+*/
 
     std::map<std::string, std::string> result;
 
-    std::string::size_type pos;
+    //std::string::size_type pos;
+    size_t  pos;
 
-	const char *listen = "listen";
-    pos = file_content.find(listen);
+    pos = file_content.find("listen");
+    std::cout << GREEN << "NPOS:" << std::string::npos << WHITE << std::endl;
+    std::cout << GREEN << "POS:" << pos << WHITE << std::endl;
+    std::cout << "---------------------------------------" << std::endl;
     if (pos != std::string::npos) 
 	{
-        pos += size(listen);  // 7 Skip "listen "
-        std::string::size_type end = file_content.find(";", pos);
+        std::cout << GREEN << "NPOS:" << std::string::npos << WHITE << std::endl;
+        std::cout << GREEN << "POS:" << pos << WHITE << std::endl;
+        pos += size("listen");  // 7 Skip "listen "
+        //std::string::size_type end = file_content.find(";", pos);
+        size_t end = file_content.find(";", pos);
         std::string host_port = file_content.substr(pos, end - pos);
-        std::string::size_type colon = host_port.find(":");
+        //std::string::size_type colon = host_port.find(":");
+        size_t colon = host_port.find(":");
         result["Host"] = host_port.substr(0, colon);
         result["Port"] = host_port.substr(colon + 1);
     }
-	const char *body_size = "body_size";
-    pos = file_content.find(body_size);
+    pos = file_content.find("body_size");
     if (pos != std::string::npos) 
 	{
-        pos += size(body_size);  //10 Skip "body_size "
+        pos += size("body_size");  //10 Skip "body_size "
         std::string::size_type end = file_content.find(";", pos);
         result["body_size"] = file_content.substr(pos, end - pos);
     }
-	const char *root = "root";
-    pos = file_content.find(root);
+
+    pos = file_content.find("root");
     if (pos != std::string::npos) 
 	{
-        pos += size(root);  //5 Skip "root "
+        pos += size("root");  //5 Skip "root "
         std::string::size_type end = file_content.find(";", pos);
         result["root"] = file_content.substr(pos, end - pos);
     }
@@ -129,81 +143,13 @@ std::map<std::string, std::string> Config::setHostFromContent(const std::string&
 
 }
 
-
-
-/*
-void Config::saveData()
-{
- 
-    {
-        
-
-            else if(key == "DocumentRoot")
-            {
-                this->DocumentRoot = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "LogFile")
-            {
-                this->LogFile = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "MaxRequestSize")
-            {
-                this->MaxRequestSize = value;
-            }
-            else if(key == "Timeout")
-            {
-                this->Timeout = value;
-            }
-            else if(key == "DirectoryIndex")
-            {
-                this->DirectoryIndex = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ErrorDocument404")
-            {
-                this->ErrorDocument_404 = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ErrorDocument500")
-            {
-                this->ErrorDocument_500 = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ServerSignature")
-            {
-                this->ServerSignature_Off = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ServerTokens")
-            {
-                this->ServerTokens_Prod = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "SSLEngine")
-            {
-                this->SSLEngine_on = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "SSLCertificateFile")
-            {
-                this->SSLCertificateFile = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "SSLCertificateKeyFile")
-            {
-                this->SSLCertificateKeyFile = line.substr(line.find(" ") + 1);
-            }
-            else
-            {
-                std::cerr <<  RED << "Error: Configuración no válida." << WHITE << std::endl;
-            }
-
-        }
-    }
-    decimalIp = ipToDecimal(Host);
-}
-*/
-
-int Config::getServerCount()
+bool Config::getServerCount()
 {
     int server = 0;
     int server_name = 0;
-    int serverCount = 0;
+    size_t  pos = 0;
+    //std::string::size_type pos = 0;
 
-    std::string::size_type pos = 0;
     while ((pos = file_content.find("server", pos)) != std::string::npos) 
     {
         ++server;
@@ -215,8 +161,12 @@ int Config::getServerCount()
         ++server_name;
         pos += 11; // Longitud de la cadena "Server"
     }
-    std::cout << "server: " << server << std::endl;
-    std::cout << "server_name: " << server_name << std::endl;   
-    serverCount = server - server_name;
-    return serverCount;
+/*     std::cout << "server: " << server << std::endl;
+    std::cout << "server_name: " << server_name << std::endl;  */  
+    this->serverCount = server - server_name;
+
+    if (this->serverCount > 0) 
+        return 1;
+    else
+        return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
 }

@@ -53,3 +53,8 @@
 
 # include "Config.hpp"
 # include "Server.hpp"
+
+#include "srv.hpp"
+#include "location.hpp"
+
+#include <algorithm>

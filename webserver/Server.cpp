@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/27 17:57:27 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/01 19:21:27 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int Server::sign = 1;
 
 Server::Server(int prt): port (prt)
 {
+	setLoc();
+	printLoc();
 	
 	id = 0;
 
@@ -68,10 +70,11 @@ void	Server::my_select()
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		int s = select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+		select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+		//int s = select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
 
-		std::cout << "sign = " << sign << std::endl;
-		std::cout << "select = " << s << std::endl;
+		//std::cout << "sign = " << sign << std::endl;
+		//std::cout << "select = " << s << std::endl;
 		if (!sign)
 			break;
 
@@ -97,6 +100,7 @@ void	Server::my_select()
 				}
 				else
 				{
+					memset(buffer, 0, sizeof(buffer));
 					int bytes = read(i, buffer, sizeof(buffer));
 					//read(i, buffer, sizeof(buffer));
 					std::cout << std::endl;
@@ -112,11 +116,15 @@ void	Server::my_select()
 					else
 					{ 
 						std::cout << "Client ID: " << id - 1 << " pasa a la cola de WRITE!!!" << std::endl;
+						
+						Request * r = new Request(buffer);
+						rq[i] = r;
+						printRequest();
 						FD_SET(i, &activefdsWrite);
 						FD_CLR(i, &activefdsRead);
 					}
 				}
-			}	
+			}
 			else if (FD_ISSET(i, &readyfdsWrite))
 			{
 				std::cout << "Client ID: " << id - 1 << " es RESPONDIDO!!!" << std::endl;
@@ -128,10 +136,10 @@ void	Server::my_select()
 	}
 	for (int i = 3; i <= maxfd; ++i)
 	{
-		std::cout << "cerrando fd: " << i << std::endl;
-		int  stat = close(i);
-
-		std::cout << "status fd " << i << " = " <<  stat << std::endl;
+		//std::cout << "cerrando fd: " << i << std::endl;
+		//int  stat = close(i);
+		close(i);
+		//std::cout << "status fd " << i << " = " <<  stat << std::endl;
 	}
 }			
 
@@ -168,44 +176,42 @@ void	Server::respond(int i)
 	}
     else
 	{
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
-   		httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
-    	httpResponse += "\r\n"; // Línea en blanco
+		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
+   		httpResponse += "Content-Type: text/html\r\n";
+    	httpResponse += "\r\n";
 
-    	// Código HTML como cuerpo de la respuesta
-   		httpResponse += "<!DOCTYPE html>\n";
-    	httpResponse += "<html lang=\"es\">\n";
-   		httpResponse += "<head>\n";
-   		httpResponse += "    <meta charset=\"UTF-8\">\n";
-    	httpResponse += "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
-    	httpResponse += "    <title>Respuesta del Servidor</title>\n";
-    	httpResponse += "</head>\n";
-    	httpResponse += "<body>\n";
-    	httpResponse += "    <header>\n";
-    	httpResponse += "        <h1>Buenas tarde y biesvenido a mis pagina güe </h1>\n";
-   		httpResponse += "    </header>\n";
-    	httpResponse += "    <main>\n";
-    	httpResponse += "        <section>\n";
-    	httpResponse += "            <h2>Mensaje de Dios:</h2>\n";
-    	httpResponse += "            <p>Hello, hijos de puta insinceros,</p>\n";
-    	httpResponse += "            <p>me cago en todo lo que se menea.</p>\n";
-		httpResponse += "            <img src=\"fary.jpg\" alt=\"Dios en la tierra\">\n";
-    	httpResponse += "        </section>\n";
-    	httpResponse += "    </main>\n";
-    	httpResponse += "    <footer>\n";
-    	httpResponse += "        <p>&copy; 2024. Todos los derechos reservados.</p>\n";
-    	httpResponse += "    </footer>\n";
-    	httpResponse += "</body>\n";
-    	httpResponse += "</html>\n";
-   
+		std::ifstream file;
+		file.open("pagina/index.html", std::ios::in);
+    	if (!file.is_open()) 
+			std::cout << RED  <<" NOT FOUND" << WHITE <<std::endl; 
+   		else 
+		{
+			std::stringstream buffer;
+    		buffer << file.rdbuf();
+    		httpResponse += buffer.str();
+    		file.close();
+		}
     	write(i, httpResponse.c_str(), httpResponse.size());
 	}
 }
 
 Server::~Server()
 {
-	close (sock);
 	std::cout << "Server destructor called!" << std::endl;
+	close (sock);
+	
+	std::map<int, Request *>::iterator iti;
+	std::map<int, Request *>::iterator ito;
+	
+	iti = rq.begin();
+	ito = rq.end();
+
+	while(iti != ito)
+	{
+		
+		delete(iti->second);
+		iti++;
+	}
 }
 
 int  Server::get_maxfd()
@@ -219,3 +225,72 @@ void	Server::signalHandler(int i)
 	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
 	sign = 0;
 }
+
+//FUNCIONES PARA PRUEBAS------------------------------------------
+
+void Server::printRequest()
+{
+	std::map<int, Request *>::iterator iti;
+	std::map<int, Request *>::iterator ito;
+	
+	iti = rq.begin();
+	ito = rq.end();
+
+	while(iti != ito)
+	{
+		std::cout << "FD " << iti->first << std::endl;
+		iti->second->printRequest();
+		iti++;
+	}
+}
+
+void Server::setLoc()
+{
+	loc a;
+	loc b;
+
+	a.file = "index.html";
+	a.root = "./pagina";
+	a.methods.push_back("GET");
+	a.methods.push_back("POST");
+
+	b.file = "rey.jpg";
+	b.root = "./pagina";
+	b.methods.push_back("GET");
+
+	conf.host = "0.0.0.0";
+	conf.port = 8080;
+	conf.server_name = "localhost";
+	conf.body_size =10000;
+	conf.location["/"] = a;
+	conf.location["/fary.jpg"] = b;
+	
+}
+
+void Server::printLoc()
+{
+	std::cout << std::endl << GREEN << "Host: " << BLUE << conf.host << std::endl;
+	std::cout << GREEN << "Port: " << BLUE << conf.port << std::endl;
+	std::cout << GREEN << "Server name:: " << BLUE << conf.server_name << std::endl;
+	std::cout << GREEN << "Body size: " << BLUE << conf.body_size << WHITE << std::endl << std::endl;
+
+	std::map<std::string, loc>::iterator iti;
+	std::map<std::string, loc>::iterator ito;
+	iti = conf.location.begin();
+	ito = conf.location.end();
+	int i = 1;
+	
+	while (iti != ito)
+	{
+		std::cout << GREEN << "LOCATION " << i << " " << iti->first << std::endl;
+		std::cout << GREEN << "File: " << BLUE << iti->second.file << std::endl;
+		std::cout << GREEN << "Root: " << BLUE << iti->second.root << std::endl;
+		std::cout << GREEN << "Methods: " << BLUE;
+		for (const auto& str : iti->second.methods)
+        	std::cout << str << " ";
+		std::cout << WHITE << std::endl << std::endl;
+		iti++;
+		i++;
+	}
+}
+

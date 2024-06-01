@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/24 16:51:47 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/01 18:16:11 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,18 @@
 # include <unistd.h>
 # include <sys/select.h>
 # include <csignal>
+# include <cstring>
+# include <map>
+# include <vector> 
+
+# define RED "\033[31m" ///////////
+# define RST "\033[0m" ////////////
+# define GREEN "\033[32m" ///////////
+# define YELLOW "\033[33m" ///////////
+# define BLUE "\033[34m" ///////////
+# define MAGENTA "\033[35m" ///////////
+# define CYAN "\033[36m" ///////////
+# define WHITE "\033[37m" ///////////
+# define BLACK "\033[30m" ///////////
 
 #endif

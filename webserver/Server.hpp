@@ -6,13 +6,16 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/05/27 17:46:46 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/01 18:56:40 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dependences.hpp"
+# include "Request.hpp"
+# include "Confs.hpp"
 
-class Socket;
+class Request;
+class Confs;
 
 class Server
 {
@@ -24,11 +27,15 @@ class Server
         }   t_client;
         
         sockaddr_in	ad;
-        int     id;
-        int     sock;
-        int     new_socket;
-        int     port;
-        char    buffer[30000];
+        int         id;
+        int     	sock;
+        int     	new_socket;
+        int     	port;
+        char    	buffer[30000];
+
+		std::map <int, Request *> rq;
+
+        Confs conf;
 
     public:
 
@@ -42,4 +49,11 @@ class Server
         int get_maxfd();
 		static int sign;
 		static void	signalHandler(int i);
+
+        void        setRequest(std::string & buf);
+
+		//FUNCIONES PARA PRUEBAS
+		void printRequest();
+        void setLoc();
+        void printLoc();
 };

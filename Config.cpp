@@ -18,9 +18,42 @@ Config::Config(std::string configName)
 
 Config::~Config()
 {
+    printArrayOfSrv();
     std::cout << "Config Destructor" << std::endl;
 }
 
+void Config::printArrayOfSrv() const
+{
+    std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
+
+    for (size_t i = 0; i < array_of_srv.size(); ++i)
+    {
+        std::cout << BLUE << "srv " << RED << (i + 1) << ":" << std::endl;
+        std::cout << BLUE << "Host: " << RED << array_of_srv[i].getHost() << std::endl;
+        std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << std::endl;
+        std::cout << BLUE << "Server Name: "<< RED  << array_of_srv[i].getServerName() << std::endl;
+        std::cout << BLUE << "Body Size: " << RED << array_of_srv[i].getBodySize() << std::endl;
+        std::cout << BLUE << "Root: " << RED << array_of_srv[i].getRoot() <<  std::endl;
+        // Add more print statements for other srv data as needed
+
+
+     for(size_t e = 0 ; e < array_of_srv[i].array_of_location.size(); ++e)
+        {
+
+            std::cout  << GREEN   << "location num:" << RED << e << std::endl;
+            std::cout << MAGENTA << "location:" << YELLOW << array_of_srv[i].array_of_location[e].getLocation()  << std::endl;
+            std::cout << MAGENTA << "root:" << YELLOW << array_of_srv[i].array_of_location[e].getRoot() << std::endl;
+            std::cout << MAGENTA << "file:"<< YELLOW << array_of_srv[i].array_of_location[e].getFile() << std::endl;
+            std::cout << MAGENTA << "methods:"<< YELLOW << array_of_srv[i].array_of_location[e].getMethods() << std::endl;
+            std::cout << MAGENTA << "autoindex:"<< YELLOW << array_of_srv[i].array_of_location[e].getAutoindex() << std::endl;
+            std::cout << MAGENTA << "cgi:"<< YELLOW << array_of_srv[i].array_of_location[e]._cgi << std::endl;
+            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << array_of_srv[i].array_of_location[e]._redirect_302 << WHITE << std::endl << std::endl; 
+    
+        }
+
+    
+    }
+}
 void Config::setValues()
 {
     server_id = 0;
@@ -92,23 +125,12 @@ void Config::createSrv()
                 serverBlock += line;
 
             }
-                std::cout << CYAN << serverBlock << WHITE << std::endl;
+
+                //std::cout << CYAN << serverBlock << WHITE << std::endl;
 				srv newServer(serverBlock);
                 newServer.locationCount = countSubstring(serverBlock, "location");
 				
                 array_of_srv.push_back(newServer);
-            
-/*             srv *newServer = new srv();
-            std::string serverBlock;
-            while(std::getline(f, line) && line.find("}}")  == std::string::npos) 
-            {
-                serverBlock += line;
-            }
-			
-            createLocations(*newServer);
-            array_of_srv.push_back(*newServer);
-            std::cout << GREEN << "Server: " << RED << i << GREEN << ", Locations: " << RED << newServer->locationCount << WHITE << std::endl;
-            i++; */
         }
     }
 }

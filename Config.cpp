@@ -193,7 +193,7 @@ bool Config::validatePort()
         int tmp = std::atoi(array_of_srv[i].getPort().c_str());
         if(tmp > 1023 && tmp < 65535)
         {
-            std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << " OK!" << std::endl;
+            std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << " OK!" << WHITE << std::endl;
         }
         else
             return 0;

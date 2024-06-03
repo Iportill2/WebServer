@@ -2,14 +2,25 @@
 
 srv::srv(std::string serverBlock)
 {
-    std::cout << "Default srv Constructor" << std::endl;
+    parseServerBlock(serverBlock) ;
+    std::cout << GREEN << "void srv::printValues() const" << WHITE << std::endl;
+    printValues();
+    //std::cout << "Default srv Constructor" << std::endl;
 }
 srv::~srv()
 {
-    std::cout << "srv Destructor" << std::endl;
+    //std::cout << "srv Destructor" << std::endl;
 }
-
-void parseServerBlock(const std::string& serverBlock, std::string& _host, std::string& _port, std::string& _server_name, std::string& _body_size, std::string& _root) {
+void srv::printValues() const
+{
+    std::cout << "Host: " << _host << std::endl;
+    std::cout << "Port: " << _port << std::endl;
+    std::cout << "Server Name: " << _server_name << std::endl;
+    std::cout << "Body Size: " << _body << std::endl;
+    std::cout << "root: " << _root << std::endl;
+}
+void srv::parseServerBlock(const std::string& serverBlock) 
+{
     size_t pos;
 
     // Find and extract host
@@ -36,7 +47,7 @@ void parseServerBlock(const std::string& serverBlock, std::string& _host, std::s
     if (pos != std::string::npos) {
         pos += 10; // Skip "body_size "
         size_t endPos = serverBlock.find(';', pos);
-        _body_size = serverBlock.substr(pos, endPos - pos);
+        _body = serverBlock.substr(pos, endPos - pos);
     }
 
     // Find and extract root
@@ -45,6 +56,15 @@ void parseServerBlock(const std::string& serverBlock, std::string& _host, std::s
         pos += 5; // Skip "root "
         size_t endPos = serverBlock.find(';', pos);
         _root = serverBlock.substr(pos, endPos - pos);
+    }
+
+        // Find and extract root
+    pos = serverBlock.find("location");
+    if (pos != std::string::npos) {
+        pos += 9; // Skip "root "
+        size_t endPos = serverBlock.find('}', pos);
+        std::string locationBlock = serverBlock.substr(pos, endPos - pos);
+        location newLocation(locationBlock);
     }
 }
 //parse server date, server name body etc...

@@ -13,7 +13,11 @@ class location
     std::string _autoindex;
     std::string _cgi;
     std::string _redirect_302;
-    location();
+    location() = default;
+    location(const std::string locationBlock);
     ~location();
+
+    void parselocationBlock(const std::string& locationBlock);
+    void printValues() const;
 };
 #endif

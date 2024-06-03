@@ -22,6 +22,7 @@ class srv
     ~srv();
 
    void instanceLocations();
-   void parseServer(std::string serverBlock);
+   void parseServerBlock(const std::string& serverBlock) ;
+   void printValues() const;
 };
 #endif

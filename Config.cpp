@@ -75,7 +75,7 @@ void Config::config_routine(std::string configName)
 
 
 
-void Config::createLocations(const srv& newServer) 
+/* void Config::createLocations(const srv& newServer) 
 {
 	std::vector<location> array_of_location;
 	//array_of_location.push_back(location());
@@ -85,31 +85,37 @@ void Config::createLocations(const srv& newServer)
         array_of_location.push_back(location());
         std::cout << MAGENTA << "Location: " << YELLOW << i << WHITE << std::endl;
     }
-}
+} */
 
 void Config::createSrv()
 {
-    int i = 0;
+    //int i = 0;
     std::istringstream f(this->file_content);
     std::string line;    
+
+	std::string serverBlock;
+
     while(std::getline(f, line)) 
     {
+        serverBlock = "";
         if(line.find("server") != std::string::npos) 
         {
 			 while(std::getline(f, line) && line.find("}}")  == std::string::npos) 
             {
-				std::string serverBlock;
                 serverBlock += line;
-				srv newServer(serverBlock);
-				array_of_srv.push_back(newServer);
+
             }
+                //std::cout << MAGENTA << serverBlock << WHITE << std::endl;
+				srv newServer(serverBlock);
+                newServer.locationCount = countSubstring(serverBlock, "location");
+				array_of_srv.push_back(newServer);
+            
 /*             srv *newServer = new srv();
             std::string serverBlock;
             while(std::getline(f, line) && line.find("}}")  == std::string::npos) 
             {
                 serverBlock += line;
             }
-            newServer->locationCount = countSubstring(serverBlock, "location");
 			
             createLocations(*newServer);
             array_of_srv.push_back(*newServer);

@@ -3,7 +3,7 @@
 
 Location::Location(const std::string locationBlock)
 {
-    std::cout << "Default location Constructor" << std::endl;
+    //std::cout << "Default location Constructor" << std::endl;
     parselocationBlock(locationBlock);
 /*     std::cout << YELLOW << "void location::printValues() const" << WHITE << std::endl;
     */
@@ -12,7 +12,7 @@ Location::Location(const std::string locationBlock)
 
 Location::~Location()
 {
-    std::cout << "location Destructor" << std::endl;
+    //std::cout << "location Destructor" << std::endl;
 }
 
 void Location::parselocationBlock(const std::string& locationBlock) 
@@ -82,16 +82,4 @@ void Location::parselocationBlock(const std::string& locationBlock)
             _file = locationBlock.substr(pos, endPos - pos);
         }
     
-}
-void Location::printValues() const
-{
-    std::cout << YELLOW ;
-    std::cout << "location: " << _location << std::endl;
-    std::cout << "Root: " << _root << std::endl;
-    std::cout << "File: " << _file << std::endl;
-    std::cout << "Methods: " << _methods << std::endl;
-    std::cout << "Autoindex: " << _autoindex << std::endl;
-    std::cout << "CGI: " << _cgi << std::endl;
-    std::cout << "Redirect 302: " << _redirect_302 << std::endl;
-    std::cout << WHITE ;
 }

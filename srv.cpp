@@ -2,42 +2,14 @@
 
 srv::srv(std::string serverBlock)
 {
-    std::cout << "Default srv Constructor" << std::endl;
+    //std::cout << "Default srv Constructor" << std::endl;
     parseServerBlock(serverBlock) ;
-    //std::cout << GREEN << "void srv::printValues() const" << WHITE << std::endl;
-    //printValues();
-    printArrayOfLocation();
 }
 srv::~srv()
 {
-    std::cout << "srv Destructor" << std::endl;
+    //std::cout << "srv Destructor" << std::endl;
 }
-/* void srv::printValues() const
-{
-    std::cout << "Host: " << _host << std::endl;
-    std::cout << "Port: " << _port << std::endl;
-    std::cout << "Server Name: " << _server_name << std::endl;
-    std::cout << "Body Size: " << _body << std::endl;
-    std::cout << "root: " << _root << std::endl;
-    
-} */
-void srv::printArrayOfLocation() const
-{
-    std::cout << "Number of locations: " << array_of_location.size() << std::endl;
 
-    for (size_t i = 0; i < array_of_location.size(); ++i)
-    {
-    std::cout << "location " << (i + 1) << ":" << std::endl;
-    std::cout << "Num of Location: " << i << std::endl;
-    std::cout << "Location: " << array_of_location[i].getLocation() << std::endl;
-    std::cout << "Root: " << array_of_location[i].getRoot() << std::endl;
-    std::cout << "File: " << array_of_location[i].getFile() << std::endl;
-    std::cout << "Methods: " << array_of_location[i].getMethods() << std::endl;
-    std::cout << "Autoindex: " << array_of_location[i].getAutoindex() << std::endl;
-    std::cout << "CGI: " << array_of_location[i].getCgi() << std::endl;
-    std::cout << "Redirect 302: " << array_of_location[i].getRedirect302() << std::endl;
-    }
-}
 
 std::vector<Location> &  srv::getlocations()
 {

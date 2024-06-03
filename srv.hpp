@@ -21,11 +21,9 @@ class srv
     srv(std::string serverBlock);
     ~srv();
 
-   void instanceLocations();
-   void parseServerBlock(const std::string& serverBlock) ;
-   void printValues() const;
 
-   void printArrayOfLocation() const;
+   void parseServerBlock(const std::string& serverBlock) ;
+
 
     std::string getHost() const { return _host; }
     std::string getPort() const { return _port; }

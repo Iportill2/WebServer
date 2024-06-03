@@ -18,9 +18,6 @@ class Location
     ~Location();
 
     void parselocationBlock(const std::string& locationBlock);
-    void printValues() const;
-
-    void printLocationData() const;
 
     std::string getLocation() const { return _location; }
     std::string getRoot() const { return _root; }

@@ -6,20 +6,20 @@
 
 Config::Config()
 {
-    std::cout << "Default Config Constructor" << std::endl;
+    //std::cout << "Default Config Constructor" << std::endl;
 }
 
 Config::Config(std::string configName)
 {
-    std::cout << "Config Constructor" << std::endl;
+    //std::cout << "Config Constructor" << std::endl;
     setValues();
     config_routine(configName);
+    printArrayOfSrv();
 }
 
 Config::~Config()
 {
-    printArrayOfSrv();
-    std::cout << "Config Destructor" << std::endl;
+    //std::cout << "Config Destructor" << std::endl;
 }
 
 void Config::printArrayOfSrv() const
@@ -96,7 +96,6 @@ void Config::config_routine(std::string configName)
         if(getServerCount()  == 0)
             return;
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
-        //std::cout << RED << "Cantidad de locations: " << YELLOW <<this->locationCount << WHITE << std::endl;
         createSrv();
     } 
     else
@@ -166,9 +165,6 @@ bool Config::getServerCount()
         ++server_name;
         pos += 11; // Longitud de la cadena "Server"
     }
-
-/*     std::cout << "server: " << server << std::endl;
-    std::cout << "server_name: " << server_name << std::endl;  */  
     this->srvCount = server - server_name;
 
     if (this->srvCount > 0) 

@@ -1,33 +1,37 @@
 #include "dependences.hpp"
 
-location::location(const std::string locationBlock)
+
+Location::Location(const std::string locationBlock)
 {
     //std::cout << "Default location Constructor" << std::endl;
     parselocationBlock(locationBlock);
     std::cout << YELLOW << "void location::printValues() const" << WHITE << std::endl;
     printValues();
 }
-location::~location()
+
+Location::~Location()
 {
     //std::cout << "location Destructor" << std::endl;
 }
 
-void location::parselocationBlock(const std::string& locationBlock) 
+void Location::parselocationBlock(const std::string& locationBlock) 
 {
     
         size_t pos;
 
         // Find and extract file
-        pos = locationBlock.find("file");
-        if (pos != std::string::npos) {
-            pos += 5; // Skip "file "
-            size_t endPos = locationBlock.find(';', pos);
-            _file = locationBlock.substr(pos, endPos - pos);
+        pos = locationBlock.find("/");
+        if (pos != std::string::npos) 
+		{
+            pos += 0; // Skip "file "
+            size_t endPos = locationBlock.find('{', pos);
+            _location = locationBlock.substr(pos, endPos - pos);
         }
 
         // Find and extract autoindex
         pos = locationBlock.find("autoindex");
-        if (pos != std::string::npos) {
+        if (pos != std::string::npos) 
+		{
             pos += 10; // Skip "autoindex "
             size_t endPos = locationBlock.find(';', pos);
             _autoindex = locationBlock.substr(pos, endPos - pos);
@@ -35,7 +39,8 @@ void location::parselocationBlock(const std::string& locationBlock)
 
         // Find and extract methods
         pos = locationBlock.find("methods");
-        if (pos != std::string::npos) {
+        if (pos != std::string::npos) 
+		{
             pos += 8; // Skip "methods "
             size_t endPos = locationBlock.find(';', pos);
             _methods = locationBlock.substr(pos, endPos - pos);
@@ -43,7 +48,8 @@ void location::parselocationBlock(const std::string& locationBlock)
 
         // Find and extract root
         pos = locationBlock.find("root");
-        if (pos != std::string::npos) {
+        if (pos != std::string::npos) 
+		{
             pos += 5; // Skip "root "
             size_t endPos = locationBlock.find(';', pos);
             _root = locationBlock.substr(pos, endPos - pos);
@@ -51,24 +57,26 @@ void location::parselocationBlock(const std::string& locationBlock)
 
         // Find and extract cgi
         pos = locationBlock.find("cgi");
-        if (pos != std::string::npos) {
+        if (pos != std::string::npos) 
+		{
             pos += 4; // Skip "cgi "
             size_t endPos = locationBlock.find(';', pos);
             _cgi = locationBlock.substr(pos, endPos - pos);
         }
 
         // Find and extract redirect_302
-        pos = locationBlock.find("redirect_302");
-        if (pos != std::string::npos) {
+        pos = locationBlock.find("redirect 302");
+        if (pos != std::string::npos) 
+		{
             pos += 13; // Skip "redirect_302 "
             size_t endPos = locationBlock.find(';', pos);
             _redirect_302 = locationBlock.substr(pos, endPos - pos);
         }
     
 }
-void location::printValues() const
+void Location::printValues() const
 {
-    std::cout << "Name: " << _name << std::endl;
+    std::cout << "location: " << _location << std::endl;
     std::cout << "Root: " << _root << std::endl;
     std::cout << "File: " << _file << std::endl;
     std::cout << "Methods: " << _methods << std::endl;

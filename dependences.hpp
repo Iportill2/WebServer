@@ -55,6 +55,6 @@
 # include "Server.hpp"
 
 #include "srv.hpp"
-#include "location.hpp"
+#include "Location.hpp"
 
 #include <algorithm>

@@ -4,7 +4,7 @@ CFLAGS = -Wall -Werror -Wextra #-std=c++98 #-g3 -fsanitize=address
 SRC_FILES = main.cpp \
 			Server.cpp \
 			Config.cpp  \
-			location.cpp \
+			Location.cpp \
 			srv.cpp 
 
 OBJS = $(SRC_FILES:.cpp=.o)

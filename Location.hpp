@@ -2,10 +2,10 @@
 # define LOCATION_HPP
 
 #include "dependences.hpp"
-class location
+class Location
 {
     public:
-    std::string _name;
+    std::string _location;
 
     std::string _root;
     std::string _file;
@@ -13,9 +13,9 @@ class location
     std::string _autoindex;
     std::string _cgi;
     std::string _redirect_302;
-    location() = default;
-    location(const std::string locationBlock);
-    ~location();
+    Location() = default;
+    Location(const std::string locationBlock);
+    ~Location();
 
     void parselocationBlock(const std::string& locationBlock);
     void printValues() const;

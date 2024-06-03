@@ -18,6 +18,7 @@ void srv::printValues() const
     std::cout << "Server Name: " << _server_name << std::endl;
     std::cout << "Body Size: " << _body << std::endl;
     std::cout << "root: " << _root << std::endl;
+    std::cout << RED << "Cantidad de locations: " << YELLOW <<this->locationCount << WHITE << std::endl;
 }
 void srv::parseServerBlock(const std::string& serverBlock) 
 {
@@ -25,7 +26,8 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
     // Find and extract host
     pos = serverBlock.find("listen");
-    if (pos != std::string::npos) {
+    if (pos != std::string::npos) 
+    {
         pos += 7; // Skip "listen "
         size_t endPos = serverBlock.find(':', pos);
         _host = serverBlock.substr(pos, endPos - pos);
@@ -36,7 +38,8 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
     // Find and extract server_name
     pos = serverBlock.find("server_name");
-    if (pos != std::string::npos) {
+    if (pos != std::string::npos) 
+    {
         pos += 12; // Skip "server_name "
         size_t endPos = serverBlock.find(';', pos);
         _server_name = serverBlock.substr(pos, endPos - pos);
@@ -44,7 +47,8 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
     // Find and extract body_size
     pos = serverBlock.find("body_size");
-    if (pos != std::string::npos) {
+    if (pos != std::string::npos)
+    {
         pos += 10; // Skip "body_size "
         size_t endPos = serverBlock.find(';', pos);
         _body = serverBlock.substr(pos, endPos - pos);
@@ -52,24 +56,21 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
     // Find and extract root
     pos = serverBlock.find("root");
-    if (pos != std::string::npos) {
+    if (pos != std::string::npos) 
+    {
         pos += 5; // Skip "root "
         size_t endPos = serverBlock.find(';', pos);
         _root = serverBlock.substr(pos, endPos - pos);
     }
 
-        // Find and extract root
+        // Find and extract location
     pos = serverBlock.find("location");
-    if (pos != std::string::npos) {
+    if (pos != std::string::npos) 
+    {
         pos += 9; // Skip "root "
         size_t endPos = serverBlock.find('}', pos);
         std::string locationBlock = serverBlock.substr(pos, endPos - pos);
-        location newLocation(locationBlock);
+        std::cout << MAGENTA << locationBlock << WHITE << std::endl;
+        Location newLocation(locationBlock);
     }
 }
-//parse server date, server name body etc...
-void srv::instanceLocations()
-{
-
-}
-//instaciar locations...

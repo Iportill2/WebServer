@@ -1,7 +1,7 @@
 
 #include "dependences.hpp"
-#include "Server.hpp"
-#include "location.hpp"
+
+
 
 
 Config::Config()
@@ -62,8 +62,8 @@ void Config::config_routine(std::string configName)
         std::cout << "Archivo abierto" << std::endl;
         if(getServerCount()  == 0)
             return;
-        std::cout << RED << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
-        std::cout << RED << "Cantidad de locations: " << YELLOW <<this->locationCount << WHITE << std::endl;
+        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        //std::cout << RED << "Cantidad de locations: " << YELLOW <<this->locationCount << WHITE << std::endl;
         createSrv();
     } 
     else
@@ -73,19 +73,6 @@ void Config::config_routine(std::string configName)
     }
 }
 
-
-
-/* void Config::createLocations(const srv& newServer) 
-{
-	std::vector<location> array_of_location;
-	//array_of_location.push_back(location());
-    for(int i = 0; i < newServer.locationCount; ++i) 
-    {
-        //std::cout << "X" << std::endl;
-        array_of_location.push_back(location());
-        std::cout << MAGENTA << "Location: " << YELLOW << i << WHITE << std::endl;
-    }
-} */
 
 void Config::createSrv()
 {
@@ -105,10 +92,11 @@ void Config::createSrv()
                 serverBlock += line;
 
             }
-                //std::cout << MAGENTA << serverBlock << WHITE << std::endl;
+                std::cout << CYAN << serverBlock << WHITE << std::endl;
 				srv newServer(serverBlock);
                 newServer.locationCount = countSubstring(serverBlock, "location");
-				array_of_srv.push_back(newServer);
+				
+                array_of_srv.push_back(newServer);
             
 /*             srv *newServer = new srv();
             std::string serverBlock;

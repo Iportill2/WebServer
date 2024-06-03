@@ -1,9 +1,9 @@
 #ifndef SRV_HPP
 # define SRV_HPP
 #include "dependences.hpp"
-#include "Config.hpp"
 
-class location;
+
+class Location;
 
 class srv
 {
@@ -15,7 +15,7 @@ class srv
     std::string _root;
 
     int locationCount;
-    std::vector<location> array_of_location;
+    std::vector<Location> array_of_location;
 
 
     srv(std::string serverBlock);

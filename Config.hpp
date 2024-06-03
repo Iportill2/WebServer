@@ -31,6 +31,8 @@ public:
     void createSrv();
 
     void printArrayOfSrv() const;
+    /////
+    bool validatePort();
 };
 
 #endif

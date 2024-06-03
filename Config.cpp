@@ -14,7 +14,9 @@ Config::Config(std::string configName)
     //std::cout << "Config Constructor" << std::endl;
     setValues();
     config_routine(configName);
-    printArrayOfSrv();
+    //printArrayOfSrv(); //para printear los server y locations
+
+
 }
 
 Config::~Config()
@@ -103,6 +105,8 @@ void Config::config_routine(std::string configName)
         std::cout << "Archivo no abierto" << std::endl;
         return;
     }
+    if(validatePort() == 0)
+        return;
 }
 
 
@@ -171,4 +175,29 @@ bool Config::getServerCount()
         return 1;
     else
         return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
+}
+///////////////////////
+/*
+El rango de puertos válidos en Nginx, y en general en cualquier sistema que siga las 
+convenciones de red estándar, es de 1 a 65535. Sin embargo, los puertos del 1 al 1023 
+son conocidos como puertos bien conocidos y están reservados para servicios específicos 
+(por ejemplo, el puerto 80 para HTTP, el puerto 443 para HTTPS). Por lo tanto, a menos 
+que estés ejecutando Nginx como root (lo cual no se recomienda por razones de seguridad),
+ deberías usar un puerto en el rango de 1024 a 65535.
+*/
+bool Config::validatePort()
+{
+    size_t i = 0;
+    while(i < array_of_srv.size())
+    {
+        int tmp = std::atoi(array_of_srv[i].getPort().c_str());
+        if(tmp > 1023 && tmp < 65535)
+        {
+            std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << " OK!" << std::endl;
+        }
+        else
+            return 0;
+        ++i;
+    }
+    return 1;
 }

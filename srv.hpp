@@ -24,5 +24,16 @@ class srv
    void instanceLocations();
    void parseServerBlock(const std::string& serverBlock) ;
    void printValues() const;
+
+   void printArrayOfLocation() const;
+
+    std::string getHost() const { return _host; }
+    std::string getPort() const { return _port; }
+    std::string getServerName() const { return _server_name; }
+    std::string getBodySize() const { return _body; }
+    std::string getRoot() const { return _root; }
+
+	///locations
+	std::vector<Location> & getlocations();
 };
 #endif

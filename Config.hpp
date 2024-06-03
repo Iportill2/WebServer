@@ -13,7 +13,7 @@ class Config
 
     int srvCount;
     int locationCount;
-    std::vector<srv> array_of_srv;
+    std::vector<srv > array_of_srv;
 
     int server_id ;
 public:
@@ -30,6 +30,8 @@ public:
 	size_t size(const char *s);
     //void createLocations(const srv& newServer); 
     void createSrv();
+
+    void printArrayOfSrv() const;
 };
 
 #endif

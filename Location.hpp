@@ -19,5 +19,16 @@ class Location
 
     void parselocationBlock(const std::string& locationBlock);
     void printValues() const;
+
+    void printLocationData() const;
+
+    std::string getLocation() const { return _location; }
+    std::string getRoot() const { return _root; }
+    std::string getFile() const { return _file; }
+    std::string getMethods() const { return _methods; }
+    std::string getAutoindex() const { return _autoindex; }
+    std::string getCgi() const { return _cgi; }
+    std::string getRedirect302() const { return _redirect_302; }
+
 };
 #endif

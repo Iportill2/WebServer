@@ -120,20 +120,25 @@ void Config::createSrv()
 
 
     std::vector<std::string> servers;
-
+    //size_t e = 0;
 
     size_t i =0;
     std::stack<char> stak;
     while(i < file_content.size())
     {
         tmp = i;
-        while(file_content[i] != '{')
+        while(i < file_content.size() && file_content[i] != '{')
+        {
             i++;
-
-        if(file_content[i] == '{')
+        }
+        std::cout << CYAN << file_content[i] << WHITE << std::endl;
+        std::cout << GREEN << stak.size() << WHITE<<std::endl;
+        if(i == file_content.size())
+            break;
+        if(file_content[i++] == '{')
             stak.push('{');
 
-        while (i < file_content.size() && stak.empty() == 0)
+        while (i < file_content.size() && !stak.empty())
         {
 
             if(file_content[i] == '{')
@@ -142,14 +147,22 @@ void Config::createSrv()
                 stak.pop();
             i++;
         }
-        servers.push_back(file_content.substr(tmp, i));
+
+        std::cout << "tmp:"<< tmp << "   i:" << i <<std::endl;
+        servers.push_back(file_content.substr(tmp, i - tmp));
+        
+        
+        std::cout << RED  << servers.back() << WHITE << std::endl;
+                std::cout << "*******************" << std::endl;
     }
     i=0;
-    while(i < servers.size())
+    std::cout << GREEN << servers.size() << WHITE << std::endl;
+/*      while(i < servers.size())
     {
         std::cout << servers[i] << std::endl;
+        std::cout << "*******************" << std::endl;
         i++;
-    }
+    } */
 }
 
 /*

@@ -14,7 +14,7 @@ class Config
     int srvCount;
     int locationCount;
     std::vector<srv > array_of_srv;
-
+    
     int server_id ;
 public:
     Config();

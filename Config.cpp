@@ -112,6 +112,49 @@ void Config::config_routine(std::string configName)
 
 void Config::createSrv()
 {
+    size_t tmp;
+    //int i = 0;
+    std::istringstream f(this->file_content);
+    std::string line;    
+    std::string serverBlock;
+
+
+    std::vector<std::string> servers;
+
+
+    size_t i =0;
+    std::stack<char> stak;
+    while(i < file_content.size())
+    {
+        tmp = i;
+        while(file_content[i] != '{')
+            i++;
+
+        if(file_content[i] == '{')
+            stak.push('{');
+
+        while (i < file_content.size() && stak.empty() == 0)
+        {
+
+            if(file_content[i] == '{')
+                stak.push(file_content[i]);
+            else if(file_content[i] == '}')
+                stak.pop();
+            i++;
+        }
+        servers.push_back(file_content.substr(tmp, i));
+    }
+    i=0;
+    while(i < servers.size())
+    {
+        std::cout << servers[i] << std::endl;
+        i++;
+    }
+}
+
+/*
+void Config::createSrv()
+{
     //int i = 0;
     std::istringstream f(this->file_content);
     std::string line;    
@@ -137,6 +180,7 @@ void Config::createSrv()
         }
     }
 }
+*/
 
 
 

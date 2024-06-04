@@ -58,3 +58,5 @@
 #include "Location.hpp"
 
 #include <algorithm>
+#include <stack>
+#include <cstring>

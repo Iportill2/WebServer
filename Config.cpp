@@ -127,15 +127,17 @@ void Config::createSrv()
     while(i < file_content.size())
     {
         tmp = i;
-        while(i < file_content.size() && file_content[i] != '{')
+        while(i < file_content.size() && file_content[i] != '{' && file_content[i] != '}')
             i++;
 
         if(i == file_content.size())
             break;
 
-        if(file_content[i++] == '{')
+        if(file_content[i] == '{')
             stak.push('{');
-
+        else if (file_content[i] == '}')
+            break;
+        i++;
         while (i < file_content.size() && !stak.empty())
         {
             if(file_content[i] == '{')

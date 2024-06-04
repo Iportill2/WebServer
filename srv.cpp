@@ -2,10 +2,8 @@
 
 srv::srv(std::string serverBlock)
 {
-    (void)serverBlock;
-    std::cout << "Default srv Constructor" << std::endl;
-    std::cout << RED << serverBlock << WHITE << std::endl;
-    //parseServerBlock(serverBlock) ;
+    //std::cout << "Default srv Constructor" << std::endl;
+    parseServerBlock(serverBlock) ;
 }
 srv::~srv()
 {
@@ -61,15 +59,35 @@ void srv::parseServerBlock(const std::string& serverBlock)
     }
 
         // Find and extract location
+
+    pos = serverBlock.find("location");
+    while (pos < serverBlock.size()) 
+    {
+        pos += 9; // Skip "location "
+        size_t endPos = serverBlock.find('}', pos);
+        if (endPos != std::string::npos) 
+        {
+            std::string locationBlock = serverBlock.substr(pos, endPos - pos);
+            pos = endPos + 1; // Skip "}"
+            Location newLocation(locationBlock);
+            array_of_location.push_back(newLocation);
+        }
+        else 
+        {
+        // Handle error: '}' not found
+        //std::cerr << RED << "} Not found" << WHITE << std::endl;
+        break;
+        }
+    }
+}
+/*
     pos = serverBlock.find("location");
     while (pos != std::string::npos) 
+        pos += (endPos - pos);
     {
         pos += 9; // Skip "root "
         size_t endPos = serverBlock.find('}', pos);
         std::string locationBlock = serverBlock.substr(pos, endPos - pos);
         //std::cout << MAGENTA << locationBlock << WHITE << std::endl;
-        Location newLocation(locationBlock);
-        pos += (endPos - pos);
-        array_of_location.push_back(newLocation);
     }
-}
+*/

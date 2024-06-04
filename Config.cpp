@@ -14,7 +14,7 @@ Config::Config(std::string configName)
     //std::cout << "Config Constructor" << std::endl;
     setValues();
     config_routine(configName);
-    //printArrayOfSrv(); //para printear los server y locations
+    printArrayOfSrv(); //para printear los server y locations
 
 
 }
@@ -144,55 +144,15 @@ void Config::createSrv()
                 stak.pop();
             i++;
         }
-                std::cout << "*******************" << std::endl;
-        std::string sub = file_content.substr(tmp, i - tmp); 
-        //std::cout << sub << std::endl;
-        //(void)tmp;
-        srv newServer (sub);
-        //newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
-                //array_of_srv.push_back(newServer);
-        //array_of_srv.push_back(newServer);
-    }
-/*     i=0;
-     while(i < servers.size())
-    {
-        std::cout << servers[i] << std::endl;
-        std::cout << "*******************" << std::endl;
-        i++;
-    } */
-}
-
-/*
-void Config::createSrv()
-{
-    //int i = 0;
-    std::istringstream f(this->file_content);
-    std::string line;    
-
-	std::string serverBlock;
-
-    while(std::getline(f, line)) 
-    {
-        serverBlock = "";
-        if(line.find("server") != std::string::npos) 
-        {
-			 while(std::getline(f, line) && line.find("}}")  == std::string::npos) 
-            {
-                serverBlock += line;
-
-            }
-
-                //std::cout << CYAN << serverBlock << WHITE << std::endl;
-				srv newServer(serverBlock);
-                newServer.locationCount = countSubstring(serverBlock, "location");
-				
-                array_of_srv.push_back(newServer);
-        }
+        size_t length = i - tmp;
+        if (tmp + length > file_content.size())
+            length = file_content.size() - tmp;
+        std::string sub = file_content.substr(tmp, length);
+        srv newServer(sub);
+        newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+        array_of_srv.push_back(newServer);
     }
 }
-*/
-
-
 
 size_t Config::size(const char *s)
 {
@@ -203,7 +163,6 @@ size_t Config::size(const char *s)
 		++i;
 	return i;
 }
-
 
 bool Config::getServerCount()
 {

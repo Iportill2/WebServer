@@ -2,8 +2,10 @@
 
 srv::srv(std::string serverBlock)
 {
-    //std::cout << "Default srv Constructor" << std::endl;
-    parseServerBlock(serverBlock) ;
+    (void)serverBlock;
+    std::cout << "Default srv Constructor" << std::endl;
+    std::cout << RED << serverBlock << WHITE << std::endl;
+    //parseServerBlock(serverBlock) ;
 }
 srv::~srv()
 {

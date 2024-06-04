@@ -145,12 +145,10 @@ void Config::createSrv()
             i++;
         }
                 std::cout << "*******************" << std::endl;
-        //std::string sub = file_content.substr(tmp, i - tmp); 
-        size_t length = i - tmp;
-        if (tmp + length > file_content.size())
-            length = file_content.size() - tmp;
-        std::string sub = file_content.substr(tmp, length);
-        srv newServer(sub);
+        std::string sub = file_content.substr(tmp, i - tmp); 
+        //std::cout << sub << std::endl;
+        //(void)tmp;
+        srv newServer (sub);
         //newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
                 //array_of_srv.push_back(newServer);
         //array_of_srv.push_back(newServer);

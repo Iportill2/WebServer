@@ -119,7 +119,7 @@ void Config::createSrv()
     std::string serverBlock;
 
 
-    std::vector<std::string> servers;
+
     //size_t e = 0;
 
     size_t i =0;
@@ -128,36 +128,35 @@ void Config::createSrv()
     {
         tmp = i;
         while(i < file_content.size() && file_content[i] != '{')
-        {
             i++;
-        }
-        std::cout << CYAN << file_content[i] << WHITE << std::endl;
-        std::cout << GREEN << stak.size() << WHITE<<std::endl;
+
         if(i == file_content.size())
             break;
+
         if(file_content[i++] == '{')
             stak.push('{');
 
         while (i < file_content.size() && !stak.empty())
         {
-
             if(file_content[i] == '{')
                 stak.push(file_content[i]);
             else if(file_content[i] == '}')
                 stak.pop();
             i++;
         }
-
-        std::cout << "tmp:"<< tmp << "   i:" << i <<std::endl;
-        servers.push_back(file_content.substr(tmp, i - tmp));
-        
-        
-        std::cout << RED  << servers.back() << WHITE << std::endl;
                 std::cout << "*******************" << std::endl;
+        //std::string sub = file_content.substr(tmp, i - tmp); 
+        size_t length = i - tmp;
+        if (tmp + length > file_content.size())
+            length = file_content.size() - tmp;
+        std::string sub = file_content.substr(tmp, length);
+        srv newServer(sub);
+        //newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+                //array_of_srv.push_back(newServer);
+        //array_of_srv.push_back(newServer);
     }
-    i=0;
-    std::cout << GREEN << servers.size() << WHITE << std::endl;
-/*      while(i < servers.size())
+/*     i=0;
+     while(i < servers.size())
     {
         std::cout << servers[i] << std::endl;
         std::cout << "*******************" << std::endl;

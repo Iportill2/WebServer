@@ -6,15 +6,19 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/01 18:56:40 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:22:52 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
+
 #include "dependences.hpp"
 # include "Request.hpp"
+# include "Response.hpp"
 # include "Confs.hpp"
 
 class Request;
+class Response;
 class Confs;
 
 class Server

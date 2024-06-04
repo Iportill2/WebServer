@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/01 18:16:11 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:08:19 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <cstring>
 # include <map>
 # include <vector> 
+#include <sys/stat.h>
 
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////

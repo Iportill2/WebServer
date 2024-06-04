@@ -45,6 +45,14 @@ void    Request::parse()
         body += line + "\n";
 }
 
+std::string Request::getMethod() {return method;}
+std::string Request::getUri() {return uri;}
+std::string Request::getHost() {return host;}
+std::string Request::getPort() {return port;}
+std::string Request::getBody() {return body;}
+int         Request::getContentLen() {return content_len;}
+
+//FUNCIONES PARA PRUEBAS----------------------------------------------------------
 void Request::printRequest()
 {
 	std::cout << GREEN << "method: " << BLUE << method << std::endl;

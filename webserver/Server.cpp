@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/01 19:21:27 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/03 19:04:04 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	Server::my_select()
 						
 						Request * r = new Request(buffer);
 						rq[i] = r;
-						printRequest();
+						//printRequest();
 						FD_SET(i, &activefdsWrite);
 						FD_CLR(i, &activefdsRead);
 					}
@@ -145,10 +145,14 @@ void	Server::my_select()
 
 void	Server::respond(int i)
 {
-	std::string request(buffer);
+	Response r(rq[i], conf, i);
+	r.printRequest();
+	r.printConf();
+	r.createResponse();
+	/* std::string request(buffer);
 	if (request.find("GET /fary.jpg") != std::string::npos)
 	{
-		std::ifstream file("rey.jpg", std::ios::binary);
+		std::ifstream file("pagina/rey.jpg", std::ios::binary);
     	std::ostringstream oss;
     	oss << file.rdbuf();
 		std::string fary = oss.str();
@@ -162,7 +166,7 @@ void	Server::respond(int i)
 	}
 	else if (request.find("GET /favicon.ico") != std::string::npos)
 	{
-		std::ifstream file("anarchy.png", std::ios::binary);
+		std::ifstream file("pagina/anarchy.png", std::ios::binary);
     	std::ostringstream oss;
     	oss << file.rdbuf();
 		std::string favi = oss.str();
@@ -192,7 +196,7 @@ void	Server::respond(int i)
     		file.close();
 		}
     	write(i, httpResponse.c_str(), httpResponse.size());
-	}
+	} */
 }
 
 Server::~Server()
@@ -282,12 +286,12 @@ void Server::printLoc()
 	
 	while (iti != ito)
 	{
-		std::cout << GREEN << "LOCATION " << i << " " << iti->first << std::endl;
+		std::cout << GREEN << "LOCATION " << i << " " << YELLOW << iti->first << std::endl;
 		std::cout << GREEN << "File: " << BLUE << iti->second.file << std::endl;
 		std::cout << GREEN << "Root: " << BLUE << iti->second.root << std::endl;
 		std::cout << GREEN << "Methods: " << BLUE;
 		for (const auto& str : iti->second.methods)
-        	std::cout << str << " ";
+         	std::cout << str << " ";
 		std::cout << WHITE << std::endl << std::endl;
 		iti++;
 		i++;

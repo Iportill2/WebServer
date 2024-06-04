@@ -1,3 +1,4 @@
+
 #pragma once
 
 # include "dependences.hpp"
@@ -21,6 +22,13 @@ class Request
         ~Request();
 
         void    parse();
+
+        std::string getMethod();
+        std::string getUri();
+        std::string getHost();
+        std::string getPort();
+        std::string getBody();
+        int         getContentLen();
 
         //FUNCIONES PARA PRUEBAS
         void printRequest();

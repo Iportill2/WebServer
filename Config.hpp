@@ -34,6 +34,8 @@ public:
     void printArrayOfSrv() const;
     /////
     bool validatePort();
+
+    std::vector<srv> & getArrayOfServers();
 };
 
 #endif

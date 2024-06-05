@@ -12,7 +12,7 @@ Config::Config(std::string configName)
         if(validatePort() == 1)
             printArrayOfSrv(); //para printear los server y locations
     }
-    std::cout << BLUE << array_of_srv[0].array_of_location[0].getFile() << "|" << WHITE << std::endl;
+    //std::cout << BLUE << array_of_srv[0].array_of_location[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
@@ -199,4 +199,8 @@ bool Config::validatePort()
         ++i;
     }
     return 1;
+}
+std::vector<srv> & Config::getArrayOfServers()
+{
+    return array_of_srv;
 }

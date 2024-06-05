@@ -29,6 +29,7 @@ void srv::parseServerBlock(const std::string& serverBlock)
 {
     size_t pos;
     std::string temp;
+    pos = 0;
 
     pos = serverBlock.find("listen");
     while (pos != std::string::npos) 
@@ -98,19 +99,27 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
 
     // Find and extract root
-    pos = serverBlock.find("root");
-    while (pos != std::string::npos) 
+    pos = serverBlock.find("server {");
+    pos = pos + 9;
+    while (pos < serverBlock.size() && serverBlock[pos] != '{')  
     {
-        pos += std::string("root").size(); // Skip "server_name "
-        size_t endPos = serverBlock.find(';', pos);
-        temp = serverBlock.substr(pos, endPos - pos);
-        if(_Root == "")
-            _Root = temp;
-        else
-            std::cout << "ERROR al conseguir ROOT valor ya inicializado" << std::endl;
-
-        // Update pos to start searching after the last occurrence of "server_name"
-        pos = serverBlock.find("root", endPos);
+        //pos += std::string("{").size(); // Skip "{"
+        pos = serverBlock.find("root", pos); // Find "root" after "{"
+        if (pos != std::string::npos)
+        {
+            pos += std::string("root").size(); // Skip "root "
+            size_t endPos = serverBlock.find(';', pos);
+            temp = serverBlock.substr(pos, endPos - pos);
+            std::cout << "!" ;
+            if(_Root == "")
+                _Root = temp;
+            else
+            {
+                std::cout << "ERROR al conseguir ROOT valor ya inicializado" << std::endl;
+                //break;
+            }
+            //pos = serverBlock.find("{");
+        }
     }
         // Find and extract location
     pos = serverBlock.find("location");
@@ -128,4 +137,34 @@ void srv::parseServerBlock(const std::string& serverBlock)
         else 
             break;
     }
+
 }
+
+/* unsigned long srv::ipToDecimal(const std::string& ip) 
+{
+    std::vector<int> octets;
+    std::stringstream ss(ip);
+    std::string item;
+
+    // Separar la IP por los puntos
+    while (std::getline(ss, item, '.')) 
+    {
+        int num;
+        std::istringstream(item) >> num;
+        octets.push_back(num);
+    }
+
+    // Verificar que tengamos exactamente cuatro octetos
+    if (octets.size() != 4) {
+        std::cerr << "Error: Dirección IP no válida." << std::endl;
+        return 0;  // O alguna otra señal de error
+    }
+
+    // Combinar los octetos en un solo número
+    this->decimalIp = 0;
+    this->decimalIp += (octets[0] << 24);
+    this->decimalIp += (octets[1] << 16);
+    this->decimalIp += (octets[2] << 8);
+    this->decimalIp += octets[3];
+    return this->decimalIp;
+} */

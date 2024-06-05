@@ -6,7 +6,7 @@ SRC_FILES = main.cpp \
 			Request.cpp \
 			Response.cpp \
 			Error.cpp \
-			Utils.cpp
+			Utils.cpp \
 			Config.cpp  \
 			Location.cpp \
 			srv.cpp 

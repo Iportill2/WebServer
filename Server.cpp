@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/04 19:31:38 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/05 13:29:32 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ void Server::setLoc()
 	b.methods.push_back("GET");
 
 	c.file = "index.html";
-	c.root = "./pagina2";
+	c.root = "./pagina/pagina2";
 	c.methods.push_back("GET");
 
 	conf.host = "0.0.0.0";

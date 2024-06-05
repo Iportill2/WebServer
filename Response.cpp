@@ -15,8 +15,8 @@ bool	Response::checkLocation()
 	{
 		if(rq->getUri() == in->first)
 		{
-			std::cout << "str = " << in->first << std::endl;
 			std::string url = in->second.root.substr(2) + "/" + in->second.file;
+			std::cout << "url1 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
 			else
@@ -25,25 +25,26 @@ bool	Response::checkLocation()
 		}
 		in++;
 	}
-	in = conf.location.begin();
 
 	size_t pos = rq->getUri().find('/', 1);
-	
-	//size_t size = 0;
 	std::string str = "/";
+	in = conf.location.begin();
 	while (in != out)
 	{
-		//if (in->first.size() > size && in->first == rq->getUri().substr(0, pos))
 		if (in->first == rq->getUri().substr(0, pos))
 		{
-			//size = in->first.size();
-			str = in->first;
+			std::string url = in->second.root.substr(2) + rq->getUri().substr(pos);
+			std::cout << "url2 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
+			else
+				return (0);
+			break;
 		}
 		in++;
 	}
-	std::cout << "str = " << str << std::endl;
-	//if (str.size() > 0)
 	
+
 	return (0);
 }
 
@@ -69,6 +70,7 @@ int Response::createResponse()
 		Error r(404, fd);
 		return 1;
 	}
+	std::cout << "FINAL url = " << _url << std::endl;
 	return 0;
 }
 

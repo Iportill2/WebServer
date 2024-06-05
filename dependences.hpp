@@ -15,9 +15,7 @@
 
 
 # include "Server.hpp"
-# include "Config.hpp"
-# include "srv.hpp"
-# include "Location.hpp"
+
 
 # include <stdio.h>
 # include <sys/socket.h>

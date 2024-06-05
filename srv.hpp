@@ -1,7 +1,7 @@
 #ifndef SRV_HPP
 # define SRV_HPP
 #include "dependences.hpp"
-
+#include "Location.hpp"
 
 class Location;
 

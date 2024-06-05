@@ -1,5 +1,5 @@
 #include "dependences.hpp"
-
+#include "Location.hpp"
 
 Location::Location(const std::string locationBlock)
 {

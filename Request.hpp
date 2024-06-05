@@ -2,6 +2,7 @@
 #pragma once
 
 # include "dependences.hpp"
+#include <string>
 
 class Request
 {

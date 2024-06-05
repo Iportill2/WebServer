@@ -5,7 +5,7 @@
 # include "Request.hpp"
 # include "Confs.hpp"
 # include "Utils.hpp"
-
+#include <string>
 class Request;
 class Confs;
 

@@ -1,6 +1,7 @@
-
 #include "dependences.hpp"
-
+# include "Config.hpp"
+# include "srv.hpp"
+# include "Location.hpp"
 int main(int ac, char **av)
 {
     if(ac== 1)

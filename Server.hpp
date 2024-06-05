@@ -16,6 +16,8 @@
 # include "Request.hpp"
 # include "Response.hpp"
 # include "Confs.hpp"
+# include <map>
+# include <netinet/in.h>
 
 class Request;
 class Response;

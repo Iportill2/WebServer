@@ -2,7 +2,9 @@
 #pragma once
 
 #include "dependences.hpp"
-
+#include <string>
+#include <vector>
+#include <map>
 struct loc
 {
 	std::string file;

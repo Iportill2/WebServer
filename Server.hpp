@@ -1,36 +1,63 @@
-#ifndef SERVER_HPP
-# define SERVER_HPP
-# include "dependences.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
+/*   Updated: 2024/06/05 12:19:40 by jgoikoet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#pragma once
 
-class Config;
+#include "dependences.hpp"
+# include "Request.hpp"
+# include "Response.hpp"
+# include "Confs.hpp"
 
-class Server 
+class Request;
+class Response;
+class Confs;
+
+class Server
 {
     private:
 
-    std::string Host;
-    std::string Port;
-    std::string ServerName;
-    int body_size;
-    std::string root;
-    std::string Location;
-    std::string redirect_302;
-    std::map<std::string, std::string> keyValue; // Variable de tipo clave-valor
+        typedef struct s_client
+        {
+            int fd;
+        }   t_client;
+        
+        sockaddr_in	ad;
+        int         id;
+        int     	sock;
+        int     	new_socket;
+        int     	port;
+        char    	buffer[30000];
 
+		std::map <int, Request *> rq;
 
+        Confs conf;
 
     public:
 
-		static int sign;
-        Server();//constructor por defecto
-        Server(std::string configName);//constructor con parametro
-        ~Server();//destructor
-      //std::string Host, std::string Port, std::string ServerName, int body_size, std::string root, std::string Location, std::string redirect_302
-      void set_data();
+        Server(int prt);
+        ~Server();
+        
+        
+        void			respond(int i);
+        void			my_select();
 
-        // Métodos para trabajar con la variable keyValue
-        void setKeyValue(const std::string& key, const std::string& value);
-        std::string getValue(const std::string& key) const ;
+        int get_maxfd();
+		static int sign;
+		static void	signalHandler(int i);
+
+        void        setRequest(std::string & buf);
+
+		//FUNCIONES PARA PRUEBAS
+		void printRequest();
+        void setLoc();
+        void printLoc();
 };
-#endif

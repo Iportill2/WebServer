@@ -18,7 +18,7 @@ void srv::nullstrings()
     _port = "";
     _server_name = "";
     _body = "";
-    _root = "";
+    _Root = "";
 
 }
 std::vector<Location> &  srv::getlocations()
@@ -29,17 +29,6 @@ void srv::parseServerBlock(const std::string& serverBlock)
 {
     size_t pos;
     std::string temp;
-    // Find and extract host
-/*     pos = serverBlock.find("listen");
-    if (pos != std::string::npos) 
-    {
-        pos += std::string("listen").size();  // Skip "listen "
-        size_t endPos = serverBlock.find(':', pos);
-        _host = serverBlock.substr(pos, endPos - pos);
-        pos = endPos + 1; // Skip ":"
-        endPos = serverBlock.find(';', pos);
-        _port = serverBlock.substr(pos, endPos - pos);
-    } */
 
     pos = serverBlock.find("listen");
     while (pos != std::string::npos) 
@@ -59,11 +48,14 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
     while (pos != std::string::npos) 
     {
-        pos += std::string(_host).size(); // Skip "server_name "
+        pos += std::string(_host + ":").size(); // Skip "server_name "
         size_t endPos = serverBlock.find(';', pos);
         temp = serverBlock.substr(pos, endPos - pos);
+
         if(_port == "")
+        {
             _port = temp;
+        }
         else
             std::cout << "ERROR al conseguir PORT valor ya inicializado" << std::endl;
         
@@ -112,8 +104,8 @@ void srv::parseServerBlock(const std::string& serverBlock)
         pos += std::string("root").size(); // Skip "server_name "
         size_t endPos = serverBlock.find(';', pos);
         temp = serverBlock.substr(pos, endPos - pos);
-        if(_root == "")
-            _root = temp;
+        if(_Root == "")
+            _Root = temp;
         else
             std::cout << "ERROR al conseguir ROOT valor ya inicializado" << std::endl;
 

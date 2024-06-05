@@ -4,6 +4,7 @@
 Location::Location(const std::string locationBlock)
 {
     //std::cout << "Default location Constructor" << std::endl;
+    nullstrings();
     parselocationBlock(locationBlock);
 /*     std::cout << YELLOW << "void location::printValues() const" << WHITE << std::endl;
     */
@@ -14,11 +15,22 @@ Location::~Location()
 {
     //std::cout << "location Destructor" << std::endl;
 }
+void Location::nullstrings()
+{
+    _location = "";
+    _root = "";
+    _file = "";
+    _methods = "";
+    _autoindex = "";
+    _cgi = "";
+    _redirect_302 = "";
 
+}
 void Location::parselocationBlock(const std::string& locationBlock) 
 {
     
         size_t pos;
+        std::string tmp;
 
         // Find and extract file
         pos = locationBlock.find("/");
@@ -26,7 +38,12 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 0; // Skip "file "
             size_t endPos = locationBlock.find('{', pos);
-            _location = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+
+            if(_location == "")
+                _location = tmp;
+            else
+                std::cout << "ERROR AL LOCATION REDIRECT" << std::endl;
         }
 
         // Find and extract autoindex
@@ -78,7 +95,7 @@ void Location::parselocationBlock(const std::string& locationBlock)
         if (pos != std::string::npos) 
 		{
             pos += 5; // Skip "redirect_302 "
-            size_t endPos = locationBlock.find(' ', pos);
+            size_t endPos = locationBlock.find(';', pos);
             _file = locationBlock.substr(pos, endPos - pos);
         }
     

@@ -26,6 +26,6 @@ class Location
     std::string getAutoindex() const { return _autoindex; }
     std::string getCgi() const { return _cgi; }
     std::string getRedirect302() const { return _redirect_302; }
-
+    void nullstrings();
 };
 #endif

@@ -24,7 +24,7 @@ public:
 
     void setValues();
     bool openFile(std::string Configname);
-    void config_routine(std::string configName);
+    bool config_routine(std::string configName);
     bool getServerCount();
     
     int countSubstring(const std::string& str, const std::string& sub);

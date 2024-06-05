@@ -7,8 +7,12 @@ Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
     setValues();
-    config_routine(configName);
-    printArrayOfSrv(); //para printear los server y locations
+    if(config_routine(configName) == 1)
+    {
+        if(validatePort() == 1)
+            printArrayOfSrv(); //para printear los server y locations
+    }
+    std::cout << BLUE << array_of_srv[0].array_of_location[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
@@ -28,7 +32,7 @@ void Config::printArrayOfSrv() const
         // Add more print statements for other srv data as needed
         for(size_t e = 0 ; e < array_of_srv[i].array_of_location.size(); ++e)
         {
-            std::cout  << GREEN   << "location num:" << RED << e << std::endl;
+            std::cout << GREEN   << "location num:" << RED << e << std::endl;
             std::cout << MAGENTA << "location:" << YELLOW << array_of_srv[i].array_of_location[e].getLocation()  << std::endl;
             std::cout << MAGENTA << "root:" << YELLOW << array_of_srv[i].array_of_location[e].getRoot() << std::endl;
             std::cout << MAGENTA << "file:"<< YELLOW << array_of_srv[i].array_of_location[e].getFile() << std::endl;
@@ -71,23 +75,22 @@ int Config::countSubstring(const std::string& str, const std::string& sub)
     return count;
 }
 
-void Config::config_routine(std::string configName)
+bool  Config::config_routine(std::string configName)
 {
     if(openFile(configName) == true)
     {
         std::cout << "Archivo abierto" << std::endl;
         if(getServerCount()  == 0)
-            return;
+            return 0;
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
         createSrv();
+        return(1);
     } 
     else
     {
         std::cout << "Archivo no abierto" << std::endl;
-        return;
+        return 0;
     }
-    if(validatePort() == 0)
-        return;
 }
 
 
@@ -178,16 +181,21 @@ que estés ejecutando Nginx como root (lo cual no se recomienda por razones de s
 */
 bool Config::validatePort()
 {
+    int tmp;
     size_t i = 0;
     while(i < array_of_srv.size())
     {
-        int tmp = std::atoi(array_of_srv[i].getPort().c_str());
+        tmp = std::atoi(array_of_srv[i].getPort().c_str());
+        //std::cout << CYAN << "tmp="<< tmp << WHITE << std::endl;
+
         if(tmp > 1023 && tmp < 65535)
-        {
             std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << " OK!" << WHITE << std::endl;
-        }
         else
+        {
+
+            std::cout << CYAN << "validatePort() error the value of port is "<< RED << tmp << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl;
             return 0;
+        }
         ++i;
     }
     return 1;

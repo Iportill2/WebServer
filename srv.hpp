@@ -12,7 +12,7 @@ class srv
     std::string _port;
     std::string _server_name;
     std::string _body;
-    std::string _root;
+    std::string _Root;
 
     int locationCount;
     std::vector<Location> array_of_location;
@@ -29,7 +29,7 @@ class srv
     std::string getPort() const { return _port; }
     std::string getServerName() const { return _server_name; }
     std::string getBodySize() const { return _body; }
-    std::string getRoot() const { return _root; }
+    std::string getRoot() const { return _Root; }
 
 	///locations
 	std::vector<Location> & getlocations();

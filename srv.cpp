@@ -56,7 +56,21 @@ void srv::parseServerBlock(const std::string& serverBlock)
     }
 
     pos = serverBlock.find(_host);
-    while(pos)
+
+    while (pos != std::string::npos) 
+    {
+        pos += std::string(_host).size(); // Skip "server_name "
+        size_t endPos = serverBlock.find(';', pos);
+        temp = serverBlock.substr(pos, endPos - pos);
+        if(_port == "")
+            _port = temp;
+        else
+            std::cout << "ERROR al conseguir PORT valor ya inicializado" << std::endl;
+        
+        pos = serverBlock.find(_host, endPos);
+    }
+
+    
 
 
     // Find and extract server_name

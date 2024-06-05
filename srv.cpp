@@ -1,8 +1,10 @@
 #include "dependences.hpp"
 #include "srv.hpp"
+#include "Config.hpp"
 srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
+    nullstrings();
     parseServerBlock(serverBlock) ;
 }
 srv::~srv()
@@ -10,7 +12,15 @@ srv::~srv()
     //std::cout << "srv Destructor" << std::endl;
 }
 
+void srv::nullstrings()
+{
+    _host = "";
+    _port = "";
+    _server_name = "";
+    _body = "";
+    _root = "";
 
+}
 std::vector<Location> &  srv::getlocations()
 {
     return(array_of_location);
@@ -18,52 +28,89 @@ std::vector<Location> &  srv::getlocations()
 void srv::parseServerBlock(const std::string& serverBlock) 
 {
     size_t pos;
-
+    std::string temp;
     // Find and extract host
-    pos = serverBlock.find("listen");
+/*     pos = serverBlock.find("listen");
     if (pos != std::string::npos) 
     {
-        pos += 7; // Skip "listen "
+        pos += std::string("listen").size();  // Skip "listen "
         size_t endPos = serverBlock.find(':', pos);
         _host = serverBlock.substr(pos, endPos - pos);
         pos = endPos + 1; // Skip ":"
         endPos = serverBlock.find(';', pos);
         _port = serverBlock.substr(pos, endPos - pos);
+    } */
+
+    pos = serverBlock.find("listen");
+    while (pos != std::string::npos) 
+    {
+        pos += std::string("listen").size(); // Skip "server_name "
+        size_t endPos = serverBlock.find(':', pos);
+        temp = serverBlock.substr(pos, endPos - pos);
+        if(_host == "")
+            _host = temp;
+        else
+            std::cout << "ERROR al conseguir HOST valor ya inicializado" << std::endl;
+        
+        pos = serverBlock.find("listen", endPos);
     }
+
+    pos = serverBlock.find(_host);
+    while(pos)
+
 
     // Find and extract server_name
     pos = serverBlock.find("server_name");
-    if (pos != std::string::npos) 
+    while (pos != std::string::npos) 
     {
-        pos += 12; // Skip "server_name "
+        pos += std::string("server_name").size(); // Skip "server_name "
         size_t endPos = serverBlock.find(';', pos);
-        _server_name = serverBlock.substr(pos, endPos - pos);
+        temp = serverBlock.substr(pos, endPos - pos);
+        if(_server_name == "")
+            _server_name = temp;
+        else
+            std::cout << "ERROR al conseguir SERVER_NAME valor ya inicializado" << std::endl;
+
+        // Update pos to start searching after the last occurrence of "server_name"
+        pos = serverBlock.find("server_name", endPos);
     }
 
-    // Find and extract body_size
     pos = serverBlock.find("body_size");
-    if (pos != std::string::npos)
+    while (pos != std::string::npos) 
     {
-        pos += 10; // Skip "body_size "
+        pos += std::string("body_size").size(); // Skip "server_name "
         size_t endPos = serverBlock.find(';', pos);
-        _body = serverBlock.substr(pos, endPos - pos);
+        temp = serverBlock.substr(pos, endPos - pos);
+        if(_body == "")
+            _body = temp;
+        else
+            std::cout << "ERROR al conseguir BODY_SIZE valor ya inicializado" << std::endl;
+
+        // Update pos to start searching after the last occurrence of "server_name"
+        pos = serverBlock.find("body_size", endPos);
     }
+
 
     // Find and extract root
     pos = serverBlock.find("root");
-    if (pos != std::string::npos) 
+    while (pos != std::string::npos) 
     {
-        pos += 5; // Skip "root "
+        pos += std::string("root").size(); // Skip "server_name "
         size_t endPos = serverBlock.find(';', pos);
-        _root = serverBlock.substr(pos, endPos - pos);
+        temp = serverBlock.substr(pos, endPos - pos);
+        if(_root == "")
+            _root = temp;
+        else
+            std::cout << "ERROR al conseguir ROOT valor ya inicializado" << std::endl;
+
+        // Update pos to start searching after the last occurrence of "server_name"
+        pos = serverBlock.find("root", endPos);
     }
-
         // Find and extract location
-
     pos = serverBlock.find("location");
     while (pos < serverBlock.size()) 
     {
-        pos += 9; // Skip "location "
+        pos += std::string("location").size(); // Skip "location "
         size_t endPos = serverBlock.find('}', pos);
         if (endPos != std::string::npos) 
         {
@@ -73,21 +120,6 @@ void srv::parseServerBlock(const std::string& serverBlock)
             array_of_location.push_back(newLocation);
         }
         else 
-        {
-        // Handle error: '}' not found
-        //std::cerr << RED << "} Not found" << WHITE << std::endl;
-        break;
-        }
+            break;
     }
 }
-/*
-    pos = serverBlock.find("location");
-    while (pos != std::string::npos) 
-        pos += (endPos - pos);
-    {
-        pos += 9; // Skip "root "
-        size_t endPos = serverBlock.find('}', pos);
-        std::string locationBlock = serverBlock.substr(pos, endPos - pos);
-        //std::cout << MAGENTA << locationBlock << WHITE << std::endl;
-    }
-*/

@@ -1,31 +1,22 @@
 #include "Config.hpp"
-
-
-
 Config::Config()
 {
     //std::cout << "Default Config Constructor" << std::endl;
 }
-
 Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
     setValues();
     config_routine(configName);
     printArrayOfSrv(); //para printear los server y locations
-
-
 }
-
 Config::~Config()
 {
     //std::cout << "Config Destructor" << std::endl;
 }
-
 void Config::printArrayOfSrv() const
 {
     std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
-
     for (size_t i = 0; i < array_of_srv.size(); ++i)
     {
         std::cout << BLUE << "srv " << RED << (i + 1) << ":" << std::endl;
@@ -35,11 +26,8 @@ void Config::printArrayOfSrv() const
         std::cout << BLUE << "Body Size: " << RED << array_of_srv[i].getBodySize() << std::endl;
         std::cout << BLUE << "Root: " << RED << array_of_srv[i].getRoot() <<  std::endl;
         // Add more print statements for other srv data as needed
-
-
-     for(size_t e = 0 ; e < array_of_srv[i].array_of_location.size(); ++e)
+        for(size_t e = 0 ; e < array_of_srv[i].array_of_location.size(); ++e)
         {
-
             std::cout  << GREEN   << "location num:" << RED << e << std::endl;
             std::cout << MAGENTA << "location:" << YELLOW << array_of_srv[i].array_of_location[e].getLocation()  << std::endl;
             std::cout << MAGENTA << "root:" << YELLOW << array_of_srv[i].array_of_location[e].getRoot() << std::endl;
@@ -48,10 +36,7 @@ void Config::printArrayOfSrv() const
             std::cout << MAGENTA << "autoindex:"<< YELLOW << array_of_srv[i].array_of_location[e].getAutoindex() << std::endl;
             std::cout << MAGENTA << "cgi:"<< YELLOW << array_of_srv[i].array_of_location[e]._cgi << std::endl;
             std::cout << MAGENTA << "redirect 302:"<< YELLOW  << array_of_srv[i].array_of_location[e]._redirect_302 << WHITE << std::endl << std::endl; 
-    
         }
-
-    
     }
 }
 void Config::setValues()
@@ -60,7 +45,6 @@ void Config::setValues()
     srvCount = 0;
     locationCount = 0;
 }
-
 bool Config::openFile(std::string Configname)
 {
     this->file.open(Configname.c_str(), std::ios::in);
@@ -75,7 +59,6 @@ bool Config::openFile(std::string Configname)
     file.close();
     return 1;
 }
-
 int Config::countSubstring(const std::string& str, const std::string& sub)
 {
     if (sub.length() == 0) return 0;
@@ -111,17 +94,12 @@ void Config::config_routine(std::string configName)
 void Config::createSrv()
 {
     size_t tmp;
-    //int i = 0;
     std::istringstream f(this->file_content);
     std::string line;    
     std::string serverBlock;
-
-
-
-    //size_t e = 0;
-
     size_t i =0;
     std::stack<char> stak;
+    
     while(i < file_content.size())
     {
         tmp = i;

@@ -21,8 +21,8 @@ class srv
     srv(std::string serverBlock);
     ~srv();
 
-
-   void parseServerBlock(const std::string& serverBlock) ;
+    void nullstrings();
+    void parseServerBlock(const std::string& serverBlock) ;
 
 
     std::string getHost() const { return _host; }

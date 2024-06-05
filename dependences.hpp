@@ -6,18 +6,12 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/05 12:37:00 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/05 12:41:20 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEPENDECES_HPP
 # define DEPENDECES_HPP
-
-
-# include "Server.hpp"
-# include "Config.hpp"
-# include "srv.hpp"
-# include "Location.hpp"
 
 # include <stdio.h>
 # include <sys/socket.h>

@@ -1,7 +1,9 @@
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
-#include "dependences.hpp"
 
+# include "dependences.hpp"
+# include "srv.hpp"
+# include "Location.hpp"
 class srv;
 class Location;
 

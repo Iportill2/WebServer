@@ -13,7 +13,8 @@ class Location
     std::string _autoindex;
     std::string _cgi;
     std::string _redirect_302;
-    Location() = default;
+
+    std::vector <std::string> methods_vector;
     Location(const std::string locationBlock);
     ~Location();
 
@@ -27,5 +28,8 @@ class Location
     std::string getCgi() const { return _cgi; }
     std::string getRedirect302() const { return _redirect_302; }
     void nullstrings();
+
+    std::string toLowerCase(const std::string& str);
+    void checkAndAddMethods(const std::string& input);
 };
 #endif

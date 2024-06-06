@@ -40,6 +40,10 @@
 # include <stack>
 # include <arpa/inet.h>
 # include <stdexcept>
+
+
+# include <algorithm>
+# include <cctype>
 //COLORES
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////

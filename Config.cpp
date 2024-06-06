@@ -43,6 +43,10 @@ void Config::printArrayOfSrv() const
             std::cout << MAGENTA << "autoindex:"<< YELLOW << array_of_srv[i].array_of_location[e].getAutoindex() << std::endl;
             std::cout << MAGENTA << "cgi:"<< YELLOW << array_of_srv[i].array_of_location[e]._cgi << std::endl;
             std::cout << MAGENTA << "redirect 302:"<< YELLOW  << array_of_srv[i].array_of_location[e]._redirect_302 << WHITE << std::endl << std::endl; 
+            for(size_t u = 0 ; u < array_of_srv[i].array_of_location[e].methods_vector.size() ; ++u)
+            {
+                std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].array_of_location[e].methods_vector[u] << WHITE << std::endl;
+            }
         }
     }
 }

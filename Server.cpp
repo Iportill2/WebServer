@@ -296,8 +296,8 @@ void Server::printLoc()
 		std::cout << GREEN << "File: " << BLUE << iti->second.file << std::endl;
 		std::cout << GREEN << "Root: " << BLUE << iti->second.root << std::endl;
 		std::cout << GREEN << "Methods: " << BLUE;
-		for (const auto& str : iti->second.methods)
-         	std::cout << str << " ";
+/* 		for (const auto& str : iti->second.methods)
+         	std::cout << str << " "; */
 		std::cout << WHITE << std::endl << std::endl;
 		iti++;
 		i++;

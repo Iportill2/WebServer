@@ -15,6 +15,9 @@ class srv
     std::string _Root;
     uint32_t _ipNum;
 
+    size_t _sizetPort;
+    size_t _sizetBody;
+
     int locationCount;
     std::vector<Location> array_of_location;
 
@@ -34,9 +37,12 @@ class srv
 
 	///locations
 	std::vector<Location> & getlocations();
+
+    /// 
     unsigned long ipToDecimal(const std::string& ip);
     bool checkstring();
-    std::string deletespaces(std::string s);
+    void deletespaces(std::string &s);
     bool ipAddressToipNum(std::string IpAddress);
+    bool stringToSizeT(const std::string& s, size_t &n);
 };
 #endif

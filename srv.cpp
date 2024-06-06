@@ -149,8 +149,9 @@ bool srv::ipAddressToipNum(std::string ipAddress)
 	//std::cout << "ipAddress:"<< "|" << ipAddress << "|" << std::endl;
     struct in_addr addr;
     // Convierte la dirección IP desde el formato de texto a la representación binaria en formato de red
-    if (inet_pton(AF_INET, ipAddress.c_str(), &addr) != 1) {
-        
+    if (inet_pton(AF_INET, ipAddress.c_str(), &addr) != 1) 
+	{
+        std::cerr << "Error converting IP address." << std::endl;
         return 0;
     }
     // Convierte la dirección IP desde el formato de red a la representación numérica en formato de host
@@ -165,25 +166,30 @@ bool srv::checkstring()
 {
     if(_host != "" )
 	{
-        _host = deletespaces(_host);
+        deletespaces(_host);
 		if(ipAddressToipNum(_host) == 0)
-		{
-			std::cerr << "Error converting IP address." << std::endl;
 			return (0);
-		}
 	}
     if(_port != "" )
-        _port = deletespaces(_port);
-    if(_server_name != "" )
-        _server_name =  deletespaces(_server_name);
+	{
+        deletespaces(_port);
+		if(stringToSizeT(_port, _sizetPort) == 0)
+			return(0);
+	}
     if(_body != "" )
-       _body = deletespaces(_body);
+	{
+        deletespaces(_body);
+		if(stringToSizeT(_body,_sizetBody) == 0)
+			return(0);
+	}
+    if(_server_name != "" )
+        deletespaces(_server_name);
     if(_Root != "" )
-       _Root = deletespaces(_Root);
+        deletespaces(_Root);
 
 return(1);
 }
-std::string srv::deletespaces(std::string s)
+void srv::deletespaces(std::string &s)
 {
     size_t i = 0;
     std::string temp;
@@ -196,11 +202,23 @@ std::string srv::deletespaces(std::string s)
         	temp.push_back(s[i]);
         	i++;
 		}
-
     }
 	s = temp;
     //checker
 	//std::cout << "s:"<< "|" << s << "|" << std::endl;
 	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
-	return(s);
+	//return(s);
+}
+
+bool srv::stringToSizeT(const std::string& s, size_t &n) 
+{
+    std::istringstream iss(s);
+    iss >> n;
+    if (iss.fail()) 
+	{
+        // Lanzar una excepción si la conversión falla
+        //throw std::runtime_error("Cannot convert string to size_t: " + s);
+		return(0);
+    }
+	return(1);
 }

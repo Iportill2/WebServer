@@ -36,6 +36,7 @@ public:
     bool validatePort();
 
     std::vector<srv> & getArrayOfServers();
+    
 };
 
 #endif

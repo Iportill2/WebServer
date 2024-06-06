@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/06 12:54:30 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/06 18:03:50 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,69 @@ void	Server::Mselect()
 				continue;
 			if (FD_ISSET(i, &readyfdsRead))
 			{
-				for
+				int isServerSock = 0;
+				for(std::map<int, int>::iterator it = serversMap.begin(); it != serversMap.end(); ++it)
+				{
+					if (i == it->first)
+					{
+						int newSocket = accept(sock, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
+						FD_SET (newSocket, &activefdsRead);
+						readMap[newSocket] = it->first;
+						if (new_socket > maxFD)
+							maxFD = new_socket;
+						isServerSock = 1;
+						break;
+					}
+				}
+				if (!isServerSock)
+				{
+					memset(buffer, 0, sizeof(buffer));
+					int bytes = read(i, buffer, sizeof(buffer));
+					if (bytes <= 0)
+					{
+						std::cout << "Client ID: " << id - 1 << " went \"a tomar por culo\"" << std::endl << std::endl;
+						FD_CLR(i, &activefdsRead);
+						readMap.erase(i);
+            			close(i);
+					}
+					else
+					{ 
+						std::cout << "Client ID: " << id - 1 << " pasa a la cola de WRITE!!!" << std::endl;
+						
+						Request * r = new Request(buffer);
+						rq[i] = r;
+						//printRequest();
+						FD_SET(i, &activefdsWrite);
+						FD_CLR(i, &activefdsRead);
+					}
+				}
+			}
+			else if (FD_ISSET(i, &readyfdsWrite))
+			{
+				std::cout << "Client ID: " << id - 1 << " es RESPONDIDO!!!" << std::endl;
+				Respond(i);
+				close (i);
+				readMap.erase(i);
+				FD_CLR(i, &activefdsWrite);
 			}
 		}
 	}
+}
+
+void	Server::Respond(int i)
+{
+	Respons r(rq[i], servers[serversMap[i]], i);
+	//r.printRequest();
+	//r.printConf();
+	//r.createRespons();
+}
+
+void	Server::respond(int i)
+{
+	Response r(rq[i], conf, i);
+	r.printRequest();
+	r.printConf();
+	r.createResponse();
 }
 
 void	Server::my_select()
@@ -224,13 +283,7 @@ void	Server::my_select()
 		close(i);
 }			
 
-void	Server::respond(int i)
-{
-	Response r(rq[i], conf, i);
-	r.printRequest();
-	r.printConf();
-	r.createResponse();
-}
+
 
 Server::~Server()
 {

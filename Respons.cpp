@@ -1,22 +1,18 @@
 
-# include "Response.hpp"
+# include "Respons.hpp"
 #include "Error.hpp"
 
-Response::Response(Request * request, Confs & cnf, int fDescriptor) : rq(request), conf(cnf), fd(fDescriptor) {}
+Respons::Respons(Request * request, srv & sv, int fDescriptor) : rq(request), server(sv), fd(fDescriptor) {}
 
-Response::~Response() {}
+Respons::~Respons() {}
 
-bool	Response::checkLocation()
+bool	Respons::checkLocation()
 {
-	std::cout << "----------------hola-----------" << std::endl;
-	std::map<std::string, loc>::iterator  in = conf.location.begin();
-	std::map<std::string, loc>::iterator  out = conf.location.end(); 
-
-	while (in != out)
+	for(size_t i = 0; i< server.arLoc.size(); i++)
 	{
-		if(rq->getUri() == in->first)
+		if(rq->getUri() == server.arLoc[i]._location)
 		{
-			std::string url = in->second.root.substr(2) + "/" + in->second.file;
+			std::string url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
 			std::cout << "url1 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
@@ -24,17 +20,16 @@ bool	Response::checkLocation()
 				return (0);
 			break;
 		}
-		in++;
 	}
 
 	size_t pos = rq->getUri().find('/', 1);
 	std::string str = "/";
-	in = conf.location.begin();
-	while (in != out)
+
+	for(size_t i = 0; i< server.arLoc.size(); i++)
 	{
-		if (in->first == rq->getUri().substr(0, pos))
+		if (rq->getUri().substr(0, pos) == server.arLoc[i]._location)
 		{
-			std::string url = in->second.root.substr(2) + rq->getUri().substr(pos);
+			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri().substr(pos);
 			std::cout << "url2 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
@@ -42,24 +37,31 @@ bool	Response::checkLocation()
 				return (0);
 			break;
 		}
-		in++;
 	}
-	std::string url = conf.location["/"].root.substr(2) + rq->getUri();	
-	std::cout << "url3 = " << url << std::endl;
-	if (Utils::isFile(url.c_str()))
+	for(size_t i = 0; i< server.arLoc.size(); i++)
+	{
+		if (server.arLoc[i]._location == "/")
+		{
+			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri();
+			std::cout << "url3 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
+		}	
+}
+	
 	return (0);
 }
 
-bool Response::checkServerName()
+bool Respons::checkServerName()
 {
-	if (rq->getHost() != conf.server_name)
+	/* if (rq->getHost() != conf.server_name)
 		return 0;
 	else
-		return 1;
+		return 1; */
+	return 66;
 }
 
-int Response::createResponse()
+int Respons::createRespons()
 {
 	if (!checkServerName())
 	{
@@ -80,20 +82,20 @@ int Response::createResponse()
 //FUNCIONES PARA PRUEBAS---------------------------------------------------
 
 
-void Response::printRequest()
+void Respons::printRequest()
 {
-	std::cout  << std::endl << "-----REQUEST DESDE RESPONSE-------" << std::endl << std::endl;
+	/* std::cout  << std::endl << "-----REQUEST DESDE Respons-------" << std::endl << std::endl;
 	std::cout << GREEN << "method: " << BLUE << rq->getMethod() << std::endl << std::endl;
     std::cout << GREEN << "uri: " << BLUE << rq->getUri() << std::endl;
     std::cout << GREEN << "host: " << BLUE << rq->getHost() << std::endl;
     std::cout << GREEN << "port: " << BLUE << rq->getPort() << std::endl;
     std::cout << GREEN << "Content Lenght: " << BLUE << rq->getContentLen() << std::endl;
-    std::cout << GREEN << "Body: " << BLUE << rq->getBody() << WHITE << std::endl << std::endl;
+    std::cout << GREEN << "Body: " << BLUE << rq->getBody() << WHITE << std::endl << std::endl; */
 }
 
-void Response::printConf()
+void Respons::printConf()
 {
-	std::cout << "-----CONF DESDE RESPONSE-------" << std::endl;
+	/* std::cout << "-----CONF DESDE Respons-------" << std::endl;
 	std::cout << std::endl << GREEN << "Host: " << BLUE << conf.host << std::endl;
 	std::cout << GREEN << "Port: " << BLUE << conf.port << std::endl;
 	std::cout << GREEN << "Server name:: " << BLUE << conf.server_name << std::endl;
@@ -116,5 +118,5 @@ void Response::printConf()
 		std::cout << WHITE << std::endl << std::endl;
 		iti++;
 		i++;
-	}
+	} */
 }

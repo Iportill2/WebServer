@@ -131,6 +131,8 @@ void srv::parseServerBlock(const std::string& serverBlock)
         {
             std::string locationBlock = serverBlock.substr(pos, endPos - pos);
             pos = endPos + 1; // Skip "}"
+			if(checkstring() == 0)
+				return;
             Location newLocation(locationBlock);
             array_of_location.push_back(newLocation);
         }
@@ -140,31 +142,65 @@ void srv::parseServerBlock(const std::string& serverBlock)
 
 }
 
-/* unsigned long srv::ipToDecimal(const std::string& ip) 
+
+
+bool srv::ipAddressToipNum(std::string ipAddress) 
 {
-    std::vector<int> octets;
-    std::stringstream ss(ip);
-    std::string item;
+	//std::cout << "ipAddress:"<< "|" << ipAddress << "|" << std::endl;
+    struct in_addr addr;
+    // Convierte la dirección IP desde el formato de texto a la representación binaria en formato de red
+    if (inet_pton(AF_INET, ipAddress.c_str(), &addr) != 1) {
+        
+        return 0;
+    }
+    // Convierte la dirección IP desde el formato de red a la representación numérica en formato de host
+	_ipNum = ntohl(addr.s_addr);
 
-    // Separar la IP por los puntos
-    while (std::getline(ss, item, '.')) 
+    //std::cout << "The numeric representation of " << ipAddress << " is " << _ipNum << std::endl;
+    return 1;
+}
+
+    
+bool srv::checkstring()
+{
+    if(_host != "" )
+	{
+        _host = deletespaces(_host);
+		if(ipAddressToipNum(_host) == 0)
+		{
+			std::cerr << "Error converting IP address." << std::endl;
+			return (0);
+		}
+	}
+    if(_port != "" )
+        _port = deletespaces(_port);
+    if(_server_name != "" )
+        _server_name =  deletespaces(_server_name);
+    if(_body != "" )
+       _body = deletespaces(_body);
+    if(_Root != "" )
+       _Root = deletespaces(_Root);
+
+return(1);
+}
+std::string srv::deletespaces(std::string s)
+{
+    size_t i = 0;
+    std::string temp;
+    while(i < s.size())
     {
-        int num;
-        std::istringstream(item) >> num;
-        octets.push_back(num);
-    }
+        while(s[i] == ' ')
+            i++;
+		if(s[i] != ' ')
+		{
+        	temp.push_back(s[i]);
+        	i++;
+		}
 
-    // Verificar que tengamos exactamente cuatro octetos
-    if (octets.size() != 4) {
-        std::cerr << "Error: Dirección IP no válida." << std::endl;
-        return 0;  // O alguna otra señal de error
     }
-
-    // Combinar los octetos en un solo número
-    this->decimalIp = 0;
-    this->decimalIp += (octets[0] << 24);
-    this->decimalIp += (octets[1] << 16);
-    this->decimalIp += (octets[2] << 8);
-    this->decimalIp += octets[3];
-    return this->decimalIp;
-} */
+	s = temp;
+    //checker
+	//std::cout << "s:"<< "|" << s << "|" << std::endl;
+	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
+	return(s);
+}

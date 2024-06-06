@@ -13,8 +13,7 @@ class srv
     std::string _server_name;
     std::string _body;
     std::string _Root;
-
-    //unsigned long decimalIp;
+    uint32_t _ipNum;
 
     int locationCount;
     std::vector<Location> array_of_location;
@@ -36,5 +35,8 @@ class srv
 	///locations
 	std::vector<Location> & getlocations();
     unsigned long ipToDecimal(const std::string& ip);
+    bool checkstring();
+    std::string deletespaces(std::string s);
+    bool ipAddressToipNum(std::string IpAddress);
 };
 #endif

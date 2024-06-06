@@ -38,7 +38,7 @@
 # include <sstream>
 # include <algorithm>
 # include <stack>
-
+# include <arpa/inet.h>
 //COLORES
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////

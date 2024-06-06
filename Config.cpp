@@ -35,14 +35,14 @@ void Config::printArrayOfSrv() const
        // Add more print statements for other srv data as needed
         for(size_t e = 0 ; e < array_of_srv[i].array_of_location.size(); ++e)
         {
-            std::cout << GREEN   << "location num:" << RED << e << std::endl;
-            std::cout << MAGENTA << "location:" << YELLOW << array_of_srv[i].array_of_location[e].getLocation()  << std::endl;
-            std::cout << MAGENTA << "root:" << YELLOW << array_of_srv[i].array_of_location[e].getRoot() << std::endl;
-            std::cout << MAGENTA << "file:"<< YELLOW << array_of_srv[i].array_of_location[e].getFile() << std::endl;
-            std::cout << MAGENTA << "methods:"<< YELLOW << array_of_srv[i].array_of_location[e].getMethods() << std::endl;
-            std::cout << MAGENTA << "autoindex:"<< YELLOW << array_of_srv[i].array_of_location[e].getAutoindex() << std::endl;
-            std::cout << MAGENTA << "cgi:"<< YELLOW << array_of_srv[i].array_of_location[e]._cgi << std::endl;
-            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << array_of_srv[i].array_of_location[e]._redirect_302 << WHITE << std::endl << std::endl; 
+            std::cout << GREEN   << "location num:" << RED << "\""<< e << "\""<< std::endl;
+            std::cout << MAGENTA << "location:" << YELLOW << "\""<< array_of_srv[i].array_of_location[e].getLocation() << "\"" << std::endl;
+            std::cout << MAGENTA << "root:" << YELLOW << "\""<< array_of_srv[i].array_of_location[e].getRoot() << "\""<< std::endl;
+            std::cout << MAGENTA << "file:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e].getFile() << "\""<< std::endl;
+            std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e].getMethods() << "\""<< std::endl;
+            std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e].getAutoindex() << "\""<< std::endl;
+            std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e]._cgi << "\""<< std::endl;
+            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].array_of_location[e]._redirect_302 << "\""<< WHITE << std::endl << std::endl; 
             for(size_t u = 0 ; u < array_of_srv[i].array_of_location[e].methods_vector.size() ; ++u)
             {
                 std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].array_of_location[e].methods_vector[u] << WHITE << std::endl;

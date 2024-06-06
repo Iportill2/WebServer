@@ -6,15 +6,33 @@ Location::Location(const std::string locationBlock)
     //std::cout << "Default location Constructor" << std::endl;
     nullstrings();
     parselocationBlock(locationBlock);
+    deletespaces(_location);
     checkAndAddMethods(_methods);
-/*     std::cout << YELLOW << "void location::printValues() const" << WHITE << std::endl;
-    */
-    //printValues(); 
 }
 
 Location::~Location()
 {
     //std::cout << "location Destructor" << std::endl;
+}
+void Location::deletespaces(std::string &s)
+{
+    size_t i = 0;
+    std::string temp;
+    while(i < s.size())
+    {
+        while(s[i] == ' ')
+            i++;
+		if(s[i] != ' ')
+		{
+        	temp.push_back(s[i]);
+        	i++;
+		}
+    }
+	s = temp;
+    //checker
+	//std::cout << "s:"<< "|" << s << "|" << std::endl;
+	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
+	//return(s);
 }
 void Location::nullstrings()
 {
@@ -102,10 +120,6 @@ void Location::parselocationBlock(const std::string& locationBlock)
     
 }
 
-
-
-
-
 std::string Location::toLowerCase(const std::string& str) 
 {
     std::string lowerStr = str;
@@ -130,19 +144,3 @@ void Location::checkAndAddMethods(const std::string& input)
         methods_vector.push_back("delete");
     }
 }
-
-
-/* int main() {
-    Location loc;
-    std::string input = "This string contains GET and post methods";
-
-    loc.checkAndAddMethods(input);
-
-    std::cout << "Methods found: ";
-    for (const std::string& method : loc.methods) {
-        std::cout << method << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-} */

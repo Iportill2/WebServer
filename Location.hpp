@@ -31,5 +31,6 @@ class Location
 
     std::string toLowerCase(const std::string& str);
     void checkAndAddMethods(const std::string& input);
+    void deletespaces(std::string &s);
 };
 #endif

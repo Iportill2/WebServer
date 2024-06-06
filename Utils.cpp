@@ -19,4 +19,17 @@ bool Utils::isDirectory(const char* path)
     return S_ISDIR(info.st_mode);
 }
 
+int Utils::toInt(const std::string &str)
+{
+    std::stringstream ss(str);
+    int num;
+    ss >> num;
+    return (num);
+}
 
+std::string Utils::toString(const int &num)
+{
+    std::stringstream ss;
+    ss << num;
+    return (ss.str());
+}

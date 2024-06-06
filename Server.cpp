@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/05 13:29:32 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/06 12:54:30 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int Server::sign = 1;
 
-Server::Server(int prt): port (prt)
+Server::Server(): port (8080)
 {
 	setLoc();
 	printLoc();
@@ -38,6 +38,8 @@ Server::Server(int prt): port (prt)
     ad.sin_port = htons(port);
     ad.sin_addr.s_addr = htonl(INADDR_ANY);
 
+	//std::cout << "size of address: " << sizeof(ad) << std::endl;
+
     if (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
 		std::cout << "Puerto ocupau atontau" << std::endl;
 	
@@ -47,6 +49,93 @@ Server::Server(int prt): port (prt)
 	my_select();
 }
 
+Server::Server(std::vector<srv> & srv) : servers(srv)
+{
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, &signalHandler);
+	serverSet();
+	Mselect();
+}
+
+void	Server::serverSet()
+{
+	int option = 1;
+	int puertoProvisional = 8080;
+	
+	std::cout << "servers size "  << servers.size() << std::endl;
+	
+	for(size_t i = 0; i < servers.size(); i++)
+	{
+		sockaddr_in	address;
+		address.sin_family = AF_INET;
+    	address.sin_port = htons(puertoProvisional++);
+    	address.sin_addr.s_addr = htonl(INADDR_ANY);
+	
+		//std::cout << "size of address: " << sizeof(address) << std::endl;
+
+		int	soc = socket(AF_INET, SOCK_STREAM, 0);
+		setsockopt(soc, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
+		
+		if (bind (soc, (sockaddr *)&address, sizeof(address)) == -1)
+			std::cout << "Puerto ocupau atontau" << std::endl;
+
+		listen(soc, 10);
+	
+		serversMap[soc] = i;
+		maxFD = sock;
+		sizeOfAddress = sizeof(address);
+	}
+	std::map<int, int>::iterator i = serversMap.begin();
+	std::map<int, int>::iterator o = serversMap.end();
+
+	while (i != o)
+	{
+		std::cout << "socket: " << i->first << " -> Server: " << i->second << " -> server name: " << servers[i->second]._server_name << std::endl;
+		i++;
+	}
+	
+}
+
+void	Server::Mselect()
+{
+	fd_set readyfdsRead, activefdsRead;
+	fd_set readyfdsWrite, activefdsWrite;
+
+	FD_ZERO(&readyfdsRead);
+	FD_ZERO(&activefdsRead);
+	FD_ZERO(&readyfdsWrite);
+	FD_ZERO(&activefdsWrite);
+
+	std::map<int, int>::iterator i = serversMap.begin();
+	std::map<int, int>::iterator o = serversMap.end();
+
+	while (i != o)
+	{
+		FD_SET (i->first, &activefdsRead);
+		i++;
+	}
+	
+	while(sign)
+	{
+		readyfdsRead = activefdsRead;
+		readyfdsWrite = activefdsWrite;
+
+		select(maxFD + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+
+		if (!sign)
+			break;
+		for (int i = 0; i <= maxFD; i++)
+		{
+			if (!FD_ISSET(i, &readyfdsRead) && !FD_ISSET(i, &readyfdsWrite))
+				continue;
+			if (FD_ISSET(i, &readyfdsRead))
+			{
+				for
+			}
+		}
+	}
+}
+
 void	Server::my_select()
 {
 	fd_set readyfdsRead, activefdsRead;
@@ -54,7 +143,7 @@ void	Server::my_select()
 	t_client clients[100];
 	
 	int addrlen = sizeof(ad);
-	
+	//std::cout << "size of address: " << sizeof(ad) << std::endl;
 	FD_ZERO(&readyfdsRead);
 	FD_ZERO(&activefdsRead);
 	FD_ZERO(&readyfdsWrite);
@@ -71,10 +160,7 @@ void	Server::my_select()
 		readyfdsWrite = activefdsWrite;
 
 		select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
-		//int s = select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
 
-		//std::cout << "sign = " << sign << std::endl;
-		//std::cout << "select = " << s << std::endl;
 		if (!sign)
 			break;
 
@@ -135,12 +221,7 @@ void	Server::my_select()
 		}
 	}
 	for (int i = 3; i <= maxfd; ++i)
-	{
-		//std::cout << "cerrando fd: " << i << std::endl;
-		//int  stat = close(i);
 		close(i);
-		//std::cout << "status fd " << i << " = " <<  stat << std::endl;
-	}
 }			
 
 void	Server::respond(int i)
@@ -149,54 +230,6 @@ void	Server::respond(int i)
 	r.printRequest();
 	r.printConf();
 	r.createResponse();
-	/* std::string request(buffer);
-	if (request.find("GET /fary.jpg") != std::string::npos)
-	{
-		std::ifstream file("pagina/rey.jpg", std::ios::binary);
-    	std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string fary = oss.str();
-	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/jpeg\r\n";
-        httpResponse += "\r\n";
-        httpResponse += fary;
-
-        write(i, httpResponse.c_str(), httpResponse.size());
-	}
-	else if (request.find("GET /favicon.ico") != std::string::npos)
-	{
-		std::ifstream file("pagina/anarchy.png", std::ios::binary);
-    	std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string favi = oss.str();
-	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/png\r\n";
-        httpResponse += "\r\n";
-        httpResponse += favi;
-
-        write(i, httpResponse.c_str(), httpResponse.size());
-	}
-    else
-	{
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-   		httpResponse += "Content-Type: text/html\r\n";
-    	httpResponse += "\r\n";
-
-		std::ifstream file;
-		file.open("pagina/index.html", std::ios::in);
-    	if (!file.is_open()) 
-			std::cout << RED  <<" NOT FOUND" << WHITE <<std::endl; 
-   		else 
-		{
-			std::stringstream buffer;
-    		buffer << file.rdbuf();
-    		httpResponse += buffer.str();
-    		file.close();
-		}
-    	write(i, httpResponse.c_str(), httpResponse.size());
-	} */
 }
 
 Server::~Server()
@@ -216,11 +249,6 @@ Server::~Server()
 		delete(iti->second);
 		iti++;
 	}
-}
-
-int  Server::get_maxfd()
-{
-	return id;
 }
 
 void	Server::signalHandler(int i)

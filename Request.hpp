@@ -18,6 +18,7 @@ class Request
         std::string body;
 
     public:
+    
         Request(std::string buf);
         ~Request();
         

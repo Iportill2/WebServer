@@ -43,8 +43,10 @@ bool	Response::checkLocation()
 		}
 		in++;
 	}
-	
-
+	std::string url = conf.location["/"].root.substr(2) + rq->getUri();	
+	std::cout << "url3 = " << url << std::endl;
+	if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
 	return (0);
 }
 
@@ -68,7 +70,7 @@ int Response::createResponse()
 	{
 		std::cout << "PAGE NOT FOUND" << std::endl;
 		Error r(404, fd);
-		return 1;
+		//return 1;
 	}
 	std::cout << "FINAL url = " << _url << std::endl;
 	return 0;

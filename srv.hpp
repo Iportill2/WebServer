@@ -52,5 +52,6 @@ class srv
 
     void parseServerBlock(const std::string& serverBlock) ;
     int countSubstring(const std::string& str, const std::string& sub);
+void setServerBlockValues(std::string s);
 };
 #endif

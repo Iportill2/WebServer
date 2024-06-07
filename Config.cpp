@@ -10,7 +10,9 @@ Config::Config(std::string configName)
     if(config_routine(configName) == 1)
     {
         if(validatePort() == 1)
-            printArrayOfSrv(); //para printear los server y locations
+            printArrayOfSrv();
+        std::cout << "";
+         //para printear los server y locations
     }
     //std::cout << BLUE << array_of_srv[0].array_of_location[0].getFile() << "|" << WHITE << std::endl;
 }

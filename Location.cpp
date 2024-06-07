@@ -51,13 +51,17 @@ void Location::parselocationBlock(const std::string& locationBlock)
         size_t pos;
         std::string tmp;
 
+        std::string LOCATION = "location /";
+
+        std::cout << CYAN << locationBlock << WHITE << std::endl;
+
         // Find and extract file
-        pos = locationBlock.find("/");
+        pos = locationBlock.find(LOCATION);
         if (pos != std::string::npos) 
 		{
-            pos += 0; // Skip "file "
+            pos += LOCATION.size() - 1; // Skip "file "
             size_t endPos = locationBlock.find('{', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos , endPos - pos);
 
             if(_location == "")
                 _location = tmp;

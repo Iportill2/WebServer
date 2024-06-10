@@ -138,6 +138,8 @@ void Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
+/*         std::cout << RED << "tmp:" << tmp << " lenght:" << length << WHITE <<std::endl;
+        std::cout << CYAN << sub << WHITE <<std::endl; */
         srv newServer(sub);
         newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
         array_of_srv.push_back(newServer);

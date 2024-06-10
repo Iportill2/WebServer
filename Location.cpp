@@ -51,7 +51,7 @@ void Location::parselocationBlock(const std::string& locationBlock)
         size_t pos;
         std::string tmp;
 
-        std::string LOCATION = "location /";
+        std::string LOCATION = "location ";
 
         //std::cout << CYAN << locationBlock << WHITE << std::endl;
 

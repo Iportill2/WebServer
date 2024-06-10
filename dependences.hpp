@@ -40,6 +40,7 @@
 # include <stack>
 # include <arpa/inet.h>
 # include <stdexcept>
+# include <limits>
 
 
 # include <algorithm>

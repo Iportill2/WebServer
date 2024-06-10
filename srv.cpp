@@ -5,7 +5,9 @@ srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
     //nullstrings();
-    parseServerBlock(serverBlock) ;
+    if(parseServerBlock(serverBlock) == 0)
+        return;
+
 }
 srv::~srv()
 {
@@ -42,7 +44,7 @@ void srv::setServerBlockValues(std::string s)
 	size_t i =0;
 	size_t Pos;
 	size_t end;
-	size_t count = 0;
+
 	std::string HOST ="listen ";
     std::string NAME ="server_name ";
     std::string BODY = "body_size ";
@@ -57,7 +59,7 @@ void srv::setServerBlockValues(std::string s)
             _host = s.substr(Pos, end - Pos);
 			//std::cout << _host << std::endl;
             i = end ;
-            count++;
+            
         }
         else if(_port.empty() && !_host.empty()) 
         {
@@ -65,7 +67,7 @@ void srv::setServerBlockValues(std::string s)
     	end = s.find(";", Pos);
         _port = s.substr(Pos, end - Pos);
         i = end;
-        count++;
+
         }
         else if(!_port.empty() && !_host.empty() && _server_name.empty()) 
         {
@@ -74,7 +76,7 @@ void srv::setServerBlockValues(std::string s)
         end = s.find(";", Pos);
     	_server_name = s.substr(Pos, end - Pos);
         i = end;
-        count++;
+
         }
         else if(!_port.empty() && !_host.empty() && !_server_name.empty() && _body.empty()) 
         {
@@ -83,7 +85,7 @@ void srv::setServerBlockValues(std::string s)
     	end = s.find(";", Pos);
         _body = s.substr(Pos, end - Pos);
     	i = end  ;
-        count++;
+
         }
         else if(!_port.empty() && !_host.empty() && !_server_name.empty() && !_body.empty() && _Root.empty())
         {
@@ -92,13 +94,13 @@ void srv::setServerBlockValues(std::string s)
         end = s.find(";", Pos);
         _Root = s.substr(Pos, end - Pos);
         i = end ;
-        count++;
+
         }
 
 		i++;
 	}
 }
-void srv::parseServerBlock(const std::string& serverBlock)
+bool srv::parseServerBlock(const std::string& serverBlock)
 {
     size_t tmp;
     (void) tmp;
@@ -132,23 +134,28 @@ void srv::parseServerBlock(const std::string& serverBlock)
             if(stak.size() == 1)
             {
                 abre = i;
-                std::cout << RED<< "abre:" << abre << std::endl;
+                //std::cout << RED<< "abre:" << abre << std::endl;//
             }
 			else if( stak.size() == 2)
 			{
 				abre2 =i;
-				std::cout << RED<< "abre2:" << abre2 << std::endl;
+				//std::cout << RED<< "abre2:" << abre2 << std::endl;//
 			}
 
         }
         else if (serverBlock[i] == '}')
         {
-            std::cout << RED<< "stak.size():" << stak.size() << WHITE << std::endl;
+            //std::cout << RED<< "stak.size():" << stak.size() << WHITE << std::endl;//
             if(stak.size() == 1 )
             {
                 cierra = i;
-                std::cout << RED << "cierra:" << cierra << WHITE << std::endl;
+                //std::cout << RED << "cierra:" << cierra << WHITE << std::endl;//
                 locations = serverBlock.find("location /");
+                if(locations == std::numeric_limits<size_t>::max())
+                {
+                    std::cout << RED << "no locations in server" << WHITE << std::endl;
+                    return 0;
+                }
             }
             stak.pop();
         }
@@ -157,12 +164,15 @@ void srv::parseServerBlock(const std::string& serverBlock)
     }
 			serverconfig = serverBlock.substr(abre,abre2+1 - abre);
 			setServerBlockValues(serverconfig);
-			std::cout << CYAN <<"serverconfig=" << serverconfig <<WHITE  <<std::endl;
+            if(checkstring() == 0)
+                return 0;
+            
+			//std::cout << CYAN <<"serverconfig=" << serverconfig <<WHITE  <<std::endl;
 			locationCount = countSubstring(serverBlock.substr(0,tmp), "location /");
 			std::string locationblock = serverBlock.substr(locations, cierra - locations);
 
-			std::cout <<  "location= " << locationCount << std::endl;
-            std::cout << RED <<  "locatioBlock= |" << locationblock << "|"<< WHITE << std::endl;
+			//std::cout <<  "location= " << locationCount << std::endl;
+            //std::cout << RED <<  "locatioBlock= |" << locationblock << "|"<< WHITE << std::endl;
 
             int e = 0;
 		 	while(e < locationCount) //  ************************************************
@@ -171,11 +181,13 @@ void srv::parseServerBlock(const std::string& serverBlock)
                 array_of_location.push_back(newLocation);
 				e++;
             }
-/*     std::cout << "host |" << _host << "|"<< std::endl;
+/*     
+    std::cout << "host |" << _host << "|"<< std::endl;
     std::cout << "port |" << _port << "|"<< std::endl;
     std::cout << "server_name |" <<  _server_name <<"|"<< std::endl;
     std::cout << "body |" << _body << "|"<< std::endl;
     std::cout << "Root |" << _Root << "|"<< std::endl; */
+    return 1;
 }
 
 

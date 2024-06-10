@@ -53,7 +53,7 @@ void Location::parselocationBlock(const std::string& locationBlock)
 
         std::string LOCATION = "location /";
 
-        std::cout << CYAN << locationBlock << WHITE << std::endl;
+        //std::cout << CYAN << locationBlock << WHITE << std::endl;
 
         // Find and extract file
         pos = locationBlock.find(LOCATION);

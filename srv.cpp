@@ -57,15 +57,17 @@ void srv::setServerBlockValues(std::string s)
             Pos += HOST.size();
             end = s.find(":", Pos);
             _host = s.substr(Pos, end - Pos);
-			//std::cout << _host << std::endl;
+			std::cout <<"host="<<  _host << std::endl;
             i = end ;
-            
+            //std::cout <<"i="<<  i << std::endl;
         }
         else if(_port.empty() && !_host.empty()) 
         {
-        Pos += HOST.size() + 1;
+        //std::cout <<"i="<<  i << std::endl;
+        Pos += HOST.size();
     	end = s.find(";", Pos);
-        _port = s.substr(Pos, end - Pos);
+        _port = s.substr(i, end - i);
+        std::cout <<"port="<<  _port << std::endl;
         i = end;
 
         }
@@ -215,12 +217,14 @@ bool srv::checkstring()
 {
     if(!_host.empty() )
 	{
+        //std::cout << "host=" << _host << std::endl;
         deletespaces(_host);
 		if(ipAddressToipNum(_host) == 0)
 			return (0);
 	}
     if(!_port.empty() )
 	{
+        //std::cout << "port=" << _port << std::endl;
         deletespaces(_port);
 		if(stringToSizeT(_port, _sizetPort) == 0)
 			return(0);

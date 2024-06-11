@@ -5,6 +5,7 @@ srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
     //nullstrings();
+    //pruebaParseGoiko(serverBlock);
     if(parseServerBlock(serverBlock) == 0)
         return;
 
@@ -57,15 +58,17 @@ void srv::setServerBlockValues(std::string s)
             Pos += HOST.size();
             end = s.find(":", Pos);
             _host = s.substr(Pos, end - Pos);
-			//std::cout << _host << std::endl;
+			//std::cout <<"host="<<  _host << std::endl;
             i = end ;
-            
+            //std::cout <<"i="<<  i << std::endl;
         }
         else if(_port.empty() && !_host.empty()) 
         {
-        Pos += HOST.size() + 1;
+        //std::cout <<"i="<<  i << std::endl;
+        Pos += HOST.size();
     	end = s.find(";", Pos);
-        _port = s.substr(Pos, end - Pos);
+        _port = s.substr(i, end - i);
+        //std::cout <<"port="<<  _port << std::endl;
         i = end;
 
         }
@@ -100,94 +103,91 @@ void srv::setServerBlockValues(std::string s)
 		i++;
 	}
 }
-bool srv::parseServerBlock(const std::string& serverBlock)
+bool srv::parseServerBlock(const std::string& s)
 {
-    size_t tmp;
-    (void) tmp;
-    std::istringstream f(serverBlock);
-    std::string line;    
+    std::cout   << std::endl;
+
+    std::string line;
+    std::istringstream stream(s);
+    //vars v;
+    std::string listen ;
     size_t i = 0;
-    std::stack<char> stak;
+    while (std::getline(stream, line)) 
+	{
+		std::istringstream lineStream(line);
+		std::string key;
 
-    size_t abre;
-    (void) abre;
-    size_t cierra = 0;
+		lineStream >> key;
 
-	size_t abre2;
-    size_t locations;
-	std::string serverconfig;
-
-    
-    while(i < serverBlock.size())
-    {
-        tmp = i;
-        while(i < serverBlock.size() && serverBlock[i] != '{' && serverBlock[i] != '}')
-            i++;
-
-       /*  if(i == serverBlock.size())
-            break; */
-
-        if(serverBlock[i] == '{')
+        if (key == "listen")
         {
-            stak.push('{');
-            //std::cout << RED<< "stak.size():" << stak.size() << std::endl;
-            if(stak.size() == 1)
+            lineStream >> listen;
+            if (listen[listen.size() - 1] == ';')
             {
-                abre = i;
-                //std::cout << RED<< "abre:" << abre << std::endl;//
-            }
-			else if( stak.size() == 2)
-			{
-				abre2 =i;
-				//std::cout << RED<< "abre2:" << abre2 << std::endl;//
-			}
-
-        }
-        else if (serverBlock[i] == '}')
-        {
-            //std::cout << RED<< "stak.size():" << stak.size() << WHITE << std::endl;//
-            if(stak.size() == 1 )
-            {
-                cierra = i;
-                //std::cout << RED << "cierra:" << cierra << WHITE << std::endl;//
-                locations = serverBlock.find("location /");
-                if(locations == std::numeric_limits<size_t>::max())
+                listen = listen.substr(0, listen.size() - 1);
+                //std::cout << "listen:" << listen << std::endl;
+                while(listen[i]!= ':')
                 {
-                    std::cout << RED << "no locations in server" << WHITE << std::endl;
-                    return 0;
+                    i++;
+                }
+                _host = listen.substr(0, i - 0);
+                i++;
+                _port = listen.substr(i, listen.size() - i);
+
+
+            }
+            
+        }
+        if (key == "server_name")
+        {
+            lineStream >> _server_name;
+            if (_server_name[_server_name.size() - 1] == ';')
+                _server_name = _server_name.substr(0, _server_name.size() - 1);
+        }
+
+        if (key == "body_size")
+        {
+            lineStream >> _body;
+            if (_body[_body.size() - 1] == ';')
+                _body = _body.substr(0, _body.size() - 1);
+        }
+        if (key == "root")
+        {
+            lineStream >> _Root;
+            if (_Root[_Root.size() - 1] == ';')
+                _Root = _Root.substr(0, _Root.size() - 1);
+        }
+        if (key == "location")
+        {
+            std::string loc;
+            loc = line + '\n';
+            while (1)
+            {
+                std::getline(stream, line);
+                loc += line + '\n';
+                if (line.find('}') != std::string::npos)
+                {
+
+                    arLoc.push_back(loc);
+                    break;
                 }
             }
-            stak.pop();
         }
-		
-        i++;
-    }
-			serverconfig = serverBlock.substr(abre,abre2+1 - abre);
-			setServerBlockValues(serverconfig);
-            if(checkstring() == 0)
-                return 0;
-            
-			//std::cout << CYAN <<"serverconfig=" << serverconfig <<WHITE  <<std::endl;
-			locationCount = countSubstring(serverBlock.substr(0,tmp), "location /");
-			std::string locationblock = serverBlock.substr(locations, cierra - locations);
 
-			//std::cout <<  "location= " << locationCount << std::endl;
-            //std::cout << RED <<  "locatioBlock= |" << locationblock << "|"<< WHITE << std::endl;
+	}
+	if(checkstring() == 0)
+        return 0;
+    /* std::cout << "listen: " << "\"" << listen <<  "\"" << std::endl;
+    std::cout << "host: " << "\"" << _host <<  "\"" << std::endl;
+    std::cout << "port: " << "\"" << _port <<  "\"" << std::endl;
+    std::cout << "Server name: " << "\"" << _server_name <<  "\"" << std::endl;
+    std::cout << "body size: " << "\"" << _body <<  "\"" << std::endl;
+    std::cout << "Root: " << "\"" << _Root <<  "\"" << std::endl; */
+/*     std::cout << "location 1: " << "\"" << arLoc[0] <<  "\"" << std::endl;
+    std::cout << "location 2: " << "\"" << arLoc[1] <<  "\"" << std::endl; */
 
-            int e = 0;
-		 	while(e < locationCount) //  ************************************************
-			{
-                Location newLocation(locationblock);
-                arLoc.push_back(newLocation);
-				e++;
-            }
-/*     
-    std::cout << "host |" << _host << "|"<< std::endl;
-    std::cout << "port |" << _port << "|"<< std::endl;
-    std::cout << "server_name |" <<  _server_name <<"|"<< std::endl;
-    std::cout << "body |" << _body << "|"<< std::endl;
-    std::cout << "Root |" << _Root << "|"<< std::endl; */
-    return 1;
+    //std::cout   << std::endl;
+    return(1);
 }
 
 
@@ -215,12 +215,14 @@ bool srv::checkstring()
 {
     if(!_host.empty() )
 	{
+        //std::cout << "host=" << _host << std::endl;
         deletespaces(_host);
 		if(ipAddressToipNum(_host) == 0)
 			return (0);
 	}
     if(!_port.empty() )
 	{
+        //std::cout << "port=" << _port << std::endl;
         deletespaces(_port);
 		if(stringToSizeT(_port, _sizetPort) == 0)
 			return(0);

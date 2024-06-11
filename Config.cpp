@@ -7,13 +7,14 @@ Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
     setValues();
-    if(config_routine(configName) == 1)
+    config_routine(configName);
+   /*  if(config_routine(configName) == 1)
     {
         if(validatePort() == 1)
             printArrayOfSrv();
         std::cout << "";
          //para printear los server y locations
-    }
+    } */
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
@@ -22,7 +23,7 @@ Config::~Config()
 }
 void Config::printArrayOfSrv() const
 {
-    std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
+    /* std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
     for (size_t i = 0; i < array_of_srv.size(); ++i)
     {
         std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
@@ -50,7 +51,7 @@ void Config::printArrayOfSrv() const
                 std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
             }
         }
-    }
+    } */
 }
 void Config::setValues()
 {
@@ -88,16 +89,16 @@ bool  Config::config_routine(std::string configName)
 {
     if(openFile(configName) == true)
     {
-        std::cout << "Archivo abierto" << std::endl;
+        //std::cout << "Archivo abierto" << std::endl;
         if(getServerCount()  == 0)
             return 0;
-        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        //std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
         createSrv();
         return(1);
     } 
     else
     {
-        std::cout << "Archivo no abierto" << std::endl;
+        //std::cout << "Archivo no abierto" << std::endl;
         return 0;
     }
 }
@@ -138,6 +139,8 @@ void Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
+/*         std::cout << RED << "tmp:" << tmp << " lenght:" << length << WHITE <<std::endl;
+        std::cout << CYAN << sub << WHITE <<std::endl; */
         srv newServer(sub);
         newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
         array_of_srv.push_back(newServer);
@@ -177,7 +180,10 @@ bool Config::getServerCount()
     if (this->srvCount > 0) 
         return 1;
     else
-        return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
+    {
+        //std::cout << RED << "Server count is less than 0" << WHITE << std::endl;
+        return 0;
+    }
 }
 ///////////////////////
 /*
@@ -203,7 +209,6 @@ bool Config::validatePort()
         {
 
             std::cout << CYAN << "validatePort() error the value of port is "<< RED << tmp << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl;
-            printArrayOfSrv();
             return 0;
         }
         ++i;

@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/11 13:35:34 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/11 20:15:04 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ Server::Server()
 	Location l1;
 	Location l2;
 
+	s._server_name = "localhost";
 	s.ipAddressToipNum("0.0.0.0");
 	s._sizetPort = 8080;
-	s._sizetBody = 100000;
+	s._sizetBody = 563218;
 	s._Root = "./pagina";
 
 	l1._location = "/";
@@ -44,13 +45,15 @@ Server::Server()
 	servers.push_back(s);
 
 	printServers();
-	//my_select();
+	serverSet();
+	Mselect();
 }
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
+	printServers();
 	serverSet();
 	Mselect();
 }
@@ -58,7 +61,6 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 void	Server::serverSet()
 {
 	int option = 1;
-	int puertoProvisional = 8080;
 	
 	std::cout << "servers size "  << servers.size() << std::endl;
 	
@@ -66,8 +68,8 @@ void	Server::serverSet()
 	{
 		sockaddr_in	address;
 		address.sin_family = AF_INET;
-    	address.sin_port = htons(puertoProvisional++);
-    	address.sin_addr.s_addr = htonl(INADDR_ANY);
+    	address.sin_port = htons(servers[i]._sizetPort);
+    	address.sin_addr.s_addr = htonl(servers[i]._ipNum);
 	
 
 		int	soc = socket(AF_INET, SOCK_STREAM, 0);
@@ -82,7 +84,7 @@ void	Server::serverSet()
 		maxFD = soc;
 		sizeOfAddress = sizeof(address);
 		
-		std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << puertoProvisional - 1 << " fd " << soc << std::endl;
+		std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << servers[i]._sizetPort << " fd " << soc << std::endl;
 	}
 	std::map<int, int>::iterator i = serversMap.begin();
 	std::map<int, int>::iterator o = serversMap.end();
@@ -123,7 +125,7 @@ void	Server::Mselect()
 
 		if (!sign)
 			break;
-		//std::cout << "MAX FD " << maxFD << std::endl;
+
 		for (int i = 0; i <= maxFD; i++)
 		{
 			if (!FD_ISSET(i, &readyfdsRead) && !FD_ISSET(i, &readyfdsWrite))
@@ -166,6 +168,7 @@ void	Server::Mselect()
 					int bytes = read(i, buffer, sizeof(buffer));
 					//std::cout << "i = " << i <<  std::endl;
 					//exit(1);
+					std::cout << MAGENTA << buffer << WHITE <<std::endl;
 					std::cout << "bytes leidos: " << bytes << std::endl;
 					if (bytes <= 0)
 					{
@@ -205,104 +208,6 @@ void	Server::Respond(int i)
 	r.printConf();
 	r.createRespons();
 }
-
-void	Server::respond(int i)
-{
-	Response r(rq[i], conf, i);
-	//r.printRequest();
-	//r.printConf();
-	r.createResponse();
-}
-
-void	Server::my_select()
-{
-	fd_set readyfdsRead, activefdsRead;
-	fd_set readyfdsWrite, activefdsWrite;
-	t_client clients[100];
-	
-	int addrlen = sizeof(ad);
-	//std::cout << "size of address: " << sizeof(ad) << std::endl;
-	FD_ZERO(&readyfdsRead);
-	FD_ZERO(&activefdsRead);
-	FD_ZERO(&readyfdsWrite);
-	FD_ZERO(&activefdsWrite);
-	
-	(void) clients;
-	int	maxfd = sock;
-
-	FD_SET (sock, &activefdsRead);
-
-	while(sign)
-	{
-		readyfdsRead = activefdsRead;
-		readyfdsWrite = activefdsWrite;
-
-		select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
-
-		if (!sign)
-			break;
-
-		for (int i = 0; i <= maxfd; i++)
-		{
-			if (!FD_ISSET(i, &readyfdsRead) && !FD_ISSET(i, &readyfdsWrite))
-				continue;
-			else if (FD_ISSET(i, &readyfdsRead))
-			{
-				if (i == sock)
-				{
-					new_socket = accept(sock, (struct sockaddr *)&ad, (socklen_t*)&addrlen);
-					FD_SET (new_socket, &activefdsRead);
-				
-					if (new_socket > maxfd)
-					{
-						maxfd = new_socket;
-						//maxFD = new_socket;
-					}
-					
-					clients[id++].fd = new_socket;
-					std::cout  << std::endl << ">>>>>   New Client just arrived; " << "ID: " << id - 1 << "; FD: " << new_socket << std::endl; 
-				}
-				else
-				{
-					memset(buffer, 0, sizeof(buffer));
-					int bytes = read(i, buffer, sizeof(buffer));
-					//read(i, buffer, sizeof(buffer));
-					std::cout << std::endl;
-					std::cout << "---BUFFER---" << std::endl;
-					std::cout << buffer << std::endl;
-					std::cout << "---BUFFER END ---" << std::endl << std::endl;
-					if (bytes <= 0)
-					{
-						std::cout << "Client ID: " << id - 1 << " went \"a tomar por culo\"" << std::endl << std::endl;
-						FD_CLR(i, &activefdsRead);
-            			close(i);
-					}
-					else
-					{ 
-						std::cout << "Client ID: " << id - 1 << " pasa a la cola de WRITE!!!" << std::endl;
-						
-						Request * r = new Request(buffer);
-						rq[i] = r;
-						//printRequest();
-						FD_SET(i, &activefdsWrite);
-						FD_CLR(i, &activefdsRead);
-					}
-				}
-			}
-			else if (FD_ISSET(i, &readyfdsWrite))
-			{
-				std::cout << "Client ID: " << id - 1 << " es RESPONDIDO!!!" << std::endl;
-				respond(i);
-				close (i);
-				FD_CLR(i, &activefdsWrite);
-			}
-		}
-	}
-	for (int i = 3; i <= maxfd; ++i)
-		close(i);
-}			
-
-
 
 Server::~Server()
 {
@@ -352,7 +257,8 @@ void Server::printServers()
 {
 	for (size_t i = 0; i < servers.size(); i++)
 	{
-		std::cout << "----SERVER  " << i + 1 << "-------" << std::endl;
+		std::cout << GREEN << "----SERVER  " << i + 1 << "-------" << WHITE << std::endl;
+		std::cout << "server name : " << "\"" << servers[i]._server_name  << "\"" << std::endl;
 		std::cout << "ip_num: " << "\"" << servers[i]._ipNum  << "\"" << std::endl;
 		std::cout << "port: " << "\"" << servers[i]._sizetPort  << "\"" << std::endl;
 		std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
@@ -361,14 +267,14 @@ void Server::printServers()
 		std::cout << std::endl;
 		for (size_t j = 0; j < servers[i].arLoc.size(); j++)
 		{
-			std::cout << "-----Location  " << "\"" << servers[i].arLoc[j]._location  << "\"" << std::endl;
+			std::cout << YELLOW << "-----Location  " << WHITE << "\"" << servers[i].arLoc[j]._location  << "\"" << std::endl;
 			std::cout << "root " << "\"" << servers[i].arLoc[j]._root  << "\"" << std::endl;
 			std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
 			for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
-				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" <<std::endl;
+				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
 			std::cout << std::endl;
 		}
-		
+		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
 	}
 }
 

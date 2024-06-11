@@ -46,7 +46,7 @@ void    Request::parse()
 
     if (uri.size() > 1 && uri[uri.size() - 1] == '/')
         uri = uri.substr(0, uri.size() - 1);
-    std::cout << RED << "URI en parse: " << uri << WHITE << std::endl;
+    //std::cout << RED << "URI en parse: " << uri << WHITE << std::endl;
 }
 
 std::string Request::getMethod() {return method;}

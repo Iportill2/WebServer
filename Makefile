@@ -1,10 +1,9 @@
 NAME = webserver
 CPP = c++
-CFLAGS = -Wall -Werror -Wextra #-std=c++98 #-g3 -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
 SRC_FILES = main.cpp \
 			Server.cpp \
 			Request.cpp \
-			Response.cpp \
 			Error.cpp \
 			Utils.cpp \
 			Config.cpp \

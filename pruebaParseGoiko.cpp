@@ -65,7 +65,7 @@ void pruebaParseGoiko(std::string & s)
 	} 
     std::cout << "listen: " << "\"" << v.listen <<  "\"" << std::endl;
     std::cout << "Server name: " << "\"" << v.server_name <<  "\"" << std::endl;
-    std::cout << "body size: " << "\"" << v.server_name <<  "\"" << std::endl;
+    std::cout << "body size: " << "\"" << v.body_size <<  "\"" << std::endl;
     std::cout << "location 1: " << "\"" << v.location[0] <<  "\"" << std::endl;
     std::cout << "location 2: " << "\"" << v.location[1] <<  "\"" << std::endl;
 

@@ -48,7 +48,7 @@ void Location::nullstrings()
 }
 void Location::parselocationBlock(const std::string& locationBlock) 
 {
-    
+        //std::cout << CYAN  << locationBlock << std::endl;
         size_t pos;
         std::string tmp;
 
@@ -63,7 +63,8 @@ void Location::parselocationBlock(const std::string& locationBlock)
             pos += LOCATION.size() - 1; // Skip "file "
             size_t endPos = locationBlock.find('{', pos);
             tmp = locationBlock.substr(pos , endPos - pos);
-
+            std::cout << "tmp:"  << tmp << std::endl;
+            deletespaces(tmp);
             if(_location == "")
                 _location = tmp;
             else
@@ -76,7 +77,9 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 10; // Skip "autoindex "
             size_t endPos = locationBlock.find(';', pos);
-            _autoindex = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+            deletespaces(tmp);
+            _autoindex = tmp; 
         }
 
         // Find and extract methods
@@ -85,7 +88,9 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 8; // Skip "methods "
             size_t endPos = locationBlock.find(';', pos);
-            _methods = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+            deletespaces(tmp);
+            _methods = tmp;
         }
 
         // Find and extract root
@@ -94,7 +99,9 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 5; // Skip "root "
             size_t endPos = locationBlock.find(';', pos);
-            _root = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+            deletespaces(tmp);
+            _root = tmp; 
         }
 
         // Find and extract cgi
@@ -103,7 +110,9 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 4; // Skip "cgi "
             size_t endPos = locationBlock.find(';', pos);
-            _cgi = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+            deletespaces(tmp);
+            _cgi = tmp; 
         }
 
         // Find and extract redirect_302
@@ -112,7 +121,9 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 13; // Skip "redirect_302 "
             size_t endPos = locationBlock.find(';', pos);
-            _redirect_302 = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+            deletespaces(tmp);
+            _redirect_302 = tmp; 
         }
         // Find and extract file
         pos = locationBlock.find("file");
@@ -120,7 +131,9 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 5; // Skip "redirect_302 "
             size_t endPos = locationBlock.find(';', pos);
-            _file = locationBlock.substr(pos, endPos - pos);
+            tmp = locationBlock.substr(pos, endPos - pos);
+            deletespaces(tmp);
+            _file = tmp;
         }
     
 }

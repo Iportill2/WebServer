@@ -1,47 +1,42 @@
-
 #ifndef CONFIG_HPP
 # define CONFIG_HPP
-
-# include "dependences.hpp"
-# include "srv.hpp"
-# include "Location.hpp"
-
+#include "dependences.hpp"
+#include "srv.hpp"
+#include "Location.hpp"
 class srv;
 class Location;
 
 class Config
 {
     protected:
+    std::ifstream file;
+    std::string file_content;
 
-    	std::ifstream file;
-    	std::string file_content;
-
-    	int srvCount;
-    	int locationCount;
-    	std::vector<srv> array_of_srv;
+    int srvCount;
+    int locationCount;
+    std::vector<srv > array_of_srv;
     
-   		int server_id ;
+    int server_id ;
+public:
+    Config();
+    Config(std::string configName);
+    ~Config();
 
-	public:
-
-    	Config();
-   		Config(std::string configName);
-    	~Config();
-
-    	void setValues();
-    	bool openFile(std::string Configname);
-    	void config_routine(std::string configName);
-    	bool getServerCount();
+    void setValues();
+    bool openFile(std::string Configname);
+    bool config_routine(std::string configName);
+    bool getServerCount();
     
-    	int countSubstring(const std::string& str, const std::string& sub);
-		size_t size(const char *s);
-    	void createSrv();
+    int countSubstring(const std::string& str, const std::string& sub);
+	size_t size(const char *s);
+    void createSrv();
 
-    	void printArrayOfSrv() const;
+    void printArrayOfSrv() const;
     /////
-    	bool validatePort();
+    bool validatePort();
 
-		std::vector<srv> & getArrayOfServers();
+    std::vector<srv> & getArrayOfServers();
+    
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/06 17:23:40 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/11 13:26:45 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,5 @@ class Server
 
 		//FUNCIONES PARA PRUEBAS
 		void printRequest();
-        void setLoc();
-        void printLoc();
+        void printServers();
 };

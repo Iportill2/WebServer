@@ -8,7 +8,7 @@ Respons::~Respons() {}
 
 bool	Respons::checkLocation()
 {
-	for(size_t i = 0; i< server.arLoc.size(); i++)
+	for(size_t i = 0; i < server.arLoc.size(); i++)
 	{
 		if(rq->getUri() == server.arLoc[i]._location)
 		{
@@ -52,13 +52,24 @@ bool	Respons::checkLocation()
 	return (0);
 }
 
-bool Respons::checkServerName()
+bool	Respons::checkServerName()
 {
-	/* if (rq->getHost() != conf.server_name)
+	if (rq->getHost() != server._server_name.substr(1))// CUIDAO!! quitar substring
 		return 0;
 	else
-		return 1; */
+		return 1;
 	return 66;
+}
+
+bool	Respons::checkAuthorized()
+{
+	size_t point = _url.find('.');//cuidao si no lo encuentra
+
+	std::cout << "url point =" << &_url[point] << std::endl;
+	std::string extension = _url.substr(point);
+	if(extension != ".html" && extension != ".jpg" && extension != ".png")
+		return 0;
+	return 1;
 }
 
 int Respons::createRespons()
@@ -73,9 +84,14 @@ int Respons::createRespons()
 	{
 		std::cout << "PAGE NOT FOUND" << std::endl;
 		Error r(404, fd);
-		//return 1;
+		return 1;
 	}
-	std::cout << "FINAL url = " << _url << std::endl;
+	std::cout << "---FINAL url = " << _url << std::endl;
+	if (!checkAuthorized())
+	{
+		std::cout << "PAGE NOT FOUND" << std::endl;
+		Error r(403, fd);
+	}
 	return 0;
 }
 
@@ -84,39 +100,33 @@ int Respons::createRespons()
 
 void Respons::printRequest()
 {
-	/* std::cout  << std::endl << "-----REQUEST DESDE Respons-------" << std::endl << std::endl;
-	std::cout << GREEN << "method: " << BLUE << rq->getMethod() << std::endl << std::endl;
-    std::cout << GREEN << "uri: " << BLUE << rq->getUri() << std::endl;
-    std::cout << GREEN << "host: " << BLUE << rq->getHost() << std::endl;
-    std::cout << GREEN << "port: " << BLUE << rq->getPort() << std::endl;
-    std::cout << GREEN << "Content Lenght: " << BLUE << rq->getContentLen() << std::endl;
-    std::cout << GREEN << "Body: " << BLUE << rq->getBody() << WHITE << std::endl << std::endl; */
+	std::cout  << std::endl << "-----REQUEST DESDE Respons-------" << std::endl << std::endl;
+	std::cout << GREEN << "method: " << "\"" << BLUE << rq->getMethod() << GREEN << "\"" << std::endl;
+    std::cout << "uri:" << "\"" << BLUE << rq->getUri() << GREEN << "\"" << std::endl;
+    std::cout << "host: " << "\"" << BLUE << rq->getHost() << GREEN << "\"" <<std::endl;
+    std::cout << "port: " << "\"" << BLUE << rq->getPort() << GREEN << "\"" <<std::endl;
+    std::cout << "Content Lenght: " << "\"" << BLUE << rq->getContentLen() << GREEN << "\"" <<std::endl;
+    std::cout << "Body: " << "\"" << BLUE << rq->getBody() << WHITE << std::endl << GREEN << "\"" << std::endl;
 }
 
 void Respons::printConf()
 {
-	/* std::cout << "-----CONF DESDE Respons-------" << std::endl;
-	std::cout << std::endl << GREEN << "Host: " << BLUE << conf.host << std::endl;
-	std::cout << GREEN << "Port: " << BLUE << conf.port << std::endl;
-	std::cout << GREEN << "Server name:: " << BLUE << conf.server_name << std::endl;
-	std::cout << GREEN << "Body size: " << BLUE << conf.body_size << WHITE << std::endl << std::endl;
+	std::cout << "-----CONF DESDE Respons-------" << std::endl;
+	std::cout << std::endl << GREEN << "Host: " << BLUE << server._host << std::endl;
+	std::cout << GREEN << "Port: " << BLUE << server._port << std::endl;
+	std::cout << GREEN << "Server name:: " << BLUE << server._server_name << std::endl;
+	std::cout << GREEN << "Body size: " << BLUE << server._body << WHITE << std::endl << std::endl;
 
-	std::map<std::string, loc>::iterator iti;
-	std::map<std::string, loc>::iterator ito;
-	iti = conf.location.begin();
-	ito = conf.location.end();
-	int i = 1;
-	
-	while (iti != ito)
-	{
-		std::cout << GREEN << "LOCATION " << i << " " << YELLOW << iti->first << std::endl;
-		std::cout << GREEN << "File: " << BLUE << iti->second.file << std::endl;
-		std::cout << GREEN << "Root: " << BLUE << iti->second.root << std::endl;
-		std::cout << GREEN << "Methods: " << BLUE;
-		for (const auto& str : iti->second.methods)
-         	std::cout << str << " ";
-		std::cout << WHITE << std::endl << std::endl;
-		iti++;
-		i++;
-	} */
+	for(size_t j = 0; j < server.arLoc.size() ; j++)
+    {
+        std::cout << std::endl << "*LOCATION " << j + 1 << std::endl;
+        std::cout << "Location: " << "\"" << GREEN << server.arLoc[j]._location << WHITE << "\"" << std::endl;
+        std::cout << "root: " << "\"" << GREEN << server.arLoc[j]._root << WHITE << "\"" << std::endl;
+        std::cout << "file: " << "\"" << GREEN << server.arLoc[j]._file << WHITE << "\"" << std::endl;
+        std::cout << "methods: " << "\"" << GREEN << server.arLoc[j]._methods << WHITE << "\"" << std::endl;
+        std::cout << "autoindex: " << "\"" << GREEN << server.arLoc[j]._autoindex << WHITE << "\"" << std::endl;
+        std::cout << "cgi:" << "\"" << GREEN << server.arLoc[j]._cgi << WHITE << "\"" << std::endl;
+        std::cout << "redirect: " << "\"" << GREEN << server.arLoc[j]._redirect_302 << WHITE << "\"" << std::endl;
+    }
+    std::cout << "---------------------------------------------------------------------" << std::endl;
 }

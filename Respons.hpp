@@ -27,6 +27,7 @@ class Respons
 		int		createRespons();
 		bool	checkServerName();
 		bool	checkLocation();
+		bool	checkAuthorized();
 		
 		
 

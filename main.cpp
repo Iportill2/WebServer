@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:00:00 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/06 11:52:20 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/10 13:25:12 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include "Config.hpp"
 
 
-void printArrayOfServers(std::vector<srv> & a)
+/* void printArrayOfServers(std::vector<srv> & a)
 {
     for (size_t i = 0; i < a.size(); i++)
     {
@@ -38,7 +38,7 @@ void printArrayOfServers(std::vector<srv> & a)
         }
         std::cout << "---------------------------------------------------------------------" << std::endl;
     }
-}
+} */
 
 int main(int argc, char **argv)
 {

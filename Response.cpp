@@ -59,6 +59,17 @@ bool Response::checkServerName()
 		return 1;
 }
 
+bool	Response::checkAuthorized()
+{
+	size_t point = _url.find('.');//cuidadin si no lo encuentra
+
+	std::cout << "url point =" << &_url[point] << std::endl;
+	std::string extension = _url.substr(point);
+	if(extension != ".html" && extension != ".jpg" && extension != ".png")
+		return 0;
+	return 1;
+}
+
 int Response::createResponse()
 {
 	if (!checkServerName())
@@ -71,9 +82,14 @@ int Response::createResponse()
 	{
 		std::cout << "PAGE NOT FOUND" << std::endl;
 		Error r(404, fd);
-		//return 1;
+		return 1;
 	}
 	std::cout << "FINAL url = " << _url << std::endl;
+	if (!checkAuthorized())
+	{
+		std::cout << "NO AUTORIZADO" << std::endl;
+		Error r(403, fd);
+	}
 	return 0;
 }
 

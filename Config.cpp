@@ -1,6 +1,4 @@
-
 #include "Config.hpp"
-
 Config::Config()
 {
     //std::cout << "Default Config Constructor" << std::endl;
@@ -9,8 +7,14 @@ Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
     setValues();
-    config_routine(configName);
-    //printArrayOfSrv(); //para printear los server y locations
+    if(config_routine(configName) == 1)
+    {
+        if(validatePort() == 1)
+            printArrayOfSrv();
+        std::cout << "";
+         //para printear los server y locations
+    }
+    //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
@@ -21,23 +25,30 @@ void Config::printArrayOfSrv() const
     std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
     for (size_t i = 0; i < array_of_srv.size(); ++i)
     {
-        std::cout << BLUE << "srv " << RED << (i + 1) << ":" << std::endl;
-        std::cout << BLUE << "Host: " << RED << array_of_srv[i].getHost() << std::endl;
-        std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << std::endl;
-        std::cout << BLUE << "Server Name: "<< RED  << array_of_srv[i].getServerName() << std::endl;
-        std::cout << BLUE << "Body Size: " << RED << array_of_srv[i].getBodySize() << std::endl;
-        std::cout << BLUE << "Root: " << RED << array_of_srv[i].getRoot() <<  std::endl;
-        // Add more print statements for other srv data as needed
+        std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
+        std::cout << BLUE << "Host:" << RED << "\""<< array_of_srv[i].getHost() << "\""<< std::endl;
+        std::cout << BLUE << "Port:" << RED << "\""<< array_of_srv[i].getPort() << "\""<< std::endl;
+        std::cout << BLUE << "Server Name:"<< RED  << "\""<< array_of_srv[i].getServerName() << "\""<< std::endl;
+        std::cout << BLUE << "Body Size:" << RED << "\""<< array_of_srv[i].getBodySize() << "\""<< std::endl;
+        std::cout << BLUE << "Root:" << RED << "\""<< array_of_srv[i].getRoot() << "\""<<  std::endl;
+        std::cout << std::endl << BLUE << "ipNum:" << RED << "\""<< array_of_srv[i]._ipNum << "\""<<  std::endl;
+        std::cout << BLUE << "sizetPort:" << RED << "\""<< array_of_srv[i]._sizetPort << "\""<<  std::endl;
+        std::cout << BLUE << "sizetBody:" << RED << "\""<< array_of_srv[i]._sizetBody << "\""<<  std::endl;
+       // Add more print statements for other srv data as needed
         for(size_t e = 0 ; e < array_of_srv[i].arLoc.size(); ++e)
         {
-            std::cout  << GREEN   << "location num:" << RED << e << std::endl;
-            std::cout << MAGENTA << "location:" << YELLOW << array_of_srv[i].arLoc[e].getLocation()  << std::endl;
-            std::cout << MAGENTA << "root:" << YELLOW << array_of_srv[i].arLoc[e].getRoot() << std::endl;
-            std::cout << MAGENTA << "file:"<< YELLOW << array_of_srv[i].arLoc[e].getFile() << std::endl;
-            std::cout << MAGENTA << "methods:"<< YELLOW << array_of_srv[i].arLoc[e].getMethods() << std::endl;
-            std::cout << MAGENTA << "autoindex:"<< YELLOW << array_of_srv[i].arLoc[e].getAutoindex() << std::endl;
-            std::cout << MAGENTA << "cgi:"<< YELLOW << array_of_srv[i].arLoc[e]._cgi << std::endl;
-            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << array_of_srv[i].arLoc[e]._redirect_302 << WHITE << std::endl << std::endl; 
+            std::cout << GREEN   << "location num:" << RED << "\""<< e << "\""<< std::endl;
+            std::cout << MAGENTA << "location:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getLocation() << "\"" << std::endl;
+            std::cout << MAGENTA << "root:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getRoot() << "\""<< std::endl;
+            std::cout << MAGENTA << "file:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getFile() << "\""<< std::endl;
+            std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getMethods() << "\""<< std::endl;
+            std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getAutoindex() << "\""<< std::endl;
+            std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e]._cgi << "\""<< std::endl;
+            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].arLoc[e]._redirect_302 << "\""<< WHITE << std::endl << std::endl; 
+            for(size_t u = 0 ; u < array_of_srv[i].arLoc[e].methods_vector.size() ; ++u)
+            {
+                std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
+            }
         }
     }
 }
@@ -73,23 +84,22 @@ int Config::countSubstring(const std::string& str, const std::string& sub)
     return count;
 }
 
-void Config::config_routine(std::string configName)
+bool  Config::config_routine(std::string configName)
 {
     if(openFile(configName) == true)
     {
         std::cout << "Archivo abierto" << std::endl;
         if(getServerCount()  == 0)
-            return;
+            return 0;
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
         createSrv();
+        return(1);
     } 
     else
     {
         std::cout << "Archivo no abierto" << std::endl;
-        return;
+        return 0;
     }
-    if(validatePort() == 0)
-        return;
 }
 
 
@@ -180,22 +190,29 @@ que estés ejecutando Nginx como root (lo cual no se recomienda por razones de s
 */
 bool Config::validatePort()
 {
+    int tmp;
     size_t i = 0;
     while(i < array_of_srv.size())
     {
-        int tmp = std::atoi(array_of_srv[i].getPort().c_str());
+        tmp = std::atoi(array_of_srv[i].getPort().c_str());
+        //std::cout << CYAN << "tmp="<< tmp << WHITE << std::endl;
+
         if(tmp > 1023 && tmp < 65535)
-        {
             std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << " OK!" << WHITE << std::endl;
-        }
         else
+        {
+
+            std::cout << CYAN << "validatePort() error the value of port is "<< RED << tmp << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl;
+            printArrayOfSrv();
             return 0;
+        }
         ++i;
     }
     return 1;
 }
-
 std::vector<srv> & Config::getArrayOfServers()
 {
     return array_of_srv;
 }
+
+

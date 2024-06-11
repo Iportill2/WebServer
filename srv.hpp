@@ -19,10 +19,11 @@ class srv
     size_t _sizetBody;
 
     int locationCount;
-    std::vector<Location> array_of_location;
+    std::vector<Location> arLoc;
 
     std::map<std::string, std::string> result;
 
+    srv(){};
     srv(std::string serverBlock);
     ~srv();
 
@@ -50,7 +51,7 @@ class srv
 
 
 
-    bool parseServerBlock(const std::string& serverBlock) ;
+    bool parseServerBlock(const std::string& s) ;
     int countSubstring(const std::string& str, const std::string& sub);
     void setServerBlockValues(std::string s);
 };

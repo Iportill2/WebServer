@@ -8,6 +8,7 @@ Response::~Response() {}
 
 bool	Response::checkLocation()
 {
+	std::cout << "----------------hola-----------" << std::endl;
 	std::map<std::string, loc>::iterator  in = conf.location.begin();
 	std::map<std::string, loc>::iterator  out = conf.location.end(); 
 
@@ -15,8 +16,8 @@ bool	Response::checkLocation()
 	{
 		if(rq->getUri() == in->first)
 		{
-			std::cout << "str = " << in->first << std::endl;
 			std::string url = in->second.root.substr(2) + "/" + in->second.file;
+			std::cout << "url1 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
 			else
@@ -25,25 +26,28 @@ bool	Response::checkLocation()
 		}
 		in++;
 	}
-	in = conf.location.begin();
 
 	size_t pos = rq->getUri().find('/', 1);
-	
-	//size_t size = 0;
 	std::string str = "/";
+	in = conf.location.begin();
 	while (in != out)
 	{
-		//if (in->first.size() > size && in->first == rq->getUri().substr(0, pos))
 		if (in->first == rq->getUri().substr(0, pos))
 		{
-			//size = in->first.size();
-			str = in->first;
+			std::string url = in->second.root.substr(2) + rq->getUri().substr(pos);
+			std::cout << "url2 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
+			else
+				return (0);
+			break;
 		}
 		in++;
 	}
-	std::cout << "str = " << str << std::endl;
-	//if (str.size() > 0)
-	
+	std::string url = conf.location["/"].root.substr(2) + rq->getUri();	
+	std::cout << "url3 = " << url << std::endl;
+	if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
 	return (0);
 }
 
@@ -53,6 +57,17 @@ bool Response::checkServerName()
 		return 0;
 	else
 		return 1;
+}
+
+bool	Response::checkAuthorized()
+{
+	size_t point = _url.find('.');//cuidadin si no lo encuentra
+
+	std::cout << "url point =" << &_url[point] << std::endl;
+	std::string extension = _url.substr(point);
+	if(extension != ".html" && extension != ".jpg" && extension != ".png")
+		return 0;
+	return 1;
 }
 
 int Response::createResponse()
@@ -68,6 +83,12 @@ int Response::createResponse()
 		std::cout << "PAGE NOT FOUND" << std::endl;
 		Error r(404, fd);
 		return 1;
+	}
+	std::cout << "FINAL url = " << _url << std::endl;
+	if (!checkAuthorized())
+	{
+		std::cout << "NO AUTORIZADO" << std::endl;
+		Error r(403, fd);
 	}
 	return 0;
 }
@@ -106,8 +127,8 @@ void Response::printConf()
 		std::cout << GREEN << "File: " << BLUE << iti->second.file << std::endl;
 		std::cout << GREEN << "Root: " << BLUE << iti->second.root << std::endl;
 		std::cout << GREEN << "Methods: " << BLUE;
-/* 		for (const auto& str : iti->second.methods)
-         	std::cout << str << " "; */
+		for (const auto& str : iti->second.methods)
+         	std::cout << str << " ";
 		std::cout << WHITE << std::endl << std::endl;
 		iti++;
 		i++;

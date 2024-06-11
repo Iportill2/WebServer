@@ -3,7 +3,6 @@
 
 Location::Location(const std::string locationBlock)
 {
-    
     //std::cout << "Default location Constructor" << std::endl;
     nullstrings();
     parselocationBlock(locationBlock);
@@ -48,7 +47,8 @@ void Location::nullstrings()
 }
 void Location::parselocationBlock(const std::string& locationBlock) 
 {
-        //std::cout << CYAN  << locationBlock << std::endl;
+        std::cout << RED << "R" << WHITE << std::endl;
+        std::cout << CYAN  << locationBlock << WHITE <<std::endl;
         size_t pos;
         std::string tmp;
 
@@ -63,7 +63,7 @@ void Location::parselocationBlock(const std::string& locationBlock)
             pos += LOCATION.size() - 1; // Skip "file "
             size_t endPos = locationBlock.find('{', pos);
             tmp = locationBlock.substr(pos , endPos - pos);
-            std::cout << "tmp:"  << tmp << std::endl;
+           /// std::cout << "tmp:"  << tmp << std::endl;
             deletespaces(tmp);
             if(_location == "")
                 _location = tmp;
@@ -88,9 +88,11 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 8; // Skip "methods "
             size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            deletespaces(tmp);
-            _methods = tmp;
+            _methods = locationBlock.substr(pos, endPos - pos);
+
+            // tmp = locationBlock.substr(pos, endPos - pos);
+            // deletespaces(tmp);
+            // _methods = tmp;
         }
 
         // Find and extract root

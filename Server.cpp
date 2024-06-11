@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/05 12:19:11 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/11 13:35:34 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,37 +14,204 @@
 
 int Server::sign = 1;
 
-Server::Server(int prt): port (prt)
+Server::Server()
 {
-	setLoc();
-	printLoc();
-	
-	id = 0;
-
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
 	
-	sock = socket(AF_INET, SOCK_STREAM, 0);
+	srv s;
+	Location l1;
+	Location l2;
 
+	s.ipAddressToipNum("0.0.0.0");
+	s._sizetPort = 8080;
+	s._sizetBody = 100000;
+	s._Root = "./pagina";
+
+	l1._location = "/";
+	l1._root = "./pagina";
+	l1._file = "index.html";
+	l1.methods_vector.push_back("get");
+	s.arLoc.push_back(l1);
+
+	l2._location = "/pepe";
+	l2._root = "./pagina/pepe";
+	l2._file = "index.html";
+	l2.methods_vector.push_back("get");
+	l2.methods_vector.push_back("post");
+	s.arLoc.push_back(l2);
+	
+	servers.push_back(s);
+
+	printServers();
+	//my_select();
+}
+
+Server::Server(std::vector<srv> & srv) : servers(srv)
+{
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, &signalHandler);
+	//serverSet();
+	//Mselect();
+}
+
+void	Server::serverSet()
+{
 	int option = 1;
+	int puertoProvisional = 8080;
 	
-	//(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option)) == -1); // el de iban
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
+	std::cout << "servers size "  << servers.size() << std::endl;
 	
-	std::cout << "Server constructor called! PORT: " << port;
-	std::cout << " sockfd: " << sock << std::endl;
+	for(size_t i = 0; i < servers.size(); i++)
+	{
+		sockaddr_in	address;
+		address.sin_family = AF_INET;
+    	address.sin_port = htons(puertoProvisional++);
+    	address.sin_addr.s_addr = htonl(INADDR_ANY);
 	
-	ad.sin_family = AF_INET;
-    ad.sin_port = htons(port);
-    ad.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind (sock, (sockaddr *)&ad, sizeof(ad)) == -1)
-		std::cout << "Puerto ocupau atontau" << std::endl;
+		int	soc = socket(AF_INET, SOCK_STREAM, 0);
+		setsockopt(soc, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
+		
+		if (bind (soc, (sockaddr *)&address, sizeof(address)) == -1)
+			std::cout << "Puerto ocupau atontau" << std::endl;
+
+		listen(soc, 10);
 	
+		serversMap[soc] = i;
+		maxFD = soc;
+		sizeOfAddress = sizeof(address);
+		
+		std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << puertoProvisional - 1 << " fd " << soc << std::endl;
+	}
+	std::map<int, int>::iterator i = serversMap.begin();
+	std::map<int, int>::iterator o = serversMap.end();
+
+	while (i != o)
+	{
+		std::cout << "socket: " << i->first << " -> Server: " << i->second << " -> server name: " << servers[i->second]._server_name << std::endl;
+		i++;
+	}
+	std::cout << std::endl;
+}
+
+void	Server::Mselect()
+{
+	fd_set readyfdsRead, activefdsRead;
+	fd_set readyfdsWrite, activefdsWrite;
+
+	FD_ZERO(&readyfdsRead);
+	FD_ZERO(&activefdsRead);
+	FD_ZERO(&readyfdsWrite);
+	FD_ZERO(&activefdsWrite);
+
+	std::map<int, int>::iterator i = serversMap.begin();
+	std::map<int, int>::iterator o = serversMap.end();
+
+	while (i != o)
+	{
+		FD_SET (i->first, &activefdsRead);
+		i++;
+	}
 	
-	listen(sock, 10);
-	
-	my_select();
+	while(sign)
+	{
+		readyfdsRead = activefdsRead;
+		readyfdsWrite = activefdsWrite;
+
+		select(maxFD + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+
+		if (!sign)
+			break;
+		//std::cout << "MAX FD " << maxFD << std::endl;
+		for (int i = 0; i <= maxFD; i++)
+		{
+			if (!FD_ISSET(i, &readyfdsRead) && !FD_ISSET(i, &readyfdsWrite))
+				continue;
+				
+			if (FD_ISSET(i, &readyfdsRead))
+			{
+				std::cout << "Select selecciona fd de lectura " << i <<  std::endl;
+				int isServerSock = 0;
+				
+				std::map<int, int>::iterator it = serversMap.begin();
+				std::map<int, int>::iterator out = serversMap.end();
+				while (it != out)
+				{
+					std::cout << "it->first " << it->first << " it->second " << it->second << std::endl;
+					it++;
+				}
+				it = serversMap.begin();
+				while (it != out)
+				{
+					std::cout << "Mira si el fd " << i << " es una llamada " << std::endl;
+					//std::cout << "it->first = " << it->first << std::endl;
+					if (i == it->first)
+					{
+						int newSocket = accept(i, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
+						FD_SET (newSocket, &activefdsRead);
+						readMap[newSocket] = it->first;
+						if (new_socket > maxFD)
+							maxFD = newSocket;
+						isServerSock = 1;
+						std::cout << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;
+						break;
+					}
+					it++;
+				}
+				if (!isServerSock)
+				{
+					std::cout << "No es llamada es comunicacion, lee la peticion del socket " << i << std::endl;
+					memset(buffer, 0, sizeof(buffer));
+					int bytes = read(i, buffer, sizeof(buffer));
+					//std::cout << "i = " << i <<  std::endl;
+					//exit(1);
+					std::cout << "bytes leidos: " << bytes << std::endl;
+					if (bytes <= 0)
+					{
+						std::cout << "Client ID: " << id - 1 << " went \"a tomar por culo\"" << std::endl << std::endl;
+						FD_CLR(i, &activefdsRead);
+						readMap.erase(i);
+            			close(i);
+					}
+					else
+					{ 
+						std::cout << "Client ID: " << id - 1 << " pasa a la cola de WRITE!!!" << std::endl;
+						Request * r = new Request(buffer);
+						rq[i] = r;
+						//printRequest();
+						FD_SET(i, &activefdsWrite);
+						FD_CLR(i, &activefdsRead);
+					}
+				}
+			}
+			else if (FD_ISSET(i, &readyfdsWrite))
+			{
+				std::cout << "Select selecciona fd de escritura " << i <<  std::endl;
+				std::cout << "Se envia respuesta al socket " << i << std::endl << std::endl;
+				Respond(i);
+				close (i);
+				readMap.erase(i);
+				FD_CLR(i, &activefdsWrite);
+			}
+		}
+	}
+}
+
+void	Server::Respond(int i)
+{
+	Respons r(rq[i], servers[serversMap[readMap[i]]], i);
+	r.printRequest();
+	r.printConf();
+	r.createRespons();
+}
+
+void	Server::respond(int i)
+{
+	Response r(rq[i], conf, i);
+	//r.printRequest();
+	//r.printConf();
+	r.createResponse();
 }
 
 void	Server::my_select()
@@ -54,7 +221,7 @@ void	Server::my_select()
 	t_client clients[100];
 	
 	int addrlen = sizeof(ad);
-	
+	//std::cout << "size of address: " << sizeof(ad) << std::endl;
 	FD_ZERO(&readyfdsRead);
 	FD_ZERO(&activefdsRead);
 	FD_ZERO(&readyfdsWrite);
@@ -71,10 +238,7 @@ void	Server::my_select()
 		readyfdsWrite = activefdsWrite;
 
 		select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
-		//int s = select(maxfd + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
 
-		//std::cout << "sign = " << sign << std::endl;
-		//std::cout << "select = " << s << std::endl;
 		if (!sign)
 			break;
 
@@ -135,69 +299,10 @@ void	Server::my_select()
 		}
 	}
 	for (int i = 3; i <= maxfd; ++i)
-	{
-		//std::cout << "cerrando fd: " << i << std::endl;
-		//int  stat = close(i);
 		close(i);
-		//std::cout << "status fd " << i << " = " <<  stat << std::endl;
-	}
 }			
 
-void	Server::respond(int i)
-{
-	Response r(rq[i], conf, i);
-	r.printRequest();
-	r.printConf();
-	r.createResponse();
-	/* std::string request(buffer);
-	if (request.find("GET /fary.jpg") != std::string::npos)
-	{
-		std::ifstream file("pagina/rey.jpg", std::ios::binary);
-    	std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string fary = oss.str();
-	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/jpeg\r\n";
-        httpResponse += "\r\n";
-        httpResponse += fary;
 
-        write(i, httpResponse.c_str(), httpResponse.size());
-	}
-	else if (request.find("GET /favicon.ico") != std::string::npos)
-	{
-		std::ifstream file("pagina/anarchy.png", std::ios::binary);
-    	std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string favi = oss.str();
-	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/png\r\n";
-        httpResponse += "\r\n";
-        httpResponse += favi;
-
-        write(i, httpResponse.c_str(), httpResponse.size());
-	}
-    else
-	{
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-   		httpResponse += "Content-Type: text/html\r\n";
-    	httpResponse += "\r\n";
-
-		std::ifstream file;
-		file.open("pagina/index.html", std::ios::in);
-    	if (!file.is_open()) 
-			std::cout << RED  <<" NOT FOUND" << WHITE <<std::endl; 
-   		else 
-		{
-			std::stringstream buffer;
-    		buffer << file.rdbuf();
-    		httpResponse += buffer.str();
-    		file.close();
-		}
-    	write(i, httpResponse.c_str(), httpResponse.size());
-	} */
-}
 
 Server::~Server()
 {
@@ -216,11 +321,6 @@ Server::~Server()
 		delete(iti->second);
 		iti++;
 	}
-}
-
-int  Server::get_maxfd()
-{
-	return id;
 }
 
 void	Server::signalHandler(int i)
@@ -248,59 +348,27 @@ void Server::printRequest()
 	}
 }
 
-void Server::setLoc()
+void Server::printServers()
 {
-	loc a;
-	loc b;
-	loc c;
-
-	a.file = "index.html";
-	a.root = "./pagina";
-	a.methods.push_back("GET");
-	a.methods.push_back("POST");
-
-	b.file = "rey.jpg";
-	b.root = "./pagina";
-	b.methods.push_back("GET");
-
-	c.file = "index.html";
-	c.root = "./pagina2";
-	c.methods.push_back("GET");
-
-	conf.host = "0.0.0.0";
-	conf.port = 8080;
-	conf.server_name = "localhost";
-	conf.body_size =10000;
-	conf.location["/"] = a;
-	conf.location["/fary.jpg"] = b;
-	conf.location["/pagina2"] = c;
-	
-}
-
-void Server::printLoc()
-{
-	std::cout << std::endl << GREEN << "Host: " << BLUE << conf.host << std::endl;
-	std::cout << GREEN << "Port: " << BLUE << conf.port << std::endl;
-	std::cout << GREEN << "Server name:: " << BLUE << conf.server_name << std::endl;
-	std::cout << GREEN << "Body size: " << BLUE << conf.body_size << WHITE << std::endl << std::endl;
-
-	std::map<std::string, loc>::iterator iti;
-	std::map<std::string, loc>::iterator ito;
-	iti = conf.location.begin();
-	ito = conf.location.end();
-	int i = 1;
-	
-	while (iti != ito)
+	for (size_t i = 0; i < servers.size(); i++)
 	{
-		std::cout << GREEN << "LOCATION " << i << " " << YELLOW << iti->first << std::endl;
-		std::cout << GREEN << "File: " << BLUE << iti->second.file << std::endl;
-		std::cout << GREEN << "Root: " << BLUE << iti->second.root << std::endl;
-		std::cout << GREEN << "Methods: " << BLUE;
-/* 		for (const auto& str : iti->second.methods)
-         	std::cout << str << " "; */
-		std::cout << WHITE << std::endl << std::endl;
-		iti++;
-		i++;
+		std::cout << "----SERVER  " << i + 1 << "-------" << std::endl;
+		std::cout << "ip_num: " << "\"" << servers[i]._ipNum  << "\"" << std::endl;
+		std::cout << "port: " << "\"" << servers[i]._sizetPort  << "\"" << std::endl;
+		std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
+		std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
+		
+		std::cout << std::endl;
+		for (size_t j = 0; j < servers[i].arLoc.size(); j++)
+		{
+			std::cout << "-----Location  " << "\"" << servers[i].arLoc[j]._location  << "\"" << std::endl;
+			std::cout << "root " << "\"" << servers[i].arLoc[j]._root  << "\"" << std::endl;
+			std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
+			for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
+				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" <<std::endl;
+			std::cout << std::endl;
+		}
+		
 	}
 }
 

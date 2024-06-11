@@ -14,7 +14,9 @@ Config::Config(std::string configName)
         std::cout << "";
          //para printear los server y locations
     }
-    //std::cout << BLUE << array_of_srv[0].array_of_location[0].getFile() << "|" << WHITE << std::endl;
+    else
+        return;
+    //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
@@ -35,19 +37,19 @@ void Config::printArrayOfSrv() const
         std::cout << BLUE << "sizetPort:" << RED << "\""<< array_of_srv[i]._sizetPort << "\""<<  std::endl;
         std::cout << BLUE << "sizetBody:" << RED << "\""<< array_of_srv[i]._sizetBody << "\""<<  std::endl;
        // Add more print statements for other srv data as needed
-        for(size_t e = 0 ; e < array_of_srv[i].array_of_location.size(); ++e)
+        for(size_t e = 0 ; e < array_of_srv[i].arLoc.size(); ++e)
         {
             std::cout << GREEN   << "location num:" << RED << "\""<< e << "\""<< std::endl;
-            std::cout << MAGENTA << "location:" << YELLOW << "\""<< array_of_srv[i].array_of_location[e].getLocation() << "\"" << std::endl;
-            std::cout << MAGENTA << "root:" << YELLOW << "\""<< array_of_srv[i].array_of_location[e].getRoot() << "\""<< std::endl;
-            std::cout << MAGENTA << "file:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e].getFile() << "\""<< std::endl;
-            std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e].getMethods() << "\""<< std::endl;
-            std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e].getAutoindex() << "\""<< std::endl;
-            std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].array_of_location[e]._cgi << "\""<< std::endl;
-            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].array_of_location[e]._redirect_302 << "\""<< WHITE << std::endl << std::endl; 
-            for(size_t u = 0 ; u < array_of_srv[i].array_of_location[e].methods_vector.size() ; ++u)
+            std::cout << MAGENTA << "location:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getLocation() << "\"" << std::endl;
+            std::cout << MAGENTA << "root:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getRoot() << "\""<< std::endl;
+            std::cout << MAGENTA << "file:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getFile() << "\""<< std::endl;
+            std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getMethods() << "\""<< std::endl;
+            std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getAutoindex() << "\""<< std::endl;
+            std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e]._cgi << "\""<< std::endl;
+            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].arLoc[e]._redirect_302 << "\""<< WHITE << std::endl << std::endl; 
+            for(size_t u = 0 ; u < array_of_srv[i].arLoc[e].methods_vector.size() ; ++u)
             {
-                std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].array_of_location[e].methods_vector[u] << WHITE << std::endl;
+                std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
             }
         }
     }
@@ -89,7 +91,7 @@ bool  Config::config_routine(std::string configName)
     if(openFile(configName) == true)
     {
         std::cout << "Archivo abierto" << std::endl;
-        if(getServerCount()  == 0)
+        if(getServerCount() == 0)
             return 0;
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
         createSrv();
@@ -138,8 +140,6 @@ void Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
-/*         std::cout << RED << "tmp:" << tmp << " lenght:" << length << WHITE <<std::endl;
-        std::cout << CYAN << sub << WHITE <<std::endl; */
         srv newServer(sub);
         newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
         array_of_srv.push_back(newServer);
@@ -205,6 +205,7 @@ bool Config::validatePort()
         {
 
             std::cout << CYAN << "validatePort() error the value of port is "<< RED << tmp << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl;
+            printArrayOfSrv();
             return 0;
         }
         ++i;

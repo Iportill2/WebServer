@@ -2,7 +2,6 @@
 #pragma once
 
 # include "dependences.hpp"
-#include <string>
 
 class Request
 {
@@ -19,6 +18,7 @@ class Request
         std::string body;
 
     public:
+    
         Request(std::string buf);
         ~Request();
         

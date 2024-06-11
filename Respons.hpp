@@ -3,28 +3,28 @@
 
 # include "dependences.hpp"
 # include "Request.hpp"
-# include "Confs.hpp"
 # include "Utils.hpp"
+# include "srv.hpp"
 
 class Request;
-class Confs;
+class srv;
 
-class Response
+class Respons
 {
 	private:
 
 		Request *	rq;
-		Confs		conf;
+		srv			server;
 		int			fd;
 
 		std::string _url;
 
 	public:
 
-		Response(Request * request, Confs & cnf, int fDescriptor);
-		~Response();
+		Respons(Request * request, srv & sv, int fDescriptor);
+		~Respons();
 
-		int		createResponse();
+		int		createRespons();
 		bool	checkServerName();
 		bool	checkLocation();
 		bool	checkAuthorized();

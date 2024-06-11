@@ -15,6 +15,7 @@ class Location
     std::string _redirect_302;
 
     std::vector <std::string> methods_vector;
+    Location(){};
     Location(const std::string locationBlock);
     ~Location();
 

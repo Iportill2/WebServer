@@ -1,16 +1,16 @@
 NAME = webserver
 CPP = c++
-CFLAGS = -Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra #-std=c++98 #-g3 -fsanitize=address
 SRC_FILES = main.cpp \
-			Utils.cpp \
-			Config.cpp  \
-			Location.cpp \
-			srv.cpp \
 			Server.cpp \
 			Request.cpp \
 			Response.cpp \
-			Error.cpp 
-
+			Error.cpp \
+			Utils.cpp \
+			Config.cpp \
+			srv.cpp \
+			Location.cpp \
+			Respons.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

@@ -9,7 +9,8 @@ SRC_FILES = main.cpp \
 			Server.cpp \
 			Request.cpp \
 			Response.cpp \
-			Error.cpp 
+			Error.cpp \
+			pruebaParseGoiko.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

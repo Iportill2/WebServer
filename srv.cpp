@@ -5,6 +5,7 @@ srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
     //nullstrings();
+    pruebaParseGoiko(serverBlock);
     if(parseServerBlock(serverBlock) == 0)
         return;
 

@@ -28,7 +28,7 @@ void Config::printArrayOfSrv() const
         std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
         std::cout << BLUE << "Host:" << RED << "\""<< array_of_srv[i].getHost() << "\""<< std::endl;
         std::cout << BLUE << "Port:" << RED << "\""<< array_of_srv[i].getPort() << "\""<< std::endl;
-        std::cout << BLUE << "Server Name:"<< RED  << "\""<< array_of_srv[i].getServerName() << "\""<< std::endl;
+        std::cout << BLUE << ""<< RED  << "\""<< array_of_srv[i].getServerName() << "\""<< std::endl;
         std::cout << BLUE << "Body Size:" << RED << "\""<< array_of_srv[i].getBodySize() << "\""<< std::endl;
         std::cout << BLUE << "Root:" << RED << "\""<< array_of_srv[i].getRoot() << "\""<<  std::endl;
         std::cout << std::endl << BLUE << "ipNum:" << RED << "\""<< array_of_srv[i]._ipNum << "\""<<  std::endl;

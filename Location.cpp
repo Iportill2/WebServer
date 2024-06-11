@@ -3,6 +3,7 @@
 
 Location::Location(const std::string locationBlock)
 {
+    
     //std::cout << "Default location Constructor" << std::endl;
     nullstrings();
     parselocationBlock(locationBlock);

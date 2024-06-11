@@ -6,16 +6,12 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/05 12:37:00 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/11 10:56:21 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEPENDECES_HPP
 # define DEPENDECES_HPP
-
-
-# include "Server.hpp"
-
 
 # include <stdio.h>
 # include <sys/socket.h>
@@ -64,5 +60,7 @@
 # define BOLDMAGENTA "\033[1m\033[35m" ///////////
 # define BOLDCYAN "\033[1m\033[36m" ///////////
 # define BOLDWHITE "\033[1m\033[37m" ///////////
+
+void pruebaParseGoiko(std::string & s);
 
 #endif

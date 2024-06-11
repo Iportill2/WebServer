@@ -4,8 +4,9 @@
 #include "Location.hpp"
 
 class Location;
+class Utils;
 
-class srv
+class srv 
 {
     public:
     std::string _host;
@@ -27,8 +28,8 @@ class srv
     srv(std::string serverBlock);
     ~srv();
 
-    void nullstrings();
-    //void parseServerBlock(const std::string& serverBlock) ;
+
+   
 
 
     std::string getHost() const { return _host; }
@@ -43,16 +44,14 @@ class srv
     /// 
     unsigned long ipToDecimal(const std::string& ip);
     bool checkstring();
-    void deletespaces(std::string &s);
     bool ipAddressToipNum(std::string IpAddress);
-    bool stringToSizeT(const std::string& s, size_t &n);
 
     void findAndExtractRoot(const std::string& serverBlock, size_t pos); 
 
 
-
+    void deletespaces(std::string &s);
     bool parseServerBlock(const std::string& s) ;
-    int countSubstring(const std::string& str, const std::string& sub);
-    void setServerBlockValues(std::string s);
+    bool stringToSizeT(const std::string& s, size_t &n);     
+
 };
 #endif

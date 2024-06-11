@@ -6,7 +6,6 @@ Config::Config()
 Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
-    setValues();
     if(config_routine(configName) == 1)
     {
         if(validatePort() == 1)
@@ -21,6 +20,29 @@ Config::Config(std::string configName)
 Config::~Config()
 {
     //std::cout << "Config Destructor" << std::endl;
+}
+bool Config::pairbrackets(const std::string s)
+{
+    std::stack<char> brackets;
+
+    for (size_t i = 0; i < s.size(); i++)
+    {
+        if (s[i] == '{')
+        {
+            brackets.push('{');
+        }
+        else if (s[i] == '}')
+        {
+            if (brackets.empty())
+            {
+                return 0;
+            }
+            brackets.pop();
+        }
+    }
+    if(brackets.empty())
+        return(1);
+    return 0;
 }
 void Config::printArrayOfSrv() const
 {
@@ -54,12 +76,7 @@ void Config::printArrayOfSrv() const
         }
     }
 }
-void Config::setValues()
-{
-    server_id = 0;
-    srvCount = 0;
-    locationCount = 0;
-}
+
 bool Config::openFile(std::string Configname)
 {
     this->file.open(Configname.c_str(), std::ios::in);
@@ -74,17 +91,7 @@ bool Config::openFile(std::string Configname)
     file.close();
     return 1;
 }
-int Config::countSubstring(const std::string& str, const std::string& sub)
-{
-    if (sub.length() == 0) return 0;
-    int count = 0;
-    for (size_t offset = str.find(sub); offset != std::string::npos;
-     offset = str.find(sub, offset + sub.length()))
-    {
-        ++count;
-    }
-    return count;
-}
+
 
 bool  Config::config_routine(std::string configName)
 {
@@ -94,6 +101,8 @@ bool  Config::config_routine(std::string configName)
         if(getServerCount() == 0)
             return 0;
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        if(pairbrackets(file_content) == 0)
+            return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
         createSrv();
         return(1);
     } 
@@ -146,15 +155,6 @@ void Config::createSrv()
     }
 }
 
-size_t Config::size(const char *s)
-{
-	size_t i = 0;
-	if (s == NULL)
-		return 0;
-	while (s[i] != '\0')
-		++i;
-	return i;
-}
 
 bool Config::getServerCount()
 {

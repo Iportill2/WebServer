@@ -4,9 +4,9 @@
 Location::Location(const std::string locationBlock)
 {
     //std::cout << "Default location Constructor" << std::endl;
-    nullstrings();
-    parselocationBlock(locationBlock);
-    deletespaces(_location);
+    if(parselocationBlock(locationBlock) == 0)
+		return;
+    //deletespaces(_location);
     checkAndAddMethods(_methods);
 }
 
@@ -14,39 +14,10 @@ Location::~Location()
 {
     //std::cout << "location Destructor" << std::endl;
 }
-void Location::deletespaces(std::string &s)
-{
-    size_t i = 0;
-    std::string temp;
-    while(i < s.size())
-    {
-        while(s[i] == ' ')
-            i++;
-		if(s[i] != ' ')
-		{
-        	temp.push_back(s[i]);
-        	i++;
-		}
-    }
-	s = temp;
-    //checker
-	//std::cout << "s:"<< "|" << s << "|" << std::endl;
-	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
-	//return(s);
-}
-void Location::nullstrings()
-{
-    _location = "";
-    _root = "";
-    _file = "";
-    _methods = "";
-    _autoindex = "";
-    _cgi = "";
-    _redirect_302 = "";
 
-}
-void Location::parselocationBlock(const std::string& locationBlock) 
-{
+
+bool Location::parselocationBlock(const std::string& locationBlock) 
+/* {
         std::cout << RED << "R" << WHITE << std::endl;
         std::cout << CYAN  << locationBlock << WHITE <<std::endl;
         size_t pos;
@@ -58,6 +29,7 @@ void Location::parselocationBlock(const std::string& locationBlock)
 
         // Find and extract file
         pos = locationBlock.find(LOCATION);
+		
         if (pos != std::string::npos) 
 		{
             pos += LOCATION.size() - 1; // Skip "file "
@@ -65,10 +37,11 @@ void Location::parselocationBlock(const std::string& locationBlock)
             tmp = locationBlock.substr(pos , endPos - pos);
            /// std::cout << "tmp:"  << tmp << std::endl;
             deletespaces(tmp);
-            if(_location == "")
+            if(_location.empty())
                 _location = tmp;
             else
-                std::cout << "ERROR AL LOCATION REDIRECT" << std::endl;
+                return std::cout << "MORE THAN 1 LOCATION IN LOCATION BLOCK" << std::endl,0;
+
         }
 
         // Find and extract autoindex
@@ -79,7 +52,10 @@ void Location::parselocationBlock(const std::string& locationBlock)
             size_t endPos = locationBlock.find(';', pos);
             tmp = locationBlock.substr(pos, endPos - pos);
             deletespaces(tmp);
-            _autoindex = tmp; 
+            if(_autoindex.empty())
+                _autoindex = tmp;
+            else
+                return std::cout << "MORE THAN 1 AUTOINDEX IN LOCATION BLOCK" << std::endl,0;
         }
 
         // Find and extract methods
@@ -88,8 +64,11 @@ void Location::parselocationBlock(const std::string& locationBlock)
 		{
             pos += 8; // Skip "methods "
             size_t endPos = locationBlock.find(';', pos);
-            _methods = locationBlock.substr(pos, endPos - pos);
-
+            tmp = locationBlock.substr(pos, endPos - pos);
+            if(_methods.empty())
+                _methods = tmp;
+            else
+                return std::cout << "MORE THAN 1 METHODS IN LOCATION BLOCK" << std::endl,0;
             // tmp = locationBlock.substr(pos, endPos - pos);
             // deletespaces(tmp);
             // _methods = tmp;
@@ -103,7 +82,10 @@ void Location::parselocationBlock(const std::string& locationBlock)
             size_t endPos = locationBlock.find(';', pos);
             tmp = locationBlock.substr(pos, endPos - pos);
             deletespaces(tmp);
-            _root = tmp; 
+            if(_root.empty())
+                _root = tmp;
+            else
+                return std::cout << "MORE THAN 1 ROOT IN LOCATION BLOCK" << std::endl,0;
         }
 
         // Find and extract cgi
@@ -114,7 +96,10 @@ void Location::parselocationBlock(const std::string& locationBlock)
             size_t endPos = locationBlock.find(';', pos);
             tmp = locationBlock.substr(pos, endPos - pos);
             deletespaces(tmp);
-            _cgi = tmp; 
+            if(_cgi.empty())
+                _cgi = tmp;
+            else
+                return std::cout << "MORE THAN 1 CGI IN LOCATION BLOCK" << std::endl,0;
         }
 
         // Find and extract redirect_302
@@ -125,7 +110,10 @@ void Location::parselocationBlock(const std::string& locationBlock)
             size_t endPos = locationBlock.find(';', pos);
             tmp = locationBlock.substr(pos, endPos - pos);
             deletespaces(tmp);
-            _redirect_302 = tmp; 
+			if(_redirect_302.empty())
+                _redirect_302 = tmp;
+            else
+                return std::cout << "MORE THAN 1 REDIRECT IN LOCATION BLOCK" << std::endl,0;
         }
         // Find and extract file
         pos = locationBlock.find("file");
@@ -135,10 +123,13 @@ void Location::parselocationBlock(const std::string& locationBlock)
             size_t endPos = locationBlock.find(';', pos);
             tmp = locationBlock.substr(pos, endPos - pos);
             deletespaces(tmp);
-            _file = tmp;
+	        if(_file.empty())
+                _file = tmp;
+            else
+                return std::cout << "MORE THAN 1 FILE IN LOCATION BLOCK" << std::endl,0;
         }
-    
-}
+    return(1);
+} */
 
 std::string Location::toLowerCase(const std::string& str) 
 {
@@ -149,18 +140,22 @@ std::string Location::toLowerCase(const std::string& str)
 
 void Location::checkAndAddMethods(const std::string& input) 
 {
-    std::string lowerInput = toLowerCase(input);
+    std::istringstream iss(toLowerCase(input));
+    std::string method;
 
-    if (lowerInput.find("get") != std::string::npos) 
+    while (std::getline(iss, method, ' ')) 
     {
-        methods_vector.push_back("get");
-    }
-    if (lowerInput.find("post") != std::string::npos) 
-    {
-        methods_vector.push_back("post");
-    }
-    if (lowerInput.find("delete") != std::string::npos) 
-    {
-        methods_vector.push_back("delete");
+        if (method == "get") 
+        {
+            methods_vector.push_back("get");
+        }
+        else if (method == "post") 
+        {
+            methods_vector.push_back("post");
+        }
+        else if (method == "delete") 
+        {
+            methods_vector.push_back("delete");
+        }
     }
 }

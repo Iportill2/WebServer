@@ -33,3 +33,44 @@ std::string Utils::toString(const int &num)
     ss << num;
     return (ss.str());
 }
+
+size_t Utils::size(const char *s)
+{
+	size_t i = 0;
+	if (s == NULL)
+		return 0;
+	while (s[i] != '\0')
+		++i;
+	return i;
+}
+int Utils::countSubstring(const std::string& str, const std::string& sub)
+{
+    if (sub.length() == 0) 
+        return 0;
+    int count = 0;
+    for (size_t offset = str.find(sub); offset != std::string::npos;offset = str.find(sub, offset + sub.length()))
+        ++count;
+    return count;
+}
+
+
+void Utils::deletespaces(std::string &s)
+{
+    size_t i = 0;
+    std::string temp;
+    while(i < s.size())
+    {
+        while(s[i] == ' ')
+            i++;
+		if(s[i] != ' ')
+		{
+        	temp.push_back(s[i]);
+        	i++;
+		}
+    }
+	s = temp;
+    //checker
+	//std::cout << "s:"<< "|" << s << "|" << std::endl;
+	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
+	//return(s);
+}

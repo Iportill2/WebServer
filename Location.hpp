@@ -1,8 +1,8 @@
 #ifndef LOCATION_HPP
 # define LOCATION_HPP
-
+#include "Utils.hpp"
 #include "dependences.hpp"
-class Location
+class Location : public Utils
 {
     public:
     std::string _location;
@@ -19,7 +19,7 @@ class Location
     Location(const std::string locationBlock);
     ~Location();
 
-    void parselocationBlock(const std::string& locationBlock);
+    bool parselocationBlock(const std::string& locationBlock);
 
     std::string getLocation() const { return _location; }
     std::string getRoot() const { return _root; }
@@ -28,10 +28,9 @@ class Location
     std::string getAutoindex() const { return _autoindex; }
     std::string getCgi() const { return _cgi; }
     std::string getRedirect302() const { return _redirect_302; }
-    void nullstrings();
 
     std::string toLowerCase(const std::string& str);
     void checkAndAddMethods(const std::string& input);
-    void deletespaces(std::string &s);
+
 };
 #endif

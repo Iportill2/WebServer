@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:00:00 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/10 13:25:12 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/11 15:49:38 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,47 +15,28 @@
 # include "Config.hpp"
 
 
-/* void printArrayOfServers(std::vector<srv> & a)
-{
-    for (size_t i = 0; i < a.size(); i++)
-    {
-        std::cout << "---------SERVER " << i + 1 << "------------------------------------------" << std::endl;
-        std::cout << "host:" << "\"" << GREEN << a[i]._host << WHITE << "\"" << std::endl;
-        std::cout << "port:" << "\"" << GREEN << a[i]._port << WHITE << "\"" << std::endl;
-        std::cout << "server name:" "\"" << GREEN << a[i]._server_name << WHITE << "\"" << std::endl;
-        std::cout << "root:" << "\"" << GREEN << a[i]._root<< WHITE << "\"" <<std::endl;
-
-        for(size_t j = 0; j < a[i].arLoc.size() ; j++)
-        {
-            std::cout << std::endl << "*LOCATION " << j + 1 << std::endl;
-            std::cout << "Location: " << "\"" << GREEN << a[i].arLoc[j]._location << WHITE << "\"" << std::endl;
-            std::cout << "root: " << "\"" << GREEN << a[i].arLoc[j]._root << WHITE << "\"" << std::endl;
-            std::cout << "file: " << "\"" << GREEN << a[i].arLoc[j]._file << WHITE << "\"" << std::endl;
-            std::cout << "methods: " << "\"" << GREEN << a[i].arLoc[j]._methods << WHITE << "\"" << std::endl;
-            std::cout << "autoindex: " << "\"" << GREEN << a[i].arLoc[j]._autoindex << WHITE << "\"" << std::endl;
-            std::cout << "cgi:" << "\"" << GREEN << a[i].arLoc[j]._cgi << WHITE << "\"" << std::endl;
-            std::cout << "redirect: " << "\"" << GREEN << a[i].arLoc[j]._redirect_302 << WHITE << "\"" << std::endl;
-        }
-        std::cout << "---------------------------------------------------------------------" << std::endl;
-    }
-} */
 
 int main(int argc, char **argv)
 {
     if (argc == 1)
+    {
+        std::cout << std::endl << BLUE << "Configuration file not provided" << std::endl;
+        std::cout << GREEN <<"Loading default configuration..."<< WHITE << std::endl << std::endl;
         Server  server;
+    }
     
     else if(argc == 2)
     {
         Config confs(argv[1]);
     
         if (confs.getArrayOfServers().empty())
-            std::cout << "TA VACIO" << std::endl;
-        else
         {
-            //printArrayOfServers(confs.getArrayOfServers());
-            Server server(confs.getArrayOfServers());
+            std::cout << std::endl << RED <<"Invalid configuration file" << std::endl;
+            std::cout << GREEN << "Loading default configuration..." << WHITE << std::endl << std::endl;
+            Server server;
         }
+        else
+            Server server(confs.getArrayOfServers());
     }
     return (0);
 }

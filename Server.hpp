@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/11 13:26:45 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/11 20:11:39 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,11 @@
 
 #include "dependences.hpp"
 # include "Request.hpp"
-# include "Response.hpp"
-# include "Confs.hpp"
+
 # include "srv.hpp"
 # include "Respons.hpp"
 
 class Request;
-class Response;
-class Confs;
 class Respons;
 
 class Server
@@ -53,7 +50,6 @@ class Server
 
 		std::map <int, Request *> rq;
 
-        Confs conf;
 
     public:
 

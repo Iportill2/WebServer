@@ -63,12 +63,19 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         {
             std::string method;
             lineStream >> method;
+            while (!method.empty() && (method[method.size() - 1] == ';' || method[method.size() - 1] == '}'))
+                method = method.substr(0, method.size() - 1);
+
             methods_vector.push_back(method);
             
             while(!method.empty())
             {
                 method.clear();
                 lineStream >> method;
+
+                while (!method.empty() && (method[method.size() - 1] == ';' || method[method.size() - 1] == '}'))
+                        method = method.substr(0, method.size() - 1);
+
                 if(!method.empty())
                 {
                     if(method == "get" || method == "post" || method == "delete")

@@ -18,6 +18,7 @@ class Respons
 		int			fd;
 
 		std::string _url;
+		std::string _extension;
 
 	public:
 
@@ -28,6 +29,10 @@ class Respons
 		bool	checkServerName();
 		bool	checkLocation();
 		bool	checkAuthorized();
+
+		void	htmlRespond();
+		void	jpgRespond();
+		void	pngRespond();
 		
 		
 

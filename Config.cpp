@@ -46,7 +46,7 @@ bool Config::pairbrackets(const std::string s)
 }
 void Config::printArrayOfSrv() const
 {
-    std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
+    /* std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
     for (size_t i = 0; i < array_of_srv.size(); ++i)
     {
         std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
@@ -74,7 +74,7 @@ void Config::printArrayOfSrv() const
                 std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
             }
         }
-    }
+    } */
 }
 
 bool Config::openFile(std::string Configname)

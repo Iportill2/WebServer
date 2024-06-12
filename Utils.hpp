@@ -17,4 +17,5 @@ class Utils
         static int			countSubstring(const std::string& str, const std::string& sub);
         
         static void			deletespaces(std::string &s);
+
 };

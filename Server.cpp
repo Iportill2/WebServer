@@ -16,6 +16,7 @@ int Server::sign = 1;
 
 Server::Server()
 {
+	//std::cout << " Default Server Constructor" << std::endl;
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
 	
@@ -44,18 +45,19 @@ Server::Server()
 	
 	servers.push_back(s);
 
-	printServers();
+/* 	printServers();
 	serverSet();
-	Mselect();
+	Mselect(); */
 }
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
+	//std::cout << "Server Constructor" << std::endl;
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
-	printServers();
+/* 	printServers();
 	serverSet();
-	Mselect();
+	Mselect(); */
 }
 
 void	Server::serverSet()

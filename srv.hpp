@@ -24,6 +24,8 @@ class srv
 
     std::map<std::string, std::string> result;
 
+    bool srv_ok;
+
     srv(){};
     srv(std::string serverBlock);
     ~srv();

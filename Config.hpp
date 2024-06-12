@@ -37,6 +37,9 @@ public:
 
     std::vector<srv> & getArrayOfServers();
     bool pairbrackets(const std::string s);
+
+    bool checksrvloc();
+    std::string &  skip_p_t_esp(std::string &s);
     
 };
 

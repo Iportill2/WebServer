@@ -3,11 +3,15 @@
 
 Location::Location(const std::string locationBlock)
 {
+    lock_ok = 1;
     //std::cout << "Default location Constructor" << std::endl;
-    if(parselocationBlock(locationBlock) == 0)
+
+    lock_ok = parselocationBlock(locationBlock);
+    //std::cout << "lock_ok:"<< lock_ok << std::endl;
 		return;
-    //deletespaces(_location);
-    checkAndAddMethods(_methods);
+
+/*     deletespaces(_location);
+    checkAndAddMethods(_methods); */
 }
 
 Location::~Location()
@@ -18,7 +22,6 @@ Location::~Location()
 
 bool Location::parselocationBlock(const std::string& locationBlock) 
  {
-    std::cout   << std::endl;
 
     //std::cout << CYAN << locationBlock << WHITE << std::endl;
 
@@ -101,7 +104,6 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         }
         if (key == "redirect_302")
         {
-            std::cout << RED << "@@@" << WHITE << std::endl;
             if(!_redirect_302.empty())
                 return(std::cout << RED << "redirect_302 twice" << WHITE << std::endl,0);
             lineStream >> _redirect_302;
@@ -119,7 +121,7 @@ std::string Location::toLowerCase(const std::string& str)
     return lowerStr;
 }
 
-void Location::checkAndAddMethods(const std::string& input) 
+/* void Location::checkAndAddMethods(const std::string& input) 
 {
     std::istringstream iss(toLowerCase(input));
     std::string method;
@@ -139,4 +141,4 @@ void Location::checkAndAddMethods(const std::string& input)
             methods_vector.push_back("delete");
         }
     }
-}
+} */

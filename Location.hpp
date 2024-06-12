@@ -14,6 +14,8 @@ class Location
     std::string _cgi;
     std::string _redirect_302;
 
+    bool lock_ok;
+
     std::vector <std::string> methods_vector;
     Location(){};
     Location(const std::string locationBlock);

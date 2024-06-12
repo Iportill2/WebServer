@@ -6,7 +6,9 @@ srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
     //nullstrings();
-    if(parseServerBlock(serverBlock) == 0)
+    srv_ok = parseServerBlock(serverBlock);
+    
+    //std::cout << "srv_ok:"<< srv_ok << std::endl;
         return;
 
 }
@@ -25,8 +27,6 @@ std::vector<Location> &  srv::getlocations()
 
 bool srv::parseServerBlock(const std::string& s)
 {
-    std::cout   << std::endl;
-
     std::string line;
     std::istringstream stream(s);
     //vars v;
@@ -34,6 +34,7 @@ bool srv::parseServerBlock(const std::string& s)
     size_t i = 0;
     while (std::getline(stream, line)) 
 	{
+
 		std::istringstream lineStream(line);
 		std::string key;
 
@@ -50,10 +51,15 @@ bool srv::parseServerBlock(const std::string& s)
                 {
                     i++;
                 }
-                _host = listen.substr(0, i - 0);
+                if(_host.empty())
+                    _host = listen.substr(0, i - 0);
+                else
+                    return(std::cout << RED << "twice host in server" << WHITE << std::endl,0);
                 i++;
-                _port = listen.substr(i, listen.size() - i);
-
+                if(_port.empty())
+                    _port = listen.substr(i, listen.size() - i);
+                else
+                    return(std::cout << RED << "twice port in server" << WHITE << std::endl,0);
 
             }
             
@@ -87,7 +93,6 @@ bool srv::parseServerBlock(const std::string& s)
                 loc += line + '\n';
                 if (line.find('}') != std::string::npos)
                 {
-
                     arLoc.push_back(loc);
                     break;
                 }
@@ -97,8 +102,6 @@ bool srv::parseServerBlock(const std::string& s)
 	}
 	if(checkstring() == 0)
         return 0;
-
-    std::cout   << std::endl;
     return(1);
 }
 

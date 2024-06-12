@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/11 20:15:04 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/12 13:42:35 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	Server::serverSet()
 			std::cout << "Puerto ocupau atontau" << std::endl;
 
 		listen(soc, 10);
-	
+
 		serversMap[soc] = i;
 		maxFD = soc;
 		sizeOfAddress = sizeof(address);

@@ -37,7 +37,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         if (key == "location")
         {
             if(!_location.empty())
-                return(std::cout << RED << "location twice" << WHITE << std::endl,0);
+                return(std::cout << RED << "location twice" << WHITE << std::endl, 0);
             lineStream >> _location;
             if(_location[_location.size()-1] == '{')
                 _location = _location.substr(0, _location.size() - 1);

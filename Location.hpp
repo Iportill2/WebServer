@@ -2,7 +2,7 @@
 # define LOCATION_HPP
 #include "Utils.hpp"
 #include "dependences.hpp"
-class Location : public Utils
+class Location
 {
     public:
     std::string _location;

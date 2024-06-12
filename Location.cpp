@@ -63,7 +63,6 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         {
             std::string method;
             lineStream >> method;
-            
             methods_vector.push_back(method);
             
             while(!method.empty())
@@ -71,7 +70,10 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 method.clear();
                 lineStream >> method;
                 if(!method.empty())
-                    methods_vector.push_back(method);
+                {
+                    if(method == "get" || method == "post" || method == "delete")
+                        methods_vector.push_back(method);
+                }
             }
         }
         if (key == "autoindex")

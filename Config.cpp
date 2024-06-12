@@ -1,25 +1,45 @@
 #include "Config.hpp"
 Config::Config()
 {
-    //std::cout << "Default Config Constructor" << std::endl;
+    std::cout << "Default Config Constructor" << std::endl;
 }
 Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == 1)
-    {
-        if(validatePort() == 1)
-            printArrayOfSrv();
-        std::cout << "";
-         //para printear los server y locations
-    }
-    else
-        return;
+        if(checksrvloc() == 1)
+            if(validatePort() == 1)
+                if(getServerCount() == 1)
+                    printArrayOfSrv();
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
     //std::cout << "Config Destructor" << std::endl;
+}
+bool Config::checksrvloc()
+{
+    size_t i = 0;
+    while (i < array_of_srv.size())
+    {
+        if(array_of_srv[i].srv_ok == 0)
+            return(std::cout << RED << "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE << std::endl,0);
+        //std::cout << GREEN<< "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE<< std::endl;
+        size_t e = 0;
+        while (e < array_of_srv[i].arLoc.size())
+        {
+            size_t u = 0;
+            while (u < array_of_srv[i].arLoc[e].methods_vector.size())
+            {
+               // std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
+                ++u;
+            }
+            ++e;
+        }
+        ++i;
+    }
+    std::cout << YELLOW << array_of_srv[3].arLoc[0]._location << WHITE << std::endl;
+    return 1;
 }
 bool Config::pairbrackets(const std::string s)
 {
@@ -46,7 +66,7 @@ bool Config::pairbrackets(const std::string s)
 }
 void Config::printArrayOfSrv() const
 {
-    /* std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
+    std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
     for (size_t i = 0; i < array_of_srv.size(); ++i)
     {
         std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
@@ -74,7 +94,7 @@ void Config::printArrayOfSrv() const
                 std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
             }
         }
-    } */
+    }
 }
 
 bool Config::openFile(std::string Configname)
@@ -97,13 +117,17 @@ bool  Config::config_routine(std::string configName)
 {
     if(openFile(configName) == true)
     {
-        std::cout << "Archivo abierto" << std::endl;
-        if(getServerCount() == 0)
-            return 0;
-        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        
+        std::cout << file_content.size() << std::endl;
+        std::cout << file_content << std::endl;
+
+        if(file_content.empty())
+            return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,0);
         if(pairbrackets(file_content) == 0)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
+        std::cout << "pepe" << std::endl;
         createSrv();
+       // std::cout << "peep" << std::endl;
         return(1);
     } 
     else
@@ -177,7 +201,10 @@ bool Config::getServerCount()
     this->srvCount = server - server_name;
 
     if (this->srvCount > 0) 
+    {
+        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
         return 1;
+    }
     else
         return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
 }
@@ -217,4 +244,13 @@ std::vector<srv> & Config::getArrayOfServers()
     return array_of_srv;
 }
 
+std::string & Config::skip_p_t_esp(std::string &s)
+{
+    size_t start = 0;
+    while (start < s.size() && (s[start] == ' ' || s[start] == '\n' || s[start] == '\t')) {
+        ++start;
+    }
+    s = s.substr(start);
+    return s;
+}
 

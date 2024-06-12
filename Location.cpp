@@ -17,119 +17,91 @@ Location::~Location()
 
 
 bool Location::parselocationBlock(const std::string& locationBlock) 
-/* {
-        std::cout << RED << "R" << WHITE << std::endl;
-        std::cout << CYAN  << locationBlock << WHITE <<std::endl;
-        size_t pos;
-        std::string tmp;
+ {
+    std::cout   << std::endl;
 
-        std::string LOCATION = "location ";
+    //std::cout << CYAN << locationBlock << WHITE << std::endl;
 
-        //std::cout << CYAN << locationBlock << WHITE << std::endl;
+    std::string line;
+    std::istringstream stream(locationBlock);
+    std::string tmp;
 
-        // Find and extract file
-        pos = locationBlock.find(LOCATION);
-		
-        if (pos != std::string::npos) 
-		{
-            pos += LOCATION.size() - 1; // Skip "file "
-            size_t endPos = locationBlock.find('{', pos);
-            tmp = locationBlock.substr(pos , endPos - pos);
-           /// std::cout << "tmp:"  << tmp << std::endl;
-            deletespaces(tmp);
-            if(_location.empty())
-                _location = tmp;
-            else
-                return std::cout << "MORE THAN 1 LOCATION IN LOCATION BLOCK" << std::endl,0;
+    while (std::getline(stream, line)) 
+	{
+		std::istringstream lineStream(line);
+		std::string key;
 
+		lineStream >> key;
+
+
+        if (key == "location")
+        {
+            if(!_location.empty())
+                return(std::cout << RED << "location twice" << WHITE << std::endl,0);
+            lineStream >> _location;
+            if(_location[_location.size()-1] == '{')
+                _location = _location.substr(0, _location.size() - 1);
         }
 
-        // Find and extract autoindex
-        pos = locationBlock.find("autoindex");
-        if (pos != std::string::npos) 
-		{
-            pos += 10; // Skip "autoindex "
-            size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            deletespaces(tmp);
-            if(_autoindex.empty())
-                _autoindex = tmp;
-            else
-                return std::cout << "MORE THAN 1 AUTOINDEX IN LOCATION BLOCK" << std::endl,0;
+         if (key == "root")
+        {
+            if(!_root.empty())
+                return(std::cout << RED << "root twice" << WHITE << std::endl,0);
+            lineStream >> _root;
+            if(_root[_root.size()-1] == ';')
+                _root = _root.substr(0, _root.size() - 1);
         }
-
-        // Find and extract methods
-        pos = locationBlock.find("methods");
-        if (pos != std::string::npos) 
-		{
-            pos += 8; // Skip "methods "
-            size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            if(_methods.empty())
-                _methods = tmp;
-            else
-                return std::cout << "MORE THAN 1 METHODS IN LOCATION BLOCK" << std::endl,0;
-            // tmp = locationBlock.substr(pos, endPos - pos);
-            // deletespaces(tmp);
-            // _methods = tmp;
+        if (key == "file")
+        {
+            if(!_file.empty())
+                return(std::cout << RED << "file twice" << WHITE << std::endl,0);
+            lineStream >> _file;
+            if(_file[_file.size()-1] == ';')
+                _file = _file.substr(0, _file.size() - 1);
         }
-
-        // Find and extract root
-        pos = locationBlock.find("root");
-        if (pos != std::string::npos) 
-		{
-            pos += 5; // Skip "root "
-            size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            deletespaces(tmp);
-            if(_root.empty())
-                _root = tmp;
-            else
-                return std::cout << "MORE THAN 1 ROOT IN LOCATION BLOCK" << std::endl,0;
+        if (key == "methods")///
+        {
+            std::string method;
+            lineStream >> method;
+            
+            methods_vector.push_back(method);
+            
+            while(!method.empty())
+            {
+                method.clear();
+                lineStream >> method;
+                if(!method.empty())
+                    methods_vector.push_back(method);
+            }
         }
-
-        // Find and extract cgi
-        pos = locationBlock.find("cgi");
-        if (pos != std::string::npos) 
-		{
-            pos += 4; // Skip "cgi "
-            size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            deletespaces(tmp);
-            if(_cgi.empty())
-                _cgi = tmp;
-            else
-                return std::cout << "MORE THAN 1 CGI IN LOCATION BLOCK" << std::endl,0;
+        if (key == "autoindex")
+        {
+            if(!_autoindex.empty())
+                return(std::cout << RED << "autoindex twice" << WHITE << std::endl,0);
+            lineStream >> _autoindex;
+            if(_autoindex[_autoindex.size()-1] == ';')
+                _autoindex = _autoindex.substr(0, _file.size() - 1);
         }
-
-        // Find and extract redirect_302
-        pos = locationBlock.find("redirect 302");
-        if (pos != std::string::npos) 
-		{
-            pos += 13; // Skip "redirect_302 "
-            size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            deletespaces(tmp);
-			if(_redirect_302.empty())
-                _redirect_302 = tmp;
-            else
-                return std::cout << "MORE THAN 1 REDIRECT IN LOCATION BLOCK" << std::endl,0;
+        if (key == "cgi")
+        {
+            if(!_cgi.empty())
+                return(std::cout << RED << "cgi twice" << WHITE << std::endl,0);
+            lineStream >> _cgi;
+            if(_cgi[_cgi.size()-1] == ';')
+                _cgi = _cgi.substr(0, _file.size() - 1);
         }
-        // Find and extract file
-        pos = locationBlock.find("file");
-        if (pos != std::string::npos) 
-		{
-            pos += 5; // Skip "redirect_302 "
-            size_t endPos = locationBlock.find(';', pos);
-            tmp = locationBlock.substr(pos, endPos - pos);
-            deletespaces(tmp);
-	        if(_file.empty())
-                _file = tmp;
-            else
-                return std::cout << "MORE THAN 1 FILE IN LOCATION BLOCK" << std::endl,0;
+        if (key == "redirect_302")
+        {
+            std::cout << RED << "@@@" << WHITE << std::endl;
+            if(!_redirect_302.empty())
+                return(std::cout << RED << "redirect_302 twice" << WHITE << std::endl,0);
+            lineStream >> _redirect_302;
+            if(_redirect_302[_redirect_302.size()-1] == ';')
+                _redirect_302 = _redirect_302.substr(0, _file.size() - 1);
         }
+	}
     return(1);
-} */
+} 
 
 std::string Location::toLowerCase(const std::string& str) 
 {

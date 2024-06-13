@@ -8,8 +8,8 @@ Config::Config(std::string configName)
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == 1)
         if(checksrvloc() == 1)
-            if(validatePort() == 1)
-                if(checkduplicateports() == 1)
+            if(checkduplicateports() == 1)
+            	if(validatePort() == 1)
                     if(getServerCount() == 1)
                         printArrayOfSrv();
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
@@ -20,26 +20,24 @@ Config::~Config()
 }
 bool Config::checkduplicateports()
 {
-	//std::cout << array_of_srv[0]._sizetPort << std::endl;
-	return 1;
-}
-/*
-int checkUniqueElements(const std::vector<int>& arr) 
-{
-    std::unordered_set<int> seen;
-
-    for (int num : arr) 
-	{
-        if (seen.count(num)) 
-		{
-            return 0;  // Elemento duplicado encontrado
+    size_t i = 1;
+    size_t e = 0;
+    while(i < array_of_srv.size())
+    {
+        while(e < i)
+        {
+            if (array_of_srv[i]._port == array_of_srv[e]._port)
+            {
+                return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,0;
+            }
+            e++;
         }
-        seen.insert(num);
+        e = 0;
+        i++;
     }
-
-    return 1;  // Todos los elementos son únicos
+    return 1;
 }
-*/
+
 bool Config::checksrvloc()
 {
     size_t i = 0;
@@ -242,22 +240,13 @@ que estés ejecutando Nginx como root (lo cual no se recomienda por razones de s
 */
 bool Config::validatePort()
 {
-    int tmp;
     size_t i = 0;
     while(i < array_of_srv.size())
     {
-        tmp = std::atoi(array_of_srv[i]._port.c_str());
-        //std::cout << CYAN << "tmp="<< tmp << WHITE << std::endl;
-
-        if(tmp > 1023 && tmp < 65535)
-            std::cout << BLUE << "Port: " << RED << array_of_srv[i].getPort() << " OK!" << WHITE << std::endl;
+        if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
+            std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
         else
-        {
-
-            std::cout << CYAN << "validatePort() error the value of port is "<< RED << tmp << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl;
-            printArrayOfSrv();
-            return 0;
-        }
+            return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,0;
         ++i;
     }
     return 1;

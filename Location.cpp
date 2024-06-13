@@ -120,25 +120,3 @@ std::string Location::toLowerCase(const std::string& str)
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
     return lowerStr;
 }
-
-/* void Location::checkAndAddMethods(const std::string& input) 
-{
-    std::istringstream iss(toLowerCase(input));
-    std::string method;
-
-    while (std::getline(iss, method, ' ')) 
-    {
-        if (method == "get") 
-        {
-            methods_vector.push_back("get");
-        }
-        else if (method == "post") 
-        {
-            methods_vector.push_back("post");
-        }
-        else if (method == "delete") 
-        {
-            methods_vector.push_back("delete");
-        }
-    }
-} */

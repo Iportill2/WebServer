@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/10 13:21:18 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/13 16:53:34 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # include <stdexcept>
 # include <limits>
 # include <set>
+# include <fcntl.h>
 
 # include <algorithm>
 # include <cctype>

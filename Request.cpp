@@ -23,7 +23,12 @@ void    Request::parse()
 
         if (key == "GET" || key == "POST" || key == "DELETE")
         {
-            method = key;
+            if (key == "GET")
+                method = "get";
+            if (key == "POST")
+                method = "post";
+            if (key == "DELETE")
+                method = "delete";
             lineStream >> uri;
         }
         else if (key == "Host:")
@@ -42,7 +47,7 @@ void    Request::parse()
             break;
 	}
     while (std::getline(stream, line)) 
-        body += line + "\n";
+        body += line;
 
     if (uri.size() > 1 && uri[uri.size() - 1] == '/')
         uri = uri.substr(0, uri.size() - 1);

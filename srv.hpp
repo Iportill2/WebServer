@@ -5,7 +5,8 @@
 
 class Location;
 
-class srv
+
+class srv 
 {
     public:
     std::string _host;
@@ -23,12 +24,14 @@ class srv
 
     std::map<std::string, std::string> result;
 
+    bool srv_ok;
+
     srv(){};
     srv(std::string serverBlock);
     ~srv();
 
-    void nullstrings();
-    //void parseServerBlock(const std::string& serverBlock) ;
+
+   
 
 
     std::string getHost() const { return _host; }
@@ -43,16 +46,14 @@ class srv
     /// 
     unsigned long ipToDecimal(const std::string& ip);
     bool checkstring();
-    void deletespaces(std::string &s);
     bool ipAddressToipNum(std::string IpAddress);
-    bool stringToSizeT(const std::string& s, size_t &n);
 
     void findAndExtractRoot(const std::string& serverBlock, size_t pos); 
 
 
+    void deletespaces(std::string &s);
+    bool parseServerBlock(const std::string& s) ;
+    bool stringToSizeT(const std::string& s, size_t &n);     
 
-    bool parseServerBlock(const std::string& serverBlock) ;
-    int countSubstring(const std::string& str, const std::string& sub);
-    void setServerBlockValues(std::string s);
 };
 #endif

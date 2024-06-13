@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/11 20:15:04 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/13 16:54:07 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	Server::serverSet()
 
 		int	soc = socket(AF_INET, SOCK_STREAM, 0);
 		setsockopt(soc, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
+		fcntl(soc, F_SETFL, O_NONBLOCK);
 		
 		if (bind (soc, (sockaddr *)&address, sizeof(address)) == -1)
 			std::cout << "Puerto ocupau atontau" << std::endl;
@@ -151,6 +152,7 @@ void	Server::Mselect()
 					if (i == it->first)
 					{
 						int newSocket = accept(i, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
+						fcntl(newSocket, F_SETFL, O_NONBLOCK);
 						FD_SET (newSocket, &activefdsRead);
 						readMap[newSocket] = it->first;
 						if (new_socket > maxFD)
@@ -257,7 +259,7 @@ void Server::printServers()
 {
 	for (size_t i = 0; i < servers.size(); i++)
 	{
-		std::cout << GREEN << "----SERVER  " << i + 1 << "-------" << WHITE << std::endl;
+		std::cout << GREEN << "----SERVER  " << i + 1 << "-------------------------" << WHITE << std::endl;
 		std::cout << "server name : " << "\"" << servers[i]._server_name  << "\"" << std::endl;
 		std::cout << "ip_num: " << "\"" << servers[i]._ipNum  << "\"" << std::endl;
 		std::cout << "port: " << "\"" << servers[i]._sizetPort  << "\"" << std::endl;
@@ -270,6 +272,7 @@ void Server::printServers()
 			std::cout << YELLOW << "-----Location  " << WHITE << "\"" << servers[i].arLoc[j]._location  << "\"" << std::endl;
 			std::cout << "root " << "\"" << servers[i].arLoc[j]._root  << "\"" << std::endl;
 			std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
+			std::cout << "redirect " << "\"" << servers[i].arLoc[j]._redirect  << "\"" << std::endl;
 			for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
 				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
 			std::cout << std::endl;

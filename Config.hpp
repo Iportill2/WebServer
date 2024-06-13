@@ -3,10 +3,11 @@
 #include "dependences.hpp"
 #include "srv.hpp"
 #include "Location.hpp"
+#include "Utils.hpp"
 class srv;
 class Location;
 
-class Config
+class Config :public Utils
 {
     protected:
     std::ifstream file;
@@ -22,13 +23,12 @@ public:
     Config(std::string configName);
     ~Config();
 
-    void setValues();
     bool openFile(std::string Configname);
     bool config_routine(std::string configName);
     bool getServerCount();
     
-    int countSubstring(const std::string& str, const std::string& sub);
-	size_t size(const char *s);
+    // int countSubstring(const std::string& str, const std::string& sub);
+	// size_t size(const char *s);
     void createSrv();
 
     void printArrayOfSrv() const;
@@ -36,6 +36,11 @@ public:
     bool validatePort();
 
     std::vector<srv> & getArrayOfServers();
+    bool pairbrackets(const std::string s);
+
+    bool checksrvloc();
+    std::string &  skip_p_t_esp(std::string &s);
+    bool checkduplicateports();
     
 };
 

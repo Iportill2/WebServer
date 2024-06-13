@@ -102,19 +102,15 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             if(_cgi[_cgi.size()-1] == ';')
                 _cgi = _cgi.substr(0, _file.size() - 1);
         }
-        if (key == "redirect")
+        if (key == "redirect" && _redirect.empty())
         {
             lineStream >> redirect_num;
             lineStream >> _redirect;
-        std::cout << redirect_num << "---" << _redirect << std::endl;
-            //if(_redirect.empty())
-
-/*                 return(std::cout << RED << "redirect_302 twice" << WHITE << std::endl,0);
             if(_redirect[_redirect.size()-1] == ';')
-                _redirect = _redirect.substr(0, _file.size() - 1);
-        } */
+                _redirect = _redirect.substr(0, _redirect.size() - 1);
+        //std::cout << "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
+		} 
 	}
-} 
     return(1);
 }
 

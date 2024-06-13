@@ -61,7 +61,7 @@ bool Config::checksrvloc()
         }
         ++i;
     }
-    std::cout << YELLOW << array_of_srv[3].arLoc[0]._location << WHITE << std::endl;
+    //std::cout << YELLOW << array_of_srv[3].arLoc[0]._location << WHITE << std::endl;
     return 1;
 }
 bool Config::pairbrackets(const std::string s)
@@ -148,7 +148,7 @@ bool  Config::config_routine(std::string configName)
             return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,0);
         if(pairbrackets(file_content) == 0)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
-        std::cout << "pepe" << std::endl;
+        //std::cout << "pepe" << std::endl;
         createSrv();
        // std::cout << "peep" << std::endl;
         return(1);

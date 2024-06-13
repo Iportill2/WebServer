@@ -51,6 +51,7 @@
         "typeinfo": "cpp",
         "map": "cpp",
         "cstring": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "set": "cpp"
     }
 }

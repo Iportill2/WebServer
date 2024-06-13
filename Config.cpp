@@ -9,14 +9,37 @@ Config::Config(std::string configName)
     if(config_routine(configName) == 1)
         if(checksrvloc() == 1)
             if(validatePort() == 1)
-                if(getServerCount() == 1)
-                    printArrayOfSrv();
+                if(checkduplicateports() == 1)
+                    if(getServerCount() == 1)
+                        printArrayOfSrv();
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
     //std::cout << "Config Destructor" << std::endl;
 }
+bool Config::checkduplicateports()
+{
+	//std::cout << array_of_srv[0]._sizetPort << std::endl;
+	return 1;
+}
+/*
+int checkUniqueElements(const std::vector<int>& arr) 
+{
+    std::unordered_set<int> seen;
+
+    for (int num : arr) 
+	{
+        if (seen.count(num)) 
+		{
+            return 0;  // Elemento duplicado encontrado
+        }
+        seen.insert(num);
+    }
+
+    return 1;  // Todos los elementos son únicos
+}
+*/
 bool Config::checksrvloc()
 {
     size_t i = 0;
@@ -88,7 +111,7 @@ void Config::printArrayOfSrv() const
             std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getMethods() << "\""<< std::endl;
             std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getAutoindex() << "\""<< std::endl;
             std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e]._cgi << "\""<< std::endl;
-            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].arLoc[e]._redirect_302 << "\""<< WHITE << std::endl << std::endl; 
+            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].arLoc[e]._redirect << "\""<< WHITE << std::endl << std::endl; 
             for(size_t u = 0 ; u < array_of_srv[i].arLoc[e].methods_vector.size() ; ++u)
             {
                 std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
@@ -118,8 +141,8 @@ bool  Config::config_routine(std::string configName)
     if(openFile(configName) == true)
     {
         
-        std::cout << file_content.size() << std::endl;
-        std::cout << file_content << std::endl;
+/*         std::cout << file_content.size() << std::endl;
+        std::cout << file_content << std::endl; */
 
         if(file_content.empty())
             return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,0);
@@ -223,7 +246,7 @@ bool Config::validatePort()
     size_t i = 0;
     while(i < array_of_srv.size())
     {
-        tmp = std::atoi(array_of_srv[i].getPort().c_str());
+        tmp = std::atoi(array_of_srv[i]._port.c_str());
         //std::cout << CYAN << "tmp="<< tmp << WHITE << std::endl;
 
         if(tmp > 1023 && tmp < 65535)

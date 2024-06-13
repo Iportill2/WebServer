@@ -40,6 +40,7 @@ public:
 
     bool checksrvloc();
     std::string &  skip_p_t_esp(std::string &s);
+    bool checkduplicateports();
     
 };
 

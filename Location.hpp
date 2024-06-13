@@ -12,7 +12,8 @@ class Location
     std::string _methods;
     std::string _autoindex;
     std::string _cgi;
-    std::string _redirect_302;
+    std::string _redirect;
+    int redirect_num;
 
     bool lock_ok;
 
@@ -29,7 +30,7 @@ class Location
     std::string getMethods() const { return _methods; }
     std::string getAutoindex() const { return _autoindex; }
     std::string getCgi() const { return _cgi; }
-    std::string getRedirect302() const { return _redirect_302; }
+    std::string getRedirect302() const { return _redirect; }
 
     std::string toLowerCase(const std::string& str);
     void checkAndAddMethods(const std::string& input);

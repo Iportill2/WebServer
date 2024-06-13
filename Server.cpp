@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/13 16:54:07 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:20:04 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ void Server::printRequest()
 
 void Server::printServers()
 {
-	for (size_t i = 0; i < servers.size(); i++)
+	/* for (size_t i = 0; i < servers.size(); i++)
 	{
 		std::cout << GREEN << "----SERVER  " << i + 1 << "-------------------------" << WHITE << std::endl;
 		std::cout << "server name : " << "\"" << servers[i]._server_name  << "\"" << std::endl;
@@ -277,7 +277,7 @@ void Server::printServers()
 				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
 			std::cout << std::endl;
 		}
-		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
-	}
+		std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
+	} */
 }
 

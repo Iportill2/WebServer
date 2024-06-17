@@ -9,7 +9,8 @@ SRC_FILES = main.cpp \
 			Config.cpp \
 			srv.cpp \
 			Location.cpp \
-			Respons.cpp
+			Respons.cpp \
+			Autoindex.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

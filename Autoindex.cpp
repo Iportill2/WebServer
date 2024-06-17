@@ -74,17 +74,17 @@ void handle_request(const std::string& directory_path)
     std::cout << response;
 }
 
-int main(int argc, char* argv[]) 
-{
-    // Example usage
-    std::string directory_path = "."; // Current directory
-    handle_request(directory_path);
-    return 0;
-}
+ int autoindex(std::string path) 
+ {
+     // Example usage
+   // std::string directory_path = "."; // Current directory
+     handle_request(path);
+     return 0;
+ }
 ///////////////////////////////////////////////////
 void serve_file(const std::string& index_file)
 {
-    
+    (void) index_file;
 }
 
 

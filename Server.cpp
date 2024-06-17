@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/13 17:20:04 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:16:56 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	Server::serverSet()
 {
 	int option = 1;
 	
-	std::cout << "servers size "  << servers.size() << std::endl;
+	//std::cout << "servers size "  << servers.size() << std::endl;
 	
 	for(size_t i = 0; i < servers.size(); i++)
 	{
@@ -85,17 +85,17 @@ void	Server::serverSet()
 		maxFD = soc;
 		sizeOfAddress = sizeof(address);
 		
-		std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << servers[i]._sizetPort << " fd " << soc << std::endl;
+		//std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << servers[i]._sizetPort << " fd " << soc << std::endl;
 	}
 	std::map<int, int>::iterator i = serversMap.begin();
 	std::map<int, int>::iterator o = serversMap.end();
 
 	while (i != o)
 	{
-		std::cout << "socket: " << i->first << " -> Server: " << i->second << " -> server name: " << servers[i->second]._server_name << std::endl;
+		//std::cout << "socket: " << i->first << " -> Server: " << i->second << " -> server name: " << servers[i->second]._server_name << std::endl;
 		i++;
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
 }
 
 void	Server::Mselect()
@@ -117,12 +117,18 @@ void	Server::Mselect()
 		i++;
 	}
 	
+	int	nClients = 0;
+	
 	while(sign)
 	{
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		select(maxFD + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+		std::cout << "------------------SELECT------------------" << std::endl;
+		
+		int sel = select(maxFD + 1, &readyfdsRead, &readyfdsWrite, NULL, NULL);
+
+		std::cout << "sel = " << sel << std::endl;
 
 		if (!sign)
 			break;
@@ -141,13 +147,13 @@ void	Server::Mselect()
 				std::map<int, int>::iterator out = serversMap.end();
 				while (it != out)
 				{
-					std::cout << "it->first " << it->first << " it->second " << it->second << std::endl;
+					//std::cout << "it->first " << it->first << " it->second " << it->second << std::endl;
 					it++;
 				}
 				it = serversMap.begin();
 				while (it != out)
 				{
-					std::cout << "Mira si el fd " << i << " es una llamada " << std::endl;
+					//std::cout << "Mira si el fd " << i << " es una llamada " << std::endl;
 					//std::cout << "it->first = " << it->first << std::endl;
 					if (i == it->first)
 					{
@@ -159,6 +165,7 @@ void	Server::Mselect()
 							maxFD = newSocket;
 						isServerSock = 1;
 						std::cout << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;
+						nClients++;
 						break;
 					}
 					it++;
@@ -170,18 +177,19 @@ void	Server::Mselect()
 					int bytes = read(i, buffer, sizeof(buffer));
 					//std::cout << "i = " << i <<  std::endl;
 					//exit(1);
-					std::cout << MAGENTA << buffer << WHITE <<std::endl;
-					std::cout << "bytes leidos: " << bytes << std::endl;
+					//std::cout << MAGENTA << buffer << WHITE <<std::endl;
+					//std::cout << "bytes leidos: " << bytes << std::endl;
 					if (bytes <= 0)
 					{
-						std::cout << "Client ID: " << id - 1 << " went \"a tomar por culo\"" << std::endl << std::endl;
+						std::cout << "fd " << i << " went \"a tomar por culo\"" << std::endl << std::endl;
 						FD_CLR(i, &activefdsRead);
 						readMap.erase(i);
+						nClients--;
             			close(i);
 					}
 					else
 					{ 
-						std::cout << "Client ID: " << id - 1 << " pasa a la cola de WRITE!!!" << std::endl;
+						std::cout << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
 						Request * r = new Request(buffer);
 						rq[i] = r;
 						//printRequest();
@@ -192,10 +200,11 @@ void	Server::Mselect()
 			}
 			else if (FD_ISSET(i, &readyfdsWrite))
 			{
-				std::cout << "Select selecciona fd de escritura " << i <<  std::endl;
-				std::cout << "Se envia respuesta al socket " << i << std::endl << std::endl;
+				std::cout << "Select selecciona fd de escritura " << i << " y es respondido!!!" << std::endl;
+				//std::cout << "Se envia respuesta al socket " << i << std::endl << std::endl;
 				Respond(i);
 				close (i);
+				nClients--;
 				readMap.erase(i);
 				FD_CLR(i, &activefdsWrite);
 			}
@@ -206,14 +215,14 @@ void	Server::Mselect()
 void	Server::Respond(int i)
 {
 	Respons r(rq[i], servers[serversMap[readMap[i]]], i);
-	r.printRequest();
-	r.printConf();
+	//r.printRequest();
+	//r.printConf();
 	r.createRespons();
 }
 
 Server::~Server()
 {
-	std::cout << "Server destructor called!" << std::endl;
+	//std::cout << "Server destructor called!" << std::endl;
 	close (sock);
 	
 	std::map<int, Request *>::iterator iti;
@@ -249,7 +258,7 @@ void Server::printRequest()
 
 	while(iti != ito)
 	{
-		std::cout << "FD " << iti->first << std::endl;
+		//std::cout << "FD " << iti->first << std::endl;
 		iti->second->printRequest();
 		iti++;
 	}
@@ -257,7 +266,7 @@ void Server::printRequest()
 
 void Server::printServers()
 {
-	/* for (size_t i = 0; i < servers.size(); i++)
+	for (size_t i = 0; i < servers.size(); i++)
 	{
 		std::cout << GREEN << "----SERVER  " << i + 1 << "-------------------------" << WHITE << std::endl;
 		std::cout << "server name : " << "\"" << servers[i]._server_name  << "\"" << std::endl;
@@ -273,11 +282,12 @@ void Server::printServers()
 			std::cout << "root " << "\"" << servers[i].arLoc[j]._root  << "\"" << std::endl;
 			std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
 			std::cout << "redirect " << "\"" << servers[i].arLoc[j]._redirect  << "\"" << std::endl;
+			std::cout << "autoindex " << "\"" << servers[i].arLoc[j]._autoindex  << "\"" << std::endl;
 			for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
 				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
 			std::cout << std::endl;
 		}
-		std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
-	} */
+		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
+	}
 }
 

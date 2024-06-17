@@ -1,7 +1,7 @@
 #include "Config.hpp"
 Config::Config()
 {
-    std::cout << "Default Config Constructor" << std::endl;
+    //std::cout << "Default Config Constructor" << std::endl;
 }
 Config::Config(std::string configName)
 {

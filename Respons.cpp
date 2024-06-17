@@ -15,13 +15,13 @@ int	Respons::checkLocation()
 		{
 			if (server.arLoc[i]._location == "/redirect")
 			{
-				std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
+				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
 				return(_url = server.arLoc[i]._redirect, 2);
 			}
 
 			_loc = i;
 			std::string url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
-			std::cout << "url1 = " << url << std::endl;
+			//std::cout << "url1 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
 			else
@@ -39,7 +39,7 @@ int	Respons::checkLocation()
 		{
 			_loc = i;
 			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri().substr(pos);
-			std::cout << "url2 = " << url << std::endl;
+			//std::cout << "url2 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
 			else
@@ -53,7 +53,7 @@ int	Respons::checkLocation()
 		{
 			_loc = i;
 			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri();
-			std::cout << "url3 = " << url << std::endl;
+			//std::cout << "url3 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
 				return (_url = url, 1);
 		}	
@@ -77,7 +77,7 @@ bool	Respons::checkAuthorized()
 	size_t point = _url.find('.');//cuidao si no lo encuentra
 
 	_extension = _url.substr(point);
-	std::cout << "Extension = " << "\"" <<  _extension  << "\"" << std::endl;
+	//std::cout << "Extension = " << "\"" <<  _extension  << "\"" << std::endl;
 
 	if(_extension != ".html" && _extension != ".jpg" && _extension != ".png" && _extension != ".ico")
 		return 0;
@@ -97,34 +97,34 @@ int Respons::createRespons()
 {
 	if (!checkServerName())
 	{
-		std::cout << "SERVERNAME ERROR" << std::endl;
+		//std::cout << "SERVERNAME ERROR" << std::endl;
 		Error r(400, fd);
 		return 1;
 	}
 	int locat = checkLocation();
 	if (!locat)
 	{
-		std::cout << "PAGE NOT FOUND" << std::endl;
+		//std::cout << "PAGE NOT FOUND" << std::endl;
 		Error r(404, fd);
 		return 1;
 	}
-	std::cout << "---FINAL url = " << _url << std::endl;
-	std::cout << "location = " << locat << std::endl;
+	//std::cout << "---FINAL url = " << _url << std::endl;
+	//std::cout << "location = " << locat << std::endl;
 
 	if (locat != 2 && !checkAuthorized())
 	{
-		std::cout << "PAGE FORBIDDEN" << std::endl;
+		//std::cout << "PAGE FORBIDDEN" << std::endl;
 		Error r(403, fd);
 		return 1;
 	}
 	if (locat != 2 && !checkMethod())
 	{
-		std::cout << "METHOD NOT ALLOWED" << std::endl;
+		//std::cout << "METHOD NOT ALLOWED" << std::endl;
 		Error r(405, fd);
 		return 1;
 	}
 
-	std::cout <<  "Extension en createResponse: " << _extension << std::endl;
+	//std::cout <<  "Extension en createResponse: " << _extension << std::endl;
 	if (locat == 2)
 	{
 		std::string httpResponse = "HTTP/1.1 302 Found\r\n";
@@ -147,7 +147,7 @@ int Respons::createRespons()
 
 void	Respons::htmlRespond()
 {
-	std::cout << "*********************************************" << std::endl;
+	//std::cout << "*********************************************" << std::endl;
 	std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
    	httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
     httpResponse += "\r\n"; // Línea en blanco

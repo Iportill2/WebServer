@@ -13,35 +13,33 @@
 #ifndef DEPENDECES_HPP
 # define DEPENDECES_HPP
 
-# include <stdio.h>
-# include <sys/socket.h>
-# include <netinet/in.h>
-# include <iostream>
-# include <cstdlib>
-# include <fstream>
-# include <sstream>
-# include <unistd.h>
-# include <sys/select.h>
-# include <csignal>
-# include <cstring>
-# include <map>
-# include <vector> 
-# include <sys/stat.h>
-# include <stdbool.h>
-# include <signal.h>
-# include <sys/types.h>
-# include <string>
-# include <sstream>
 # include <algorithm>
-# include <stack>
 # include <arpa/inet.h>
-# include <stdexcept>
-# include <limits>
-# include <set>
-# include <fcntl.h>
-
-# include <algorithm>
 # include <cctype>
+# include <csignal>
+# include <cstdlib>
+# include <cstring>
+# include <dirent.h>
+# include <fcntl.h>
+# include <fstream>
+# include <iostream>
+# include <limits>
+# include <map>
+# include <netinet/in.h>
+# include <set>
+# include <signal.h>
+# include <sstream>
+# include <stdbool.h>
+# include <stack>
+# include <stdexcept>
+# include <stdio.h>
+# include <string>
+# include <sys/select.h>
+# include <sys/socket.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <unistd.h>
+# include <vector>
 //COLORES
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////

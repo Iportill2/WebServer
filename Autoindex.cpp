@@ -1,10 +1,11 @@
 #include "Autoindex.hpp"
 #include "dependences.hpp"
 
-Autoindex::Autoindex(std::string path) 
+Autoindex::Autoindex(std::string path, int fd) 
 {
     std::cout <<"Constructor de Autoindex" << std::endl;
      // Example usage
+     _fd = fd;
    // std::string directory_path = "."; // Current directory
     std::cout << GREEN << path << WHITE << std::endl;
     handle_request(path);
@@ -21,7 +22,6 @@ bool Autoindex::is_directory(const std::string& path)
     {
         return false;
     }
-    std::cout << "HHHH" <<std::endl;
     return S_ISDIR(statbuf.st_mode);
 }
 
@@ -67,8 +67,8 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
 // Example function to handle a request and send a response
 void Autoindex::handle_request(const std::string& directory_path) 
 {
-    std::cout << RED << "XXX" << WHITE << std::endl;
     std::string response;
+    std::ostringstream oss;
 
     if (is_directory(directory_path)) 
     {
@@ -79,17 +79,23 @@ void Autoindex::handle_request(const std::string& directory_path)
         response = "<html><body><h1>Not Found</h1></body></html>";
     }
 
-    // Send HTTP response (pseudo code, replace with your actual send function)
-    std::cout << "HTTP/1.1 200 OK\r\n";
-    std::cout << "Content-Type: text/html\r\n";
-    std::cout << "Content-Length: " << response.size() << "\r\n";
-    std::cout << "\r\n";
-    std::cout << response;
+    // metemos la info del html y del index que hemos creado para el index en un ostringstream
+    oss << "HTTP/1.1 200 OK\r\n";
+    oss << "Content-Type: text/html\r\n";
+    oss << "Content-Length: " << response.size() << "\r\n";
+    oss << "\r\n";
+    oss << response;
+    std::string str = oss.str();
+    size_t n = str.size();
+    char* cstr = new char[str.length() + 1];
+    std::strcpy(cstr, str.c_str());
+    write (_fd, cstr, n);
+    delete [] cstr;
 }
 
 
 ///////////////////////////////////////////////////
-void Autoindex::serve_file(const std::string& index_file)
+/* void Autoindex::serve_file(const std::string& index_file)
 {
     (void) index_file;
 }
@@ -112,6 +118,6 @@ void Autoindex::process_request(const std::string& path)
         // Generate and serve the autoindex
         handle_request(path);
     }
-}
+} */
 
 

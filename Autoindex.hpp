@@ -6,7 +6,9 @@
 class Autoindex //: public Config
 {
     public:
-    Autoindex(std::string path);
+
+    int _fd;
+    Autoindex(std::string path, int fd);
     ~Autoindex();
 
 

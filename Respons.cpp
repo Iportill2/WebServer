@@ -20,7 +20,7 @@ int	Respons::checkLocation()
 			}
 			if (server.arLoc[i]._autoindex == "on")
 			{
-				Autoindex ai(server.arLoc[i]._root);
+				Autoindex ai(server.arLoc[i]._root,fd);
 			}
 			_loc = i;
 			std::string url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;

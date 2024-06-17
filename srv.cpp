@@ -5,9 +5,7 @@
 srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
-    //nullstrings();
-    srv_ok = parseServerBlock(serverBlock);
-    
+    srv_ok = parseServerBlock(serverBlock);    
     //std::cout << "srv_ok:"<< srv_ok << std::endl;
         return;
 
@@ -22,7 +20,6 @@ std::vector<Location> &  srv::getlocations()
 {
     return(arLoc);
 }
-
 
 
 bool srv::parseServerBlock(const std::string& s)
@@ -100,6 +97,10 @@ bool srv::parseServerBlock(const std::string& s)
         }
 
 	}
+    if(_host.empty() && _port.empty() && _body.empty() && _Root.empty())
+    {
+        return(0);
+    }
 	if(checkstring() == 0)
         return 0;
     return(1);
@@ -135,13 +136,13 @@ bool srv::checkstring()
 	{
         deletespaces(_port);
 		if(stringToSizeT(_port, _sizetPort) == 0)
-			return(0);
+			return(std::cout << "Error doing the conversion from _port to __sizetport" << std::endl,0);
 	}
     if(!_body.empty())
 	{
         deletespaces(_body);
 		if(stringToSizeT(_body,_sizetBody) == 0)
-			return(0);
+			return(std::cout << "Error doing the conversion from _body to __sizetBody" << std::endl,0);
 	}
     if(!_server_name.empty() )
         deletespaces(_server_name);

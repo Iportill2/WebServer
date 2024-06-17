@@ -1,10 +1,21 @@
 #ifndef AUTOINDEX_HPP
 # define AUTOINDEX_HPP
 #include "dependences.hpp"
+#include "Config.hpp"
 
-class Autoindex:
+class Autoindex //: public Config
 {
-    Autoindex();
+    public:
+    Autoindex(std::string path);
+    ~Autoindex();
+
+
+    bool is_directory(const std::string& path);
+    std::string generate_autoindex(const std::string& directory_path);
+    void handle_request(const std::string& directory_path);
+    void process_request(const std::string& path);
+
+    void serve_file(const std::string& index_file);
 };
 
 #endif

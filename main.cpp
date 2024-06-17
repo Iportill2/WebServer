@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     else if(argc == 2)
     {
         Config confs(argv[1]);
-    
+        
         if (confs.getArrayOfServers().empty())
         {
             std::cout << std::endl << RED <<"Invalid configuration file" << std::endl;

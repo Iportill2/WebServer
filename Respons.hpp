@@ -5,9 +5,11 @@
 # include "Request.hpp"
 # include "Utils.hpp"
 # include "srv.hpp"
+#include "Autoindex.hpp"
 
 class Request;
 class srv;
+class Autoindex;
 
 class Respons
 {

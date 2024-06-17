@@ -18,8 +18,10 @@ int	Respons::checkLocation()
 				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
 				return(_url = server.arLoc[i]._redirect, 2);
 			}
-			if (server.arLoc[i]._autoindex == "on;")
-				autoindex(server.arLoc[i]._root);
+			if (server.arLoc[i]._autoindex == "on")
+			{
+				Autoindex ai(server.arLoc[i]._root);
+			}
 			_loc = i;
 			std::string url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
 			//std::cout << "url1 = " << url << std::endl;

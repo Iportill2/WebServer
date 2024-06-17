@@ -3,10 +3,12 @@
         "cctype": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
+        "csignal": "cpp",
         "cstdarg": "cpp",
         "cstddef": "cpp",
         "cstdio": "cpp",
         "cstdlib": "cpp",
+        "cstring": "cpp",
         "cwchar": "cpp",
         "cwctype": "cpp",
         "array": "cpp",
@@ -17,6 +19,8 @@
         "concepts": "cpp",
         "cstdint": "cpp",
         "deque": "cpp",
+        "map": "cpp",
+        "set": "cpp",
         "unordered_map": "cpp",
         "vector": "cpp",
         "exception": "cpp",
@@ -48,10 +52,6 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp",
-        "map": "cpp",
-        "cstring": "cpp",
-        "csignal": "cpp",
-        "set": "cpp"
+        "typeinfo": "cpp"
     }
 }

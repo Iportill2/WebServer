@@ -1,4 +1,4 @@
-NAME = webserver
+NAME = webserv
 CPP = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
 SRC_FILES = main.cpp \

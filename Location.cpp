@@ -92,7 +92,10 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 return(std::cout << RED << "autoindex twice" << WHITE << std::endl,0);
             lineStream >> _autoindex;
             if(_autoindex[_autoindex.size()-1] == ';')
-                _autoindex = _autoindex.substr(0, _file.size() - 1);
+            {
+                _autoindex = _autoindex.substr(0, _autoindex.size() - 1);
+                //std::cout << RED << "|" << _autoindex << "|" << std::endl;
+            }
         }
         if (key == "cgi")
         {

@@ -1,20 +1,32 @@
-//#include "Autoindex.hpp"
+#include "Autoindex.hpp"
 #include "dependences.hpp"
 
-
+Autoindex::Autoindex(std::string path) 
+{
+    std::cout <<"Constructor de Autoindex" << std::endl;
+     // Example usage
+   // std::string directory_path = "."; // Current directory
+    std::cout << GREEN << path << WHITE << std::endl;
+    handle_request(path);
+}
+Autoindex::~Autoindex()
+{
+    std::cout << "Destructor de Autoindex" << std::endl;
+}
 // Helper function to check if path is a directory
-bool is_directory(const std::string& path) 
+bool Autoindex::is_directory(const std::string& path) 
 {
     struct stat statbuf;
     if (stat(path.c_str(), &statbuf) != 0) 
     {
         return false;
     }
+    std::cout << "HHHH" <<std::endl;
     return S_ISDIR(statbuf.st_mode);
 }
 
 // Function to generate autoindex HTML
-std::string generate_autoindex(const std::string& directory_path) 
+std::string Autoindex::generate_autoindex(const std::string& directory_path) 
 {
     DIR *dir;
     struct dirent *entry;
@@ -53,8 +65,9 @@ std::string generate_autoindex(const std::string& directory_path)
 }
 
 // Example function to handle a request and send a response
-void handle_request(const std::string& directory_path) 
+void Autoindex::handle_request(const std::string& directory_path) 
 {
+    std::cout << RED << "XXX" << WHITE << std::endl;
     std::string response;
 
     if (is_directory(directory_path)) 
@@ -74,21 +87,15 @@ void handle_request(const std::string& directory_path)
     std::cout << response;
 }
 
- int autoindex(std::string path) 
- {
-     // Example usage
-   // std::string directory_path = "."; // Current directory
-     handle_request(path);
-     return 0;
- }
+
 ///////////////////////////////////////////////////
-void serve_file(const std::string& index_file)
+void Autoindex::serve_file(const std::string& index_file)
 {
     (void) index_file;
 }
 
 
-void process_request(const std::string& path) 
+void Autoindex::process_request(const std::string& path) 
 {
     std::string index_file = path + "/index.html";
     //std::cout << RED << index_file << WHITE << std::endl;

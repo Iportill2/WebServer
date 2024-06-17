@@ -29,7 +29,7 @@ public:
     
     // int countSubstring(const std::string& str, const std::string& sub);
 	// size_t size(const char *s);
-    void createSrv();
+    bool createSrv();
 
     void printArrayOfSrv() const;
     /////

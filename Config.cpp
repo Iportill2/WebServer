@@ -12,6 +12,7 @@ Config::Config(std::string configName)
             	if(validatePort() == 1)
                     if(getServerCount() == 1)
                         printArrayOfSrv();
+
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
@@ -22,6 +23,7 @@ bool Config::checkduplicateports()
 {
     size_t i = 1;
     size_t e = 0;
+    //std::cout << RED << "@"<< array_of_srv[e]._port << WHITE << std::endl;
     while(i < array_of_srv.size())
     {
         while(e < i)
@@ -30,6 +32,7 @@ bool Config::checkduplicateports()
             {
                 return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,0;
             }
+            else
             e++;
         }
         e = 0;
@@ -147,7 +150,8 @@ bool  Config::config_routine(std::string configName)
         if(pairbrackets(file_content) == 0)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
         //std::cout << "pepe" << std::endl;
-        createSrv();
+        if(createSrv() == 0)
+            return(0);
        // std::cout << "peep" << std::endl;
         return(1);
     } 
@@ -159,7 +163,7 @@ bool  Config::config_routine(std::string configName)
 }
 
 
-void Config::createSrv()
+bool Config::createSrv()
 {
     size_t tmp;
     std::istringstream f(this->file_content);
@@ -194,10 +198,18 @@ void Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
-        srv newServer(sub);
-        newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
-        array_of_srv.push_back(newServer);
+        size_t pos = sub.find("server");
+        if (pos != std::string::npos) 
+        {
+            srv newServer(sub);
+            newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+            if(newServer.srv_ok == 1)
+                array_of_srv.push_back(newServer);
+        } 
+        else 
+            return(std::cout << "sub didnt contain the word server" << std::endl,0);
     }
+    return(1);
 }
 
 
@@ -243,6 +255,8 @@ bool Config::validatePort()
     size_t i = 0;
     while(i < array_of_srv.size())
     {
+        if(array_of_srv[i]._sizetPort == 0)
+            return(std::cout << array_of_srv[i]._sizetPort << std::endl,0);
         if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
             std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
         else

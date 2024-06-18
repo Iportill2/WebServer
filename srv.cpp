@@ -2,10 +2,36 @@
 #include "srv.hpp"
 #include "Config.hpp"
 #include "Utils.hpp"
+srv::srv(const srv& other)
+{
+    this->locationCount = other.locationCount;
+    this->srv_ok = other.srv_ok;
+
+
+    this->_host = other._host;
+    this-> _port = other._port;
+    this->_server_name = other._server_name;
+    this-> _body = other._body;
+    this-> _Root = other._Root;
+    this-> _ipNum = other._ipNum;
+
+    this-> _sizetPort = other._sizetPort;
+    this-> _sizetBody = other._sizetBody;
+
+    this->locationCount = other.locationCount;
+    this-> arLoc = other.arLoc;
+
+    this-> arErr = other.arErr;
+
+    this-> result = other.result;
+
+    this->srv_ok = other.srv_ok;
+}
 srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
-    srv_ok = parseServerBlock(serverBlock);    
+    srv_ok = parseServerBlock(serverBlock);   
+  
     //std::cout << "srv_ok:"<< srv_ok << std::endl;
         return;
 
@@ -80,6 +106,29 @@ bool srv::parseServerBlock(const std::string& s)
             if (_Root[_Root.size() - 1] == ';')
                 _Root = _Root.substr(0, _Root.size() - 1);
         }
+        if( key == "error_page")
+        {
+            {
+                //std::cout << RED << "key:"<< key << WHITE << std::endl;
+                
+                std::string errorstring;
+                errorstring = line + '\n';
+                while (1)
+                {
+                    if (!std::getline(stream, line))
+                    {
+                        // Llegamos al final del stream, rompemos el bucle
+                        break;
+                    }
+                    errorstring += line + '\n';
+                    if (line.find('}') != std::string::npos)
+                    {
+                        arErr.push_back(errorstring);
+                        break;
+                    }
+                }
+            }
+        }
         if (key == "location")
         {
             std::string loc;
@@ -87,22 +136,30 @@ bool srv::parseServerBlock(const std::string& s)
             while (1)
             {
                 std::getline(stream, line);
+                if (!std::getline(stream, line))
+                    break;
                 loc += line + '\n';
                 if (line.find('}') != std::string::npos)
                 {
-                    arLoc.push_back(loc);
+                    Location newlocation(loc);
+                    if(newlocation.lock_ok == 1)
+                        arLoc.push_back(loc);
+                    else
+                        return(0);
                     break;
                 }
             }
         }
-
 	}
     if(_host.empty() && _port.empty() && _body.empty() && _Root.empty())
     {
+        std::cout << "|" << _host << "|" << _port << "|" << _body << "|" << _Root << "|"<< std::endl;
         return(0);
     }
+        
 	if(checkstring() == 0)
         return 0;
+
     return(1);
 }
 
@@ -149,6 +206,7 @@ bool srv::checkstring()
     if(!_Root.empty())
         deletespaces(_Root);
 
+    
 return(1);
 }
 bool srv::stringToSizeT(const std::string& s, size_t &n) 

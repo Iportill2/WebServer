@@ -44,7 +44,7 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     while ((entry = readdir(dir)) != NULL) 
     {
         std::string name = entry->d_name;
-        if (name == ".") 
+        if (name == ".") /////////////////////////
         {
             continue;
         }

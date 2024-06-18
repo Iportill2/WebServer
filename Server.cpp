@@ -287,6 +287,15 @@ void Server::printServers()
 				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
 			std::cout << std::endl;
 		}
+		for (size_t u = 0; u < servers[i].arErr.size(); u++)
+		{
+			std::cout << YELLOW << "-----Error Page  " << WHITE  << std::endl;
+			std::cout << "error_page_404 \"" << servers[i].arErr[u].error_page_404 <<  "\"" << std::endl; 
+			std::cout << "location \"" << servers[i].arErr[u].location <<  "\"" << std::endl; 
+			std::cout << "root \"" << servers[i].arErr[u].root <<  "\"" << std::endl; 
+			std::cout << "internal \"" << servers[i].arErr[u].internal <<  "\"" << std::endl;
+			std::cout << "ErrorRoot:" << servers[i].arErr[u].ErrorRoot << std::endl; 
+		}
 		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
 	}
 }

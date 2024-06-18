@@ -2,9 +2,10 @@
 # define SRV_HPP
 #include "dependences.hpp"
 #include "Location.hpp"
+#include "ErrorPage.hpp"
 
 class Location;
-
+class ErrorPage;
 
 class srv 
 {
@@ -22,12 +23,15 @@ class srv
     int locationCount;
     std::vector<Location> arLoc;
 
+    std::vector<ErrorPage> arErr;
+
     std::map<std::string, std::string> result;
 
     bool srv_ok;
 
     srv(){};
     srv(std::string serverBlock);
+    srv(const srv& other);
     ~srv();
 
 

@@ -1,6 +1,7 @@
 #ifndef ERRORPAGE_HPP
 # define ERRORPAGE_HPP
 #include "dependences.hpp"
+
 //#include "Config.hpp"
 
 class ErrorPage //: public Config

@@ -2,13 +2,23 @@
 # define AUTOINDEX_HPP
 #include "dependences.hpp"
 #include "Config.hpp"
-
+#include "Server.hpp"
+#include "srv.hpp"
+#include "ErrorPage.hpp"
+#include "Error.hpp"
+class ErrprPage;
+class Server;
+class srv;
 class Autoindex //: public Config
 {
     public:
 
+    srv _server;
+    std::string directory_path;
+    std::string error;
+    size_t _i;
     int _fd;
-    Autoindex(std::string path, int fd);
+    Autoindex(srv &server, int fd, size_t i);
     ~Autoindex();
 
 

@@ -1,20 +1,63 @@
 #include "Autoindex.hpp"
 #include "dependences.hpp"
 
-Autoindex::Autoindex(std::string path, int fd) 
+
+Autoindex::Autoindex(srv& server, int fd, size_t i) 
 {
     std::cout <<"Constructor de Autoindex" << std::endl;
-     // Example usage
+
+
+    _i = i;
      _fd = fd;
-   // std::string directory_path = "."; // Current directory
-    std::cout << GREEN << path << WHITE << std::endl;
-    handle_request(path);
+    _server = server;
+    directory_path = server.arLoc[i]._root;
+    error = server.arErr[0].ErrorRoot;
+    std::cout << RED << "directory_path:" << directory_path << std::endl;
+    std::cout << RED << "error:" << error << std::endl;
+    handle_request(directory_path);
 }
 Autoindex::~Autoindex()
 {
     std::cout << "Destructor de Autoindex" << std::endl;
 }
-// Helper function to check if path is a directory
+void Autoindex::handle_request(const std::string& directory_path) 
+{
+    std::string response;
+    std::ostringstream oss;
+
+    if (is_directory(directory_path)) 
+        response = generate_autoindex(directory_path);
+    else 
+    {
+        std::cout << YELLOW << error << WHITE << std::endl;
+        //error = "." + error;//descomentar para entrar en el if
+        std::ifstream file( error.c_str());
+
+        if (file)
+        {
+            std::stringstream buffer;
+            buffer << file.rdbuf();
+            response = buffer.str();
+            std::cout<< RED << response << WHITE << std::endl;
+            file.close();
+        }
+        else
+            return; 
+}
+
+    // metemos la info del html y del index que hemos creado para el index en un ostringstream
+    oss << "HTTP/1.1 200 OK\r\n";
+    oss << "Content-Type: text/html\r\n";
+    oss << "Content-Length: " << response.size() << "\r\n";
+    oss << "\r\n";
+    oss << response;
+    std::string str = oss.str();
+    size_t n = str.size();
+    char* cstr = new char[str.length() + 1];
+    std::strcpy(cstr, str.c_str());
+    write (_fd, cstr, n);
+    delete [] cstr;
+}
 bool Autoindex::is_directory(const std::string& path) 
 {
     struct stat statbuf;
@@ -24,8 +67,6 @@ bool Autoindex::is_directory(const std::string& path)
     }
     return S_ISDIR(statbuf.st_mode);
 }
-
-// Function to generate autoindex HTML
 std::string Autoindex::generate_autoindex(const std::string& directory_path) 
 {
     DIR *dir;
@@ -37,6 +78,7 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     {
         return "<html><body><h1>Unable to open directory</h1></body></html>";
     }
+    std::cout << GREEN << "dir:"<<dir << WHITE << std::endl;
 
     html << "<html><head><title>Index of " << directory_path << "</title></head>";
     html << "<body><h1>Index of " << directory_path << "</h1><ul>";
@@ -64,60 +106,10 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     return html.str();
 }
 
-// Example function to handle a request and send a response
-void Autoindex::handle_request(const std::string& directory_path) 
-{
-    std::string response;
-    std::ostringstream oss;
-
-    if (is_directory(directory_path)) 
-    {
-        response = generate_autoindex(directory_path);
-    } 
-    else 
-    {
-        response = "<html><body><h1>Not Found</h1></body></html>";
-    }
-
-    // metemos la info del html y del index que hemos creado para el index en un ostringstream
-    oss << "HTTP/1.1 200 OK\r\n";
-    oss << "Content-Type: text/html\r\n";
-    oss << "Content-Length: " << response.size() << "\r\n";
-    oss << "\r\n";
-    oss << response;
-    std::string str = oss.str();
-    size_t n = str.size();
-    char* cstr = new char[str.length() + 1];
-    std::strcpy(cstr, str.c_str());
-    write (_fd, cstr, n);
-    delete [] cstr;
-}
 
 
-///////////////////////////////////////////////////
-/* void Autoindex::serve_file(const std::string& index_file)
-{
-    (void) index_file;
-}
 
 
-void Autoindex::process_request(const std::string& path) 
-{
-    std::string index_file = path + "/index.html";
-    //std::cout << RED << index_file << WHITE << std::endl;
-    struct stat buffer;
-    
-    // Check if index.html exists
-    if (stat(index_file.c_str(), &buffer) == 0) 
-    {
-        // Serve the index.html file (pseudo code)
-        serve_file(index_file);
-    } 
-    else 
-    {
-        // Generate and serve the autoindex
-        handle_request(path);
-    }
-} */
+
 
 

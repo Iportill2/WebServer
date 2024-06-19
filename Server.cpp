@@ -56,6 +56,7 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 	printServers();
 	serverSet();
 	Mselect();
+
 }
 
 void	Server::serverSet()
@@ -110,7 +111,6 @@ void	Server::Mselect()
 
 	std::map<int, int>::iterator i = serversMap.begin();
 	std::map<int, int>::iterator o = serversMap.end();
-
 	while (i != o)
 	{
 		FD_SET (i->first, &activefdsRead);
@@ -203,6 +203,7 @@ void	Server::Mselect()
 				std::cout << "Select selecciona fd de escritura " << i << " y es respondido!!!" << std::endl;
 				//std::cout << "Se envia respuesta al socket " << i << std::endl << std::endl;
 				Respond(i);
+
 				close (i);
 				nClients--;
 				readMap.erase(i);
@@ -215,6 +216,7 @@ void	Server::Mselect()
 void	Server::Respond(int i)
 {
 	Respons r(rq[i], servers[serversMap[readMap[i]]], i);
+
 	//r.printRequest();
 	//r.printConf();
 	r.createRespons();

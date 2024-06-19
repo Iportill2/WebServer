@@ -8,7 +8,6 @@ Respons::~Respons() {}
 
 int	Respons::checkLocation()
 {
-
 	for(size_t i = 0; i < server.arLoc.size(); i++)
 	{
 		if(rq->getUri() == server.arLoc[i]._location)
@@ -18,11 +17,13 @@ int	Respons::checkLocation()
 				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
 				return(_url = server.arLoc[i]._redirect, 2);
 			}
-			if (server.arLoc[i]._autoindex == "on")
+/* 			if (server.arLoc[i]._autoindex == "on")
 			{
 				Autoindex ai(server.arLoc[i]._root,fd);
-			}
+			} */
 			_loc = i;
+			//std::cout << RED << server.arLoc[i]._root.size() << WHITE << std::endl;
+
 			std::string url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
 			//std::cout << "url1 = " << url << std::endl;
 			if (Utils::isFile(url.c_str()))
@@ -105,6 +106,7 @@ int Respons::createRespons()
 		return 1;
 	}
 	int locat = checkLocation();
+
 	if (!locat)
 	{
 		//std::cout << "PAGE NOT FOUND" << std::endl;
@@ -144,7 +146,6 @@ int Respons::createRespons()
 		jpgRespond();
 	else if (_extension == ".png")
 		pngRespond();
-
 	return 0;
 }
 

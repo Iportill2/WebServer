@@ -17,10 +17,10 @@ int	Respons::checkLocation()
 				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
 				return(_url = server.arLoc[i]._redirect, 2);
 			}
-/* 			if (server.arLoc[i]._autoindex == "on")
+			if (server.arLoc[i]._autoindex == "on")
 			{
 				Autoindex ai(server.arLoc[i]._root,fd);
-			} */
+			}
 			_loc = i;
 			//std::cout << RED << server.arLoc[i]._root.size() << WHITE << std::endl;
 

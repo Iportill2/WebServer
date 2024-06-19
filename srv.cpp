@@ -135,7 +135,6 @@ bool srv::parseServerBlock(const std::string& s)
             loc = line + '\n';
             while (1)
             {
-                std::getline(stream, line);
                 if (!std::getline(stream, line))
                     break;
                 loc += line + '\n';

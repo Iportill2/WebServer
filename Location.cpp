@@ -31,6 +31,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
 
     while (std::getline(stream, line)) 
 	{
+        
 		std::istringstream lineStream(line);
 		std::string key;
 
@@ -46,13 +47,14 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 _location = _location.substr(0, _location.size() - 1);
         }
 
-         if (key == "root")
+        if (key == "root")
         {
             if(!_root.empty())
                 return(std::cout << RED << "root twice" << WHITE << std::endl,0);
             lineStream >> _root;
             if(_root[_root.size()-1] == ';')
                 _root = _root.substr(0, _root.size() - 1);
+
         }
         if (key == "file")
         {
@@ -114,6 +116,11 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         //std::cout << "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
 		} 
 	}
+/*     std::cout << RED << "_location|" << _location << "|" << std::endl;
+    std::cout << RED << "_root|" << _root << "|" << std::endl;
+    std::cout << RED << "_file|" << _file << "|" << std::endl;
+    std::cout << RED << "_redirect|" << _redirect << "|" << std::endl;
+    std::cout << RED << "_autoindex|" << _autoindex << "|" << std::endl << std::endl; */
     return(1);
 }
 

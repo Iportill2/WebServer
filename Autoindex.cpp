@@ -11,10 +11,13 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
      _fd = fd;
     _server = server;
     directory_path = server.arLoc[i]._root;
-    error = server.arErr[0].ErrorRoot;
+    if(!server.arErr.empty())
+        error = server.arErr[0].ErrorRoot;
+
     std::cout << RED << "directory_path:" << directory_path << WHITE<< std::endl;
     std::cout << RED << "error:" << error << WHITE << std::endl;
-    handle_request(directory_path);
+    handle_request(directory_path); 
+   
 }
 Autoindex::~Autoindex()
 {

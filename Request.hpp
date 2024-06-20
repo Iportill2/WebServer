@@ -13,9 +13,10 @@ class Request
         std::string uri;
         std::string host;
         std::string port;
-        int         content_len;
+        size_t		content_len;
 
         std::string body;
+        std::string boundary;
 
     public:
     
@@ -29,7 +30,9 @@ class Request
         std::string getHost();
         std::string getPort();
         std::string getBody();
-        int         getContentLen();
+        std::string getBoundary();
+
+        size_t		getContentLen();
 
         //FUNCIONES PARA PRUEBAS
         void printRequest();

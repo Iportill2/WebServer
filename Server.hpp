@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/11 20:11:39 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/20 13:27:51 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ class Server
         int			maxFD;
         int         sizeOfAddress;           
         
-        char		buffer[30000];
+        char		buffer[3000000];
         
-
+        std::vector<int>    comFds;
         std::vector<srv>    servers;
 		
         std::map<int, int>  serversMap; // clave = socket bindeado, valor = servidor

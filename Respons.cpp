@@ -147,23 +147,58 @@ int Respons::createRespons()
 
 void	Respons::htmlRespond()
 {
-	//std::cout << "*********************************************" << std::endl;
-	std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
-   	httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
-    httpResponse += "\r\n"; // Línea en blanco
+	if (rq->getMethod() == "get")
+	{
+		std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
+   		httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
+  	 	 httpResponse += "\r\n"; // Línea en blanco
 
-	std::ifstream file(_url.c_str());  // Abre el archivo en modo lectura
-    if (!file.is_open()) {  // Verifica si el archivo se abrió correctamente
-        std::cerr << "Can't open : " << _url << std::endl;
-    }
+		std::ifstream file(_url.c_str());  // Abre el archivo en modo lectura
+  	  	if (!file.is_open()) {  // Verifica si el archivo se abrió correctamente
+  	      std::cerr << "Can't open : " << _url << std::endl;
+ 	   }
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();  // Lee el contenido del archivo en el buffer
-    file.close(); 
+    	std::stringstream buffer;
+   		buffer << file.rdbuf();  // Lee el contenido del archivo en el buffer
+    	file.close(); 
 
-	httpResponse += buffer.str();
+		httpResponse += buffer.str();
 
-	write(fd, httpResponse.c_str(), httpResponse.size());
+		write(fd, httpResponse.c_str(), httpResponse.size());
+	}
+	else if (rq->getMethod() == "post")
+	{
+		if (rq->getContentLen() > server._sizetBody)
+			Error r(413, fd);
+		else if(rq->getUri() == "/cgi")
+		{
+			int cgiOn = 0;
+			for(size_t i = 0; i < server.arLoc.size(); i++)
+			{
+				if (server.arLoc[i].getLocation() == "/cgi" && server.arLoc[i].getCgi() == "on")
+				{
+					cgiOn = 1;
+					Cgi res(rq->getBody(), fd);
+				}
+			}
+			if (!cgiOn)
+				Error r(403, fd);
+		}
+		else if (rq->getUri() == "/upload")
+		{
+			int up = 0;
+			for(size_t i = 0; i < server.arLoc.size(); i++)
+			{
+				if (server.arLoc[i].getLocation() == "/upload")
+				{
+					up = 1;
+					Load res(rq->getBody(), fd);
+				}
+			}
+			if (!up)
+				Error r(404, fd);
+		}
+	}
 }
 
 void	Respons::jpgRespond()
@@ -206,7 +241,8 @@ void Respons::printRequest()
     std::cout << "host: " << "\"" << BLUE << rq->getHost() << GREEN << "\"" <<std::endl;
     std::cout << "port: " << "\"" << BLUE << rq->getPort() << GREEN << "\"" <<std::endl;
     std::cout << "Content Lenght: " << "\"" << BLUE << rq->getContentLen() << GREEN << "\"" <<std::endl;
-    std::cout << "Body: " << "\"" << BLUE << rq->getBody() << WHITE << std::endl << GREEN << "\"" << std::endl;
+    std::cout << "Body: " << "\"" << BLUE << rq->getBody()  << GREEN << "\"" << GREEN << std::endl;
+	std::cout << "Boundary: " << "\"" << BLUE << rq->getBoundary()  << GREEN << "\"" << WHITE<< std::endl;
 }
 
 void Respons::printConf()

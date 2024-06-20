@@ -5,6 +5,8 @@
 # include "Request.hpp"
 # include "Utils.hpp"
 # include "srv.hpp"
+# include "Cgi.hpp"
+# include "Load.hpp"
 
 class Request;
 class srv;
@@ -28,7 +30,7 @@ class Respons
 
 		int		createRespons();
 		bool	checkServerName();
-		int	checkLocation();
+		int		checkLocation();
 		bool	checkAuthorized();
 		bool	checkMethod();
 

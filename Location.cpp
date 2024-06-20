@@ -92,7 +92,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 return(std::cout << RED << "autoindex twice" << WHITE << std::endl,0);
             lineStream >> _autoindex;
             if(_autoindex[_autoindex.size()-1] == ';')
-                _autoindex = _autoindex.substr(0, _file.size() - 1);
+                _autoindex = _autoindex.substr(0, _autoindex.size() - 1);
         }
         if (key == "cgi")
         {
@@ -100,7 +100,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 return(std::cout << RED << "cgi twice" << WHITE << std::endl,0);
             lineStream >> _cgi;
             if(_cgi[_cgi.size()-1] == ';')
-                _cgi = _cgi.substr(0, _file.size() - 1);
+                _cgi = _cgi.substr(0, _cgi.size() - 1);
         }
         if (key == "redirect" && _redirect.empty())
         {

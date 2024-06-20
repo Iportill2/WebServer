@@ -33,8 +33,10 @@ void    Request::parse()
         }
         else if (key == "Host:")
         {
-            size_t colonPos = line.find(":");
-            std::string hostAndPort = line.substr(colonPos + 2);
+            //size_t colonPos = line.find(":");
+            //std::string hostAndPort = line.substr(colonPos + 2);
+            std::string hostAndPort;
+            lineStream >> hostAndPort;
 
             size_t secondColonPos = hostAndPort.find(":");
     
@@ -46,8 +48,12 @@ void    Request::parse()
         else if (line == "\r")
             break;
 	}
+    line.clear();
     while (std::getline(stream, line)) 
         body += line;
+
+    if (buffer.find("boundary=")!= std::string::npos)
+        boundary = buffer.substr(buffer.find("boundary="));
 
     if (uri.size() > 1 && uri[uri.size() - 1] == '/')
         uri = uri.substr(0, uri.size() - 1);
@@ -59,7 +65,8 @@ std::string Request::getUri() {return uri;}
 std::string Request::getHost() {return host;}
 std::string Request::getPort() {return port;}
 std::string Request::getBody() {return body;}
-int         Request::getContentLen() {return content_len;}
+std::string Request::getBoundary() {return boundary;}
+size_t		Request::getContentLen() {return content_len;}
 
 //FUNCIONES PARA PRUEBAS----------------------------------------------------------
 void Request::printRequest()

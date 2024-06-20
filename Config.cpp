@@ -152,10 +152,7 @@ bool  Config::config_routine(std::string configName)
         return(1);
     } 
     else
-    {
-        std::cout << "Archivo no abierto" << std::endl;
         return 0;
-    }
 }
 
 
@@ -227,7 +224,7 @@ bool Config::getServerCount()
         return 1;
     }
     else
-        return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
+        return 0;
 }
 ///////////////////////
 /*
@@ -244,7 +241,7 @@ bool Config::validatePort()
     while(i < array_of_srv.size())
     {
         if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
-            std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
+            std::cout << BLUE << "Port: " << GREEN << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
         else
             return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,0;
         ++i;

@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/13 16:53:34 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:22:42 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/select.h>
 # include <csignal>
 # include <cstring>
+
 # include <map>
 # include <vector> 
 # include <sys/stat.h>
@@ -39,7 +40,8 @@
 # include <limits>
 # include <set>
 # include <fcntl.h>
-
+# include <sys/time.h>
+# include <sys/wait.h>
 # include <algorithm>
 # include <cctype>
 //COLORES

@@ -217,6 +217,7 @@ void	Server::Respond(int i)
 {
 	Respons r(rq[i], servers[serversMap[readMap[i]]], i);
 
+
 	//r.printRequest();
 	//r.printConf();
 	r.createRespons();

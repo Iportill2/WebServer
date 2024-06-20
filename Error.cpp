@@ -3,6 +3,7 @@
 
 Error::Error(int er, int fdescriptor): error(er), fd(fdescriptor) 
 {
+    std::cout << RED << "XXXX" << WHITE << std::endl;
     sendError();
 }
 

@@ -5,17 +5,12 @@
 Autoindex::Autoindex(srv& server, int fd, size_t i) 
 {
     std::cout <<"Constructor de Autoindex" << std::endl;
-
-
     _i = i;
-     _fd = fd;
+    _fd = fd;
     _server = server;
     directory_path = server.arLoc[i]._root;
     if(!server.arErr.empty())
         error = server.arErr[0].ErrorRoot;
-
-    std::cout << RED << "directory_path:" << directory_path << WHITE<< std::endl;
-    std::cout << RED << "error:" << error << WHITE << std::endl;
     handle_request(directory_path); 
    
 }
@@ -32,8 +27,6 @@ void Autoindex::handle_request(const std::string& directory_path)
         response = generate_autoindex(directory_path);
     else 
     {
-        std::cout << YELLOW << error << WHITE << std::endl;
-        //error = "." + error;//descomentar para entrar en el if
         std::ifstream file( error.c_str());
 
         if (file)
@@ -46,7 +39,7 @@ void Autoindex::handle_request(const std::string& directory_path)
         }
         else
             return; 
-}
+    }
 
     // metemos la info del html y del index que hemos creado para el index en un ostringstream
     oss << "HTTP/1.1 200 OK\r\n";
@@ -65,9 +58,7 @@ bool Autoindex::is_directory(const std::string& path)
 {
     struct stat statbuf;
     if (stat(path.c_str(), &statbuf) != 0) 
-    {
         return false;
-    }
     return S_ISDIR(statbuf.st_mode);
 }
 std::string Autoindex::generate_autoindex(const std::string& directory_path) 
@@ -78,10 +69,7 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
 
     dir = opendir(directory_path.c_str());
     if (dir == NULL) 
-    {
         return "<html><body><h1>Unable to open directory</h1></body></html>";
-    }
-    std::cout << GREEN << "dir:"<<dir << WHITE << std::endl;
 
     html << "<html><head><title>Index of " << directory_path << "</title></head>";
     html << "<body><h1>Index of " << directory_path << "</h1><ul>";
@@ -89,31 +77,47 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     while ((entry = readdir(dir)) != NULL) 
     {
         std::string name = entry->d_name;
-        
-        std::cout << YELLOW << "entry:" << entry << WHITE<< std::endl;
-        std::cout << CYAN<< "name:" << name << WHITE<<std::endl;
-        if (name == ".") /////////////////////////
+        if (name == ".")
         {
             continue;
         }
         std::string full_path = directory_path + "/" + name;
-        std::cout << RED << "full path:" << full_path << WHITE << std::endl;
 
         if (is_directory(full_path)) 
         {
-
-            //write(_fd,"a",1);
-            std::cout << RED<< "IF" << WHITE<<std::endl;
             html << "<li><a href=\"" << name << "/\">" << name << "/</a></li>";
-            std::cout << GREEN << "full path:" << full_path << WHITE << std::endl;
             std::string s = html.str() ;
-            std::cout << MAGENTA << s << WHITE << std::endl;
         } 
-        else 
+        else
         {
-            std::cout << RED<< "ELSE" << WHITE<<std::endl;
+            int i = open(directory_path.c_str(),O_RDONLY);
+            if(i < 0)
+            {
+                close(i);
+                if(error.empty())
+                    return "<html><body><h1>Unable to open directory</h1></body></html>";
+                else
+                {
+                    std::ifstream file( error.c_str());
+                    std::string response;
+                    if (file)
+                    {
+                        std::stringstream buffer;
+                        buffer << file.rdbuf();
+                        response = buffer.str();
+                        std::cout<< RED << response << WHITE << std::endl;
+                        file.close();
+                        std::string s ="<html><body><h1>"+ response;
+                        s +"</h1></body></html>";
+                        html << s;
+                        return html.str();
+                    }
+                     else
+                        return "<html><body><h1>PATAATA</h1></body></html>"; 
+                }
+
+            }
             html << "<li><a href=\"" << name << "\">" << name << "</a></li>";
-            //html << "<li><a href=\"" << full_path << "</a></li>";
         }
     }
     closedir(dir);

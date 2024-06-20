@@ -106,7 +106,6 @@ int Respons::createRespons()
 		return 1;
 	}
 	int locat = checkLocation();
-
 	if (!locat)
 	{
 		//std::cout << "PAGE NOT FOUND" << std::endl;
@@ -118,6 +117,7 @@ int Respons::createRespons()
 
 	if (locat != 2 && !checkAuthorized())
 	{
+		
 		//std::cout << "PAGE FORBIDDEN" << std::endl;
 		Error r(403, fd);
 		return 1;

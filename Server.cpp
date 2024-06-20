@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/17 15:16:56 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/06/20 17:06:20 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,9 +177,6 @@ void	Server::Mselect()
 					int bytes = read(i, buffer, sizeof(buffer));
 					//std::cout << "i = " << i <<  std::endl;
 					//exit(1);
-					//std::cout << MAGENTA << buffer << WHITE <<std::endl;
-					//std::cout << "bytes leidos: " << bytes << std::endl;
-					if (bytes <= 0)
 					{
 						std::cout << "fd " << i << " went \"a tomar por culo\"" << std::endl << std::endl;
 						FD_CLR(i, &activefdsRead);

@@ -1,9 +1,19 @@
-NAME = my_server
+NAME = webserv
 CPP = c++
 CFLAGS = -Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
 SRC_FILES = main.cpp \
 			Server.cpp \
-			Config.cpp
+			Request.cpp \
+			Error.cpp \
+			Utils.cpp \
+			Config.cpp \
+			srv.cpp \
+			Location.cpp \
+			Respons.cpp \
+			Cgi.cpp \
+			Load.cpp \
+			ErrorPage.cpp \
+			Autoindex.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

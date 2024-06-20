@@ -1,11 +1,27 @@
-#ifndef SERVER_HPP
-# define SERVER_HPP
-# include "dependences.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
+/*   Updated: 2024/06/20 13:27:51 by jgoikoet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#pragma once
 
-class Socket;
+#include "dependences.hpp"
+# include "Request.hpp"
 
-class Server : public Config
+# include "srv.hpp"
+# include "Respons.hpp"
+
+class Request;
+class Respons;
+
+class Server
 {
     private:
 
@@ -14,28 +30,45 @@ class Server : public Config
             int fd;
         }   t_client;
         
-        int     id;
-        int     sock;
-        int     new_socket;
-        //int     port;
-        char    buffer[30000];
         sockaddr_in	ad;
+        int			id;
+        int			sock;
+        int			new_socket;
+        int			port;
+        
+        int			maxFD;
+        int         sizeOfAddress;           
+        
+        char		buffer[3000000];
+        
+        std::vector<int>    comFds;
+        std::vector<srv>    servers;
+		
+        std::map<int, int>  serversMap; // clave = socket bindeado, valor = servidor
+		std::map<int, int>  readMap; // clave = socket mensajero, valor = socket bindeado              
+		std::map<int, int>  writeMap; // clave = socket mensajero, valor = servidor 
 
-        std::string def_or_conf;
+		std::map <int, Request *> rq;
+
 
     public:
 
-		static int sign;
-        Server();//constructor por defecto
-        Server(std::string configName);//constructor con parametro
-        ~Server();//destructor
+        Server();
+        Server(std::vector<srv> & srv);
+        ~Server();
         
-        
-        void    respond(int i);
-        void    my_select();
+        void			respond(int i);
+        void			Respond(int i);
+        void			my_select();
+        void            Mselect();
+        void            serverSet();
 
-        int get_maxfd();
+		static int sign;
 		static void	signalHandler(int i);
 
+        void        setRequest(std::string & buf);
+
+		//FUNCIONES PARA PRUEBAS
+		void printRequest();
+        void printServers();
 };
-#endif

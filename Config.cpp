@@ -1,290 +1,301 @@
-
-#include "dependences.hpp"
-
-
-//false 0
-//true 1
-
-/*
- open:
-
-std::ios::in: Abre el archivo para lectura.
-
-std::ios::out: Abre el archivo para escritura.
-
-std::ios::binar<wbr>y: Abre el archivo en modo binario,
- sin realizar ninguna conversión de fin de línea.
-
-std::ios::ate: Se posiciona al final del archivo 
-inmediatamente después de abrirlo.
-
-std::ios::app: Todos los datos escritos en el 
-archivo se añadirán al final del archivo, 
-preservando el contenido existente (append).
-
-std::ios::trunc<wbr>: Si el archivo ya existe, 
-su contenido se trunca antes de abrir el archivo 
-(es decir, se borra el contenido existente)
-*/
-
+#include "Config.hpp"
 Config::Config()
 {
-    std::cout << "Default Config Constructor" << std::endl;
-    this->Config_data = "";
-    this->Port = 8080;
-    this->Host = "127.0.0.1"; //0.0.0.0 //significa que el servidor es accesible en todas las interfaces de red
-    this->DocumentRoot = "./pagina1";
-    this->LogFile = "/var/log/myserver.log";
-    this->MaxRequestSize = 1048576;
-    this->Timeout = 30;
-    this->DirectoryIndex = "./pagina1/index.html";
-    this->ErrorDocument_404 = "./errors/404.html ";
-    this->ErrorDocument_500 = "./errors/500.html";
-    this->ServerSignature_Off = "Off";
-    this->ServerTokens_Prod = "Prod";
-    this->SSLEngine_on = "on";
-    this->SSLCertificateFile = "/etc/ssl/certs/myserver.crt";
-    this->SSLCertificateKeyFile = "/etc/ssl/private/myserver.key";
-    this->decimalIp = ipToDecimal(this->Host);
-	printData();
+    //std::cout << "Default Config Constructor" << std::endl;
 }
-
 Config::Config(std::string configName)
 {
-    std::cout << "Config Constructor" << std::endl;
-    this->Config_data = configName;
-    std::cout << "Config_data: " << this->Config_data << std::endl;
-    if(openFile() == true)
-	{
-        saveData();
-	}
-    else
+    //std::cout << "Config Constructor" << std::endl;
+    if(config_routine(configName) == 1)
     {
-        return;
-    }
-	printData();
-}
+                        
+        if(checksrvloc() == 1)
+        {
 
+            if(checkduplicateports() == 1)
+            {
+
+            	if(validatePort() == 1)
+                {
+
+                    if(getServerCount() == 1)
+                    {
+                        //printArrayOfSrv();
+                    }
+                }
+            }
+        }
+    }
+
+
+    //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
+}
 Config::~Config()
 {
-    std::cout << "Config Destructor" << std::endl;
+    //std::cout << "Config Destructor" << std::endl;
+}
+bool Config::checkduplicateports()
+{
+    size_t i = 1;
+    size_t e = 0;
+    //std::cout << RED << "@"<< array_of_srv[e]._port << WHITE << std::endl;
+    while(i < array_of_srv.size())
+    {
+        while(e < i)
+        {
+            if (array_of_srv[i]._port == array_of_srv[e]._port)
+            {
+                return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,0;
+            }
+            else
+            e++;
+        }
+        e = 0;
+        i++;
+    }
+    return 1;
 }
 
-
-bool Config::openFile()
+bool Config::checksrvloc()
 {
-    this->file.open(this->Config_data.c_str(), std::ios::in);
-    if (this->file.is_open() == false) 
+    size_t i = 0;
+    while (i < array_of_srv.size())
     {
-        std::cerr << RED << "No se pudo abrir el archivo." << WHITE << std::endl;
-        return 0;
+        if(array_of_srv[i].srv_ok == 0)
+            return(std::cout << RED << "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE << std::endl,0);
+        //std::cout << GREEN<< "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE<< std::endl;
+        size_t e = 0;
+        while (e < array_of_srv[i].arLoc.size())
+        {
+            size_t u = 0;
+            while (u < array_of_srv[i].arLoc[e].methods_vector.size())
+            {
+               // std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
+                ++u;
+            }
+            ++e;
+        }
+        ++i;
     }
-    std::cerr << RED << "Se pudo abrir el archivo." << WHITE << std::endl;
+    //std::cout << YELLOW << array_of_srv[3].arLoc[0]._location << WHITE << std::endl;
+    return 1;
+}
+bool Config::pairbrackets(const std::string s)
+{
+    std::stack<char> brackets;
+
+    for (size_t i = 0; i < s.size(); i++)
+    {
+        if (s[i] == '{')
+        {
+            brackets.push('{');
+        }
+        else if (s[i] == '}')
+        {
+            if (brackets.empty())
+            {
+                return 0;
+            }
+            brackets.pop();
+        }
+    }
+    if(brackets.empty())
+        return(1);
+    return 0;
+}
+void Config::printArrayOfSrv() const
+{
+/*     std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
+    for (size_t i = 0; i < array_of_srv.size(); ++i)
+    {
+        std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
+        std::cout << BLUE << "Host:" << RED << "\""<< array_of_srv[i].getHost() << "\""<< std::endl;
+        std::cout << BLUE << "Port:" << RED << "\""<< array_of_srv[i].getPort() << "\""<< std::endl;
+        std::cout << BLUE << "Server Name:"<< RED  << "\""<< array_of_srv[i].getServerName() << "\""<< std::endl;
+        std::cout << BLUE << "Body Size:" << RED << "\""<< array_of_srv[i].getBodySize() << "\""<< std::endl;
+        std::cout << BLUE << "Root:" << RED << "\""<< array_of_srv[i].getRoot() << "\""<<  std::endl;
+        std::cout << std::endl << BLUE << "ipNum:" << RED << "\""<< array_of_srv[i]._ipNum << "\""<<  std::endl;
+        std::cout << BLUE << "sizetPort:" << RED << "\""<< array_of_srv[i]._sizetPort << "\""<<  std::endl;
+        std::cout << BLUE << "sizetBody:" << RED << "\""<< array_of_srv[i]._sizetBody << "\""<<  std::endl;
+       // Add more print statements for other srv data as needed
+        for(size_t e = 0 ; e < array_of_srv[i].arLoc.size(); ++e)
+        {
+            std::cout << GREEN   << "location num:" << RED << "\""<< e << "\""<< std::endl;
+            std::cout << MAGENTA << "location:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getLocation() << "\"" << std::endl;
+            std::cout << MAGENTA << "root:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getRoot() << "\""<< std::endl;
+            std::cout << MAGENTA << "file:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getFile() << "\""<< std::endl;
+            std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getMethods() << "\""<< std::endl;
+            std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getAutoindex() << "\""<< std::endl;
+            std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e]._cgi << "\""<< std::endl;
+            std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].arLoc[e]._redirect << "\""<< WHITE << std::endl << std::endl; 
+            for(size_t u = 0 ; u < array_of_srv[i].arLoc[e].methods_vector.size() ; ++u)
+            {
+                std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
+            }
+        }
+    } */
+}
+
+bool Config::openFile(std::string Configname)
+{
+    this->file.open(Configname.c_str(), std::ios::in);
+    if (this->file.is_open() == false) 
+        return 0;
     std::stringstream buffer;
     buffer << file.rdbuf();
 
     // Convertir el contenido del stringstream en un string
-    this->Config_data = buffer.str();
+    this->file_content = buffer.str();
     //std::cout << this->Config_data << std::endl;//para printear el contenido del archivo
     file.close();
     return 1;
 }
-void Config::saveData()
+
+
+bool  Config::config_routine(std::string configName)
 {
-    std::string line;
-    std::istringstream file(this->Config_data);
-    std::string a = "Port";
-    while (std::getline(file, line)) 
+    if(openFile(configName) == true)
     {
-        if (!line.empty() && line[0] != '#') 
+        
+/*         std::cout << file_content.size() << std::endl;
+        std::cout << file_content << std::endl; */
+
+        if(file_content.empty())
+            return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,0);
+        if(pairbrackets(file_content) == 0)
+            return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
+        //std::cout << "pepe" << std::endl;
+        if(createSrv() == 0)
+            return(0);
+       // std::cout << "peep" << std::endl;
+        return(1);
+    } 
+    else
+    {
+        std::cout << "Archivo no abierto" << std::endl;
+        return 0;
+    }
+}
+
+
+bool Config::createSrv()
+{
+    size_t tmp;
+    std::istringstream f(this->file_content);
+    std::string line;    
+    std::string serverBlock;
+    size_t i =0;
+    std::stack<char> stak;
+
+    srv Ser;
+    
+    while(i < file_content.size())
+    {
+        tmp = i;
+        while(i < file_content.size() && file_content[i] != '{' && file_content[i] != '}')
+            i++;
+
+        if(i == file_content.size())
+            break;
+
+        if(file_content[i] == '{')
+            stak.push('{');
+        else if (file_content[i] == '}')
+            break;
+        i++;
+        while (i < file_content.size() && !stak.empty())
         {
-            std::istringstream lineStream(line);
-			std::string key;
-        	int value;
-
-            lineStream >> key >> value;
-            if (key == "Port") 
-            {
-                std::istringstream iss(line.substr(line.find(" ") + 1));
-                int num;
-                iss >> num;
-                this->Port = num;
-            }
-			else if(key == "Host")
-			{
-                this->Host = line.substr(line.find(" ") + 1);
-			}
-            else if(key == "DocumentRoot")
-            {
-                this->DocumentRoot = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "LogFile")
-            {
-                this->LogFile = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "MaxRequestSize")
-            {
-                this->MaxRequestSize = value;
-            }
-            else if(key == "Timeout")
-            {
-                this->Timeout = value;
-            }
-            else if(key == "DirectoryIndex")
-            {
-                this->DirectoryIndex = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ErrorDocument404")
-            {
-                this->ErrorDocument_404 = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ErrorDocument500")
-            {
-                this->ErrorDocument_500 = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ServerSignature")
-            {
-                this->ServerSignature_Off = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "ServerTokens")
-            {
-                this->ServerTokens_Prod = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "SSLEngine")
-            {
-                this->SSLEngine_on = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "SSLCertificateFile")
-            {
-                this->SSLCertificateFile = line.substr(line.find(" ") + 1);
-            }
-            else if(key == "SSLCertificateKeyFile")
-            {
-                this->SSLCertificateKeyFile = line.substr(line.find(" ") + 1);
-            }
-            else
-            {
-                std::cerr <<  RED << "Error: Configuración no válida." << WHITE << std::endl;
-            }
-
+            if(file_content[i] == '{')
+                stak.push(file_content[i]);
+            else if(file_content[i] == '}')
+                stak.pop();
+            i++;
         }
+        size_t length = i - tmp;
+        if (tmp + length > file_content.size())
+            length = file_content.size() - tmp;
+        std::string sub = file_content.substr(tmp, length);
+        size_t pos = sub.find("server");
+        if (pos != std::string::npos) 
+        {
+            srv newServer(sub);
+            newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+            if(newServer.srv_ok == 1)
+                array_of_srv.push_back(newServer);
+        } 
+        else 
+            return(std::cout << "sub didnt contain the word server" << std::endl,0);
+    
     }
-    decimalIp = ipToDecimal(Host);
-}
-void Config::printData()
-{
-	std::cout << GREEN << "Port: " << YELLOW << this->Port << WHITE << std::endl;
-	std::cout << GREEN << "Host: " << YELLOW << this->Host << WHITE << std::endl;
-	std::cout << GREEN << "DocumentRoot: " << YELLOW << this->DocumentRoot << WHITE << std::endl;
-	std::cout << GREEN << "LogFile: " << YELLOW << this->LogFile << WHITE << std::endl;
-	std::cout << GREEN << "MaxRequestSize: " << YELLOW << this->MaxRequestSize << WHITE << std::endl;
-	std::cout << GREEN << "Timeout: " << YELLOW << this->Timeout << WHITE << std::endl;
-	std::cout << GREEN << "DirectoryIndex: " << YELLOW << this->DirectoryIndex << WHITE << std::endl;
-	std::cout << GREEN << "ErrorDocument_404: " << YELLOW << this->ErrorDocument_404 << WHITE << std::endl;
-	std::cout << GREEN << "ErrorDocument_500: " << YELLOW << this->ErrorDocument_500 << WHITE << std::endl;
-	std::cout << GREEN << "ServerSignature_Off: " << YELLOW << this->ServerSignature_Off << WHITE << std::endl;
-	std::cout << GREEN << "ServerTokens_Prod: " << YELLOW << this->ServerTokens_Prod << WHITE << std::endl;
-	std::cout << GREEN << "SSLEngine_on: " << YELLOW << this->SSLEngine_on << WHITE << std::endl;
-	std::cout << GREEN << "SSLCertificateFile: " << YELLOW << this->SSLCertificateFile << WHITE << std::endl;
-	std::cout << GREEN << "SSLCertificateKeyFile: " << YELLOW << this->SSLCertificateKeyFile << WHITE << std::endl;
-    std::cout << GREEN << "decimalIp: " << YELLOW << this->decimalIp << WHITE << std::endl;
+    return(1);
 }
 
-unsigned long Config::ipToDecimal(const std::string& ip) 
-{
-    std::vector<int> octets;
-    std::stringstream ss(ip);
-    std::string item;
 
-    // Separar la IP por los puntos
-    while (std::getline(ss, item, '.')) 
+bool Config::getServerCount()
+{
+    int server = 0;
+    int server_name = 0;
+    size_t  pos = 0;
+    //std::string::size_type pos = 0;
+
+    while ((pos = file_content.find("server", pos)) != std::string::npos) 
     {
-        int num;
-        std::istringstream(item) >> num;
-        octets.push_back(num);
+        ++server;
+        pos += 6; // Longitud de la cadena "Server"
     }
-
-    // Verificar que tengamos exactamente cuatro octetos
-    if (octets.size() != 4) {
-        std::cerr << "Error: Dirección IP no válida." << std::endl;
-        return 0;  // O alguna otra señal de error
+    pos = 0;
+    while ((pos = file_content.find("server_name", pos)) != std::string::npos) 
+    {
+        ++server_name;
+        pos += 11; // Longitud de la cadena "Server"
     }
+    this->srvCount = server - server_name;
 
-    // Combinar los octetos en un solo número
-    this->decimalIp = 0;
-    this->decimalIp += (octets[0] << 24);
-    this->decimalIp += (octets[1] << 16);
-    this->decimalIp += (octets[2] << 8);
-    this->decimalIp += octets[3];
-    return this->decimalIp;
+    if (this->srvCount > 0) 
+    {
+        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        return 1;
+    }
+    else
+        return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
+}
+///////////////////////
+/*
+El rango de puertos válidos en Nginx, y en general en cualquier sistema que siga las 
+convenciones de red estándar, es de 1 a 65535. Sin embargo, los puertos del 1 al 1023 
+son conocidos como puertos bien conocidos y están reservados para servicios específicos 
+(por ejemplo, el puerto 80 para HTTP, el puerto 443 para HTTPS). Por lo tanto, a menos 
+que estés ejecutando Nginx como root (lo cual no se recomienda por razones de seguridad),
+ deberías usar un puerto en el rango de 1024 a 65535.
+*/
+bool Config::validatePort()
+{
+    size_t i = 0;
+    while(i < array_of_srv.size())
+    {
+        if(array_of_srv[i]._sizetPort == 0)
+            return(std::cout << array_of_srv[i]._sizetPort << std::endl,0);
+        if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
+            std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
+        else
+            return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,0;
+        ++i;
+    }
+    return 1;
+}
+std::vector<srv> & Config::getArrayOfServers()
+{
+    return array_of_srv;
 }
 
-//GETTERS
-/* std::ifstream Config::getfile() const
+std::string & Config::skip_p_t_esp(std::string &s)
 {
-    return this->file;
-} */
-std::string  Config::getConfig_data() const
-{
-    return this->Config_data;
+    size_t start = 0;
+    while (start < s.size() && (s[start] == ' ' || s[start] == '\n' || s[start] == '\t')) {
+        ++start;
+    }
+    s = s.substr(start);
+    return s;
 }
-int Config::getPort() const
-{
-    return this->Port;
-}
-std::string Config::getHost() const
-{
-    return this->Host;
-}
-std::string Config::getDocumentRoot() const
-{
-    return this->DocumentRoot;
-}
-std::string Config::getLogFile() const
-{
-    return this->LogFile;
-}
-int Config::getMaxRequestSize() const
-{
-    return this->MaxRequestSize;
-}
-int Config::getTimeout() const
-{
-    return this->Timeout;
-}
-std::string Config::getDirectoryIndex() const
-{
-    return this->DirectoryIndex;
-}
-std::string Config::getErrorDocument_404() const
-{
-    return this->ErrorDocument_404;
-}
-std::string Config::getErrorDocument_500() const
-{
-    return this->ErrorDocument_500;
-}
-std::string Config::getServerSignature_Off() const
-{
-    return this->ServerSignature_Off;
-}
-std::string Config::getServerTokens_Prod() const
-{
-    return this->ServerTokens_Prod;
-}
-std::string Config::getSSLEngine_on() const
-{
-    return this->SSLEngine_on;
-}
-std::string Config::getSSLCertificateFile() const
-{
-    return this->SSLCertificateFile;
-}
-std::string Config::getSSLCertificateKeyFile() const
-{
-    return this->SSLCertificateKeyFile;
-}
-unsigned long Config::getdecimalIp() const
-{
-    return this->decimalIp;
-}
+
+

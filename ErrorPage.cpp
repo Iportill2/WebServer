@@ -62,7 +62,8 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
             internal = "yes";
     }
 
-    if(!error_page_404.empty() && !root.empty())
-        ErrorRoot = root + error_page_404 ;
+    if(error_page_404 == location)
+        if(!error_page_404.empty() && !root.empty())
+            ErrorRoot = root + error_page_404 ;
     return(1);
 }

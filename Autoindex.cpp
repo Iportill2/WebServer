@@ -12,8 +12,8 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
     _server = server;
     directory_path = server.arLoc[i]._root;
     error = server.arErr[0].ErrorRoot;
-    std::cout << RED << "directory_path:" << directory_path << std::endl;
-    std::cout << RED << "error:" << error << std::endl;
+    std::cout << RED << "directory_path:" << directory_path << WHITE<< std::endl;
+    std::cout << RED << "error:" << error << WHITE << std::endl;
     handle_request(directory_path);
 }
 Autoindex::~Autoindex()
@@ -86,18 +86,31 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     while ((entry = readdir(dir)) != NULL) 
     {
         std::string name = entry->d_name;
+        
+        std::cout << YELLOW << "entry:" << entry << WHITE<< std::endl;
+        std::cout << CYAN<< "name:" << name << WHITE<<std::endl;
         if (name == ".") /////////////////////////
         {
             continue;
         }
         std::string full_path = directory_path + "/" + name;
+        std::cout << RED << "full path:" << full_path << WHITE << std::endl;
+
         if (is_directory(full_path)) 
         {
+
+            //write(_fd,"a",1);
+            std::cout << RED<< "IF" << WHITE<<std::endl;
             html << "<li><a href=\"" << name << "/\">" << name << "/</a></li>";
+            std::cout << GREEN << "full path:" << full_path << WHITE << std::endl;
+            std::string s = html.str() ;
+            std::cout << MAGENTA << s << WHITE << std::endl;
         } 
         else 
         {
+            std::cout << RED<< "ELSE" << WHITE<<std::endl;
             html << "<li><a href=\"" << name << "\">" << name << "</a></li>";
+            //html << "<li><a href=\"" << full_path << "</a></li>";
         }
     }
     closedir(dir);

@@ -1,9 +1,11 @@
 
 #include "Error.hpp"
+std::string Error::ErrorPage404 = "";
 
-Error::Error(int er, int fdescriptor): error(er), fd(fdescriptor) 
+Error::Error(int er, int fdescriptor, srv server): error(er), fd(fdescriptor) 
 {
-    //std::cout << RED << "XXX" << WHITE << std::endl;
+    if(!server.arErr.empty())
+        ErrorPage404 = server.arErr[0].ErrorRoot;
     sendError();
 }
 
@@ -24,7 +26,14 @@ std::string Error::status(int error)
 	errorCodes[400] = "400 Bad Request";
 	errorCodes[401] = "401 Unauthorized";
 	errorCodes[403] = "403 Forbidden";
-	errorCodes[404] = "404 Not Found";
+    if(ErrorPage404 == "")
+    {
+	    errorCodes[404] = "404 Not Found";
+    }
+    else
+    {
+        errorCodes[404] = ErrorPage404;
+    }
 	errorCodes[405] = "405 Method Not Allowed";
 	errorCodes[406] = "406 Not Acceptable";
 	errorCodes[408] = "408 Request Timeout";

@@ -105,32 +105,30 @@ int Respons::createRespons()
 	if (!checkServerName())
 	{
 		//std::cout << "SERVERNAME ERROR" << std::endl;
-		Error r(400, fd);
+		Error r(400, fd ,server);
 		return 1;
 	}
 	int locat = checkLocation();
 	if (!locat)
 	{
 		//std::cout << "PAGE NOT FOUND" << std::endl;
-		Error r(404, fd);
+		Error r(404, fd,server);
 		return 1;
 	}
 	//std::cout << "---FINAL url = " << _url << std::endl;
 	//std::cout << "location = " << locat << std::endl;
-
-	std::cout << RED <<"XXX" << WHITE << std::endl;
+	
+////////////////////////////////////////////////////////////
 	if (locat != 2 && !checkAuthorized())
 	{
-		std::cout << GREEN <<"XXX" << WHITE << std::endl;
 		//std::cout << "PAGE FORBIDDEN" << std::endl;
-		Error r(403, fd);
+		Error r(403, fd,server);
 		return 1;
 	}
-	std::cout << YELLOW <<"XXX" << WHITE << std::endl;
 	if (locat != 2 && !checkMethod())
 	{
 		//std::cout << "METHOD NOT ALLOWED" << std::endl;
-		Error r(405, fd);
+		Error r(405, fd,server);
 		return 1;
 	}
 
@@ -178,7 +176,7 @@ void	Respons::htmlRespond()
 	else if (rq->getMethod() == "post")
 	{
 		if (rq->getContentLen() > server._sizetBody)
-			Error r(413, fd);
+			Error r(413, fd,server);
 		else if(rq->getUri() == "/cgi")
 		{
 			int cgiOn = 0;
@@ -191,7 +189,7 @@ void	Respons::htmlRespond()
 				}
 			}
 			if (!cgiOn)
-				Error r(403, fd);
+				Error r(403, fd,server);
 		}
 		else if (rq->getUri() == "/upload")
 		{
@@ -205,7 +203,7 @@ void	Respons::htmlRespond()
 				}
 			}
 			if (!up)
-				Error r(404, fd);
+				Error r(404, fd,server);
 		}
 	}
 }

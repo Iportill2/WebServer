@@ -272,7 +272,6 @@ void Server::printRequest()
 	
 	iti = rq.begin();
 	ito = rq.end();
-		//std::cout << RED <<"XXX" << WHITE << std::endl;
 	while(iti != ito)
 	{
 		//std::cout << "FD " << iti->first << std::endl;

@@ -79,11 +79,12 @@ bool	Respons::checkServerName()
 }
 
 bool	Respons::checkAuthorized()
-{
+{	
 	size_t point = _url.find('.');//cuidao si no lo encuentra
-
-	_extension = _url.substr(point);
-	//std::cout << "Extension = " << "\"" <<  _extension  << "\"" << std::endl;
+    if(point != std::string::npos) 
+        _extension = _url.substr(point);
+	else 
+        _extension = "";
 
 	if(_extension != ".html" && _extension != ".jpg" && _extension != ".png" && _extension != ".ico")
 		return 0;
@@ -117,12 +118,15 @@ int Respons::createRespons()
 	//std::cout << "---FINAL url = " << _url << std::endl;
 	//std::cout << "location = " << locat << std::endl;
 
+	std::cout << RED <<"XXX" << WHITE << std::endl;
 	if (locat != 2 && !checkAuthorized())
 	{
+		std::cout << GREEN <<"XXX" << WHITE << std::endl;
 		//std::cout << "PAGE FORBIDDEN" << std::endl;
 		Error r(403, fd);
 		return 1;
 	}
+	std::cout << YELLOW <<"XXX" << WHITE << std::endl;
 	if (locat != 2 && !checkMethod())
 	{
 		//std::cout << "METHOD NOT ALLOWED" << std::endl;
@@ -147,7 +151,6 @@ int Respons::createRespons()
 		jpgRespond();
 	else if (_extension == ".png")
 		pngRespond();
-
 	return 0;
 }
 

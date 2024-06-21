@@ -98,21 +98,24 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
                     return "<html><body><h1>Unable to open directory</h1></body></html>";
                 else
                 {
+                    std::cout << YELLOW << "directory_path:" << directory_path << WHITE << std::endl;
                     std::ifstream file( error.c_str());
                     std::string response;
                     if (file)
                     {
+                        response = "<html><body><h1>";
                         std::stringstream buffer;
                         buffer << file.rdbuf();
-                        response = buffer.str();
+                        response += buffer.str();
+                        response += "</h1></body></html>";
                         std::cout<< RED << response << WHITE << std::endl;
-                        file.close();
-                        std::string s ="<html><body><h1>"+ response;
-                        s +"</h1></body></html>";
-                        html << s;
+                        close(i);
+                        //std::string s ="<html><body><h1>"+ response;
+                        //s +"</h1></body></html>";
+                        html << response;
                         return html.str();
                     }
-                     else
+                    else
                         return "<html><body><h1>PATAATA</h1></body></html>"; 
                 }
 

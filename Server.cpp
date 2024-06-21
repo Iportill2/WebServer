@@ -233,6 +233,7 @@ void	Server::Respond(int i)
 	Respons r(rq[i], servers[serversMap[readMap[i]]], i);
 	r.printRequest();
 	//r.printConf();
+	
 	r.createRespons();
 }
 
@@ -271,10 +272,11 @@ void Server::printRequest()
 	
 	iti = rq.begin();
 	ito = rq.end();
-
+		//std::cout << RED <<"XXX" << WHITE << std::endl;
 	while(iti != ito)
 	{
 		//std::cout << "FD " << iti->first << std::endl;
+
 		iti->second->printRequest();
 		iti++;
 	}

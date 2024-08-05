@@ -18,7 +18,7 @@ class Config :public Utils
     std::vector<srv > array_of_srv;
     
     int server_id ;
-public:
+    public:
     Config();
     Config(std::string configName);
     ~Config();

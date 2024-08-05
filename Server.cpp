@@ -14,6 +14,31 @@
 
 int Server::sign = 1;
 
+
+//#include <sys/stat.h>
+
+bool Server::directoryExists(const std::string& dirName) {
+    struct stat info;
+
+    if (stat(dirName.c_str(), &info) != 0) {
+        // No se puede acceder al directorio
+        return false;
+    } else if (info.st_mode & S_IFDIR) {
+        // Es un directorio
+        return true;
+    } else {
+        // Existe, pero no es un directorio
+        return false;
+    }
+}
+bool fileExists(const std::string& filename) {
+    std::ifstream file(filename.c_str());
+    return file.good();
+}
+/* bool Server::checkdefaultsettings(){
+	if( directoryExists(s._Root))
+} */
+
 Server::Server()
 {
 	signal(SIGINT, signalHandler);
@@ -22,9 +47,9 @@ Server::Server()
 	srv s;
 	Location l1;
 	Location l2;
-
+	std::string ip = "0.0.0.0";
 	s._server_name = "localhost";
-	s.ipAddressToipNum("0.0.0.0");
+	s.ipAddressToipNum(ip.c_str());
 	s._sizetPort = 8080;
 	s._sizetBody = 563218;
 	s._Root = "./pagina";
@@ -43,10 +68,28 @@ Server::Server()
 	s.arLoc.push_back(l2);
 	
 	servers.push_back(s);
+	
+if(s.ipAddressToipNum(ip) != 0)
+	if( directoryExists(s._Root) == 1)
+		if(directoryExists(l1._location) == 1)
+			if(directoryExists(l1._root) == 1)
+				if(fileExists(l1._file) == 1)
+					if(l1.methods_vector.size() == 1)
+					{
+						if(directoryExists(l2._location) == 1)
+							if(directoryExists(l2._root) == 1)
+								if(fileExists(l2._file) == 1)
+									if(l2.methods_vector.size() == 2)
+									{
+											printServers();
+											serverSet();
+											Mselect();
+									}
 
-	printServers();
-	serverSet();
-	Mselect();
+					}
+	
+
+
 }
 
 Server::Server(std::vector<srv> & srv) : servers(srv)

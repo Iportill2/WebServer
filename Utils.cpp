@@ -74,3 +74,5 @@ void Utils::deletespaces(std::string &s)
 	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
 	//return(s);
 }
+
+

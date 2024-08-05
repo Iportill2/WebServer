@@ -50,8 +50,7 @@ class srv
     /// 
     unsigned long ipToDecimal(const std::string& ip);
     bool checkstring();
-    bool ipAddressToipNum(std::string IpAddress);
-
+    bool ipAddressToipNum(std::string ipAddress);
     void findAndExtractRoot(const std::string& serverBlock, size_t pos); 
 
 

@@ -15,7 +15,51 @@
 int Server::sign = 1;
 
 
-//#include <sys/stat.h>
+bool Server::checkdefaultsettings(std::string ip, Location l1,Location l2,srv s)
+{
+if(s.ipAddressToipNum(ip) == 1)
+{
+	std::cout << "s.ipAddressToipNum(ip)\n";
+}
+	if( directoryExists(s._Root) == 1)
+	{
+	std::cout << "directoryExists(s._Root)\n";
+}
+		if(directoryExists(l1._location) == 1)
+		{
+	std::cout << "directoryExists(l1._location)\n";
+}
+			if(directoryExists(l1._root) == 1)
+			{
+	std::cout << "directoryExists(l1._root)\n";
+}
+				if(fileExists(l1._file) == 1)
+				{
+	std::cout << "fileExists(l1._file)\n";
+}
+					if(l1.methods_vector.size() == 1)
+					{
+	std::cout << "l1.methods_vector.size() == 1\n";
+
+						if(directoryExists(l2._location) == 1)
+						{
+	std::cout << "directoryExists(l2._location) \n";
+}
+							if(directoryExists(l2._root) == 1)
+							{
+	std::cout << "directoryExists(l2._root)\n";
+}
+								if(fileExists(l2._file) == 1)
+								{
+	std::cout << "fileExists(l2._file)\n";
+}
+									if(l2.methods_vector.size() == 2)
+									{
+	std::cout << "l2.methods_vector.size() == 2\n";
+}
+					}
+	return 1;
+}
 
 bool Server::directoryExists(const std::string& dirName) {
     struct stat info;
@@ -31,13 +75,10 @@ bool Server::directoryExists(const std::string& dirName) {
         return false;
     }
 }
-bool fileExists(const std::string& filename) {
+bool Server::fileExists(const std::string& filename) {
     std::ifstream file(filename.c_str());
     return file.good();
 }
-/* bool Server::checkdefaultsettings(){
-	if( directoryExists(s._Root))
-} */
 
 Server::Server()
 {
@@ -68,28 +109,14 @@ Server::Server()
 	s.arLoc.push_back(l2);
 	
 	servers.push_back(s);
-	
-if(s.ipAddressToipNum(ip) != 0)
-	if( directoryExists(s._Root) == 1)
-		if(directoryExists(l1._location) == 1)
-			if(directoryExists(l1._root) == 1)
-				if(fileExists(l1._file) == 1)
-					if(l1.methods_vector.size() == 1)
-					{
-						if(directoryExists(l2._location) == 1)
-							if(directoryExists(l2._root) == 1)
-								if(fileExists(l2._file) == 1)
-									if(l2.methods_vector.size() == 2)
-									{
-											printServers();
-											serverSet();
-											Mselect();
-									}
 
-					}
-	
-
-
+	if(checkdefaultsettings(ip.c_str(),l1,l2,s) == 1)
+	{
+		printServers();
+		serverSet();
+		Mselect();
+									
+	}
 }
 
 Server::Server(std::vector<srv> & srv) : servers(srv)

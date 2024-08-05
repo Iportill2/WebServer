@@ -74,5 +74,7 @@ class Server
 
         bool directoryExists(const std::string& dirName);
         bool fileExists(const std::string& filename);
-        bool checkdefaultsettings();
+
+        bool checkdefaultsettings(std::string ip, Location l1,Location l2,srv s);
+
 };

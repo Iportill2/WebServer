@@ -1,7 +1,7 @@
 #include "ErrorPage.hpp"
 ErrorPage::ErrorPage(const std::string ErrorPageBlock)
 {
-    std::cout << "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n";
+    
     std::cout << ErrorPageBlock << "\n";
     //std::cout <<"Default ErrorPage Constructor" << std::endl;
     if(ErrorParseBlock(ErrorPageBlock) == 1)

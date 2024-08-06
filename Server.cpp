@@ -17,51 +17,52 @@ int Server::sign = 1;
 
 bool Server::checkdefaultsettings(std::string ip, Location l1,Location l2,srv s)
 {
-if(s.ipAddressToipNum(ip) == 1)
-{
-	std::cout << "s.ipAddressToipNum(ip)\n";
-}
-	if( directoryExists(s._Root) == 1)
+	if(s.ipAddressToipNum(ip) == 1)
 	{
-	std::cout << "directoryExists(s._Root)\n";
-}
-		if(directoryExists(l1._location) == 1)
+		std::cout << "s.ipAddressToipNum(ip)\n";
+		if( directoryExists(s._Root) == 1)
 		{
-	std::cout << "directoryExists(l1._location)\n";
-}
-			if(directoryExists(l1._root) == 1)
+			std::cout << "directoryExists(s._Root)\n";
+			if(directoryExists(l1._location) == 1)
 			{
-	std::cout << "directoryExists(l1._root)\n";
-}
-				if(fileExists(l1._file) == 1)
+				std::cout << "directoryExists(l1._location)\n";
+				if(directoryExists(l1._root) == 1)
 				{
-	std::cout << "fileExists(l1._file)\n";
-}
-					if(l1.methods_vector.size() == 1)
+					std::cout << "directoryExists(l1._root)\n";
+					if(fileExists(l1._file) == 1)
 					{
-	std::cout << "l1.methods_vector.size() == 1\n";
-
-						if(directoryExists(l2._location) == 1)
+						std::cout << "fileExists(l1._file)\n";
+						if(l1.methods_vector.size() == 1)
 						{
-	std::cout << "directoryExists(l2._location) \n";
-}
-							if(directoryExists(l2._root) == 1)
+							std::cout << "l1.methods_vector.size() == 1\n";
+							if(directoryExists(l2._location) == 1)
 							{
-	std::cout << "directoryExists(l2._root)\n";
-}
-								if(fileExists(l2._file) == 1)
+								std::cout << "directoryExists(l2._location) \n";//////////
+								if(directoryExists(l2._root) == 1)
 								{
-	std::cout << "fileExists(l2._file)\n";
-}
-									if(l2.methods_vector.size() == 2)
+									std::cout << "directoryExists(l2._root)\n";
+									if(fileExists(l2._file) == 1)
 									{
-	std::cout << "l2.methods_vector.size() == 2\n";
-}
+										std::cout << "fileExists(l2._file)\n";
+										if(l2.methods_vector.size() == 2)
+										{	
+											std::cout << "l2.methods_vector.size() == 2\n";
+											return 1;
+										}
+									}
+								}
+							}
+						}
 					}
-	return 1;
+				}
+			}
+		}
+	}
+	return 0;
 }
 
-bool Server::directoryExists(const std::string& dirName) {
+bool Server::directoryExists(const std::string& dirName) 
+{
     struct stat info;
 
     if (stat(dirName.c_str(), &info) != 0) {
@@ -75,7 +76,8 @@ bool Server::directoryExists(const std::string& dirName) {
         return false;
     }
 }
-bool Server::fileExists(const std::string& filename) {
+bool Server::fileExists(const std::string& filename) 
+{
     std::ifstream file(filename.c_str());
     return file.good();
 }
@@ -101,7 +103,7 @@ Server::Server()
 	l1.methods_vector.push_back("get");
 	s.arLoc.push_back(l1);
 
-	l2._location = "/pepe";
+	l2._location = "./pepe";//// estaba /pepe  y no funcionaba
 	l2._root = "./pagina/pepe";
 	l2._file = "index.html";
 	l2.methods_vector.push_back("get");

@@ -14,7 +14,6 @@ class Location
     std::string _cgi;
     std::string _redirect;
     int redirect_num;
-
     bool lock_ok;
 
     std::vector <std::string> methods_vector;

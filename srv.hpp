@@ -20,7 +20,7 @@ class srv
     size_t _sizetPort;
     size_t _sizetBody;
 
-    int locationCount;
+    int locationCount;/// esto no esta ya en config???
     std::vector<Location> arLoc;
 
     std::vector<ErrorPage> arErr;

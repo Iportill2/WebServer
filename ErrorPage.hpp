@@ -19,16 +19,24 @@ class ErrorPage //: public Config
     std::map< int, std::string> ErMap;
     std::map< int, std::string> FinalErMap;
 
+    std::map < int , std::string > ErRoute;
 
     ErrorPage();
     ErrorPage(std::string ErrorPageBlock);
     ~ErrorPage();
 
     void inidefaultErMap();
+    void iniErRoute();
 
     bool ErrorParseBlock (const std::string ErrorParseBlock);
     void printmap();
     std::string createHtml_in_mapValue(std::string text);
+    bool directoryExistsA(const std::string& dirName);
+    bool fileExistsA(const std::string& filename);
+
+    void mergedefaultErMapErRoute();
+
+
 };
 
 #endif

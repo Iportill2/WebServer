@@ -14,9 +14,75 @@
 
 int Server::sign = 1;
 
+Server::Server()
+{
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, &signalHandler);
+	
+	srv s;
+	Location l1;
+	Location l2;
+	ErrorPage Error;
+	std::ifstream file("errors/404.html");
+                if (!file)
+                {
+                    throw std::runtime_error("Could not open file: " + Error.ErrorRoot);
+                }
+                std::stringstream buffer;
+                buffer << file.rdbuf();
+
+                std::string c = "404 OK!"; 
+                std::string httpResponse = "HTTP/1.1 " + c + "\r\n";
+   	            httpResponse += "Content-Type: text/html\r\n";
+                httpResponse += "\r\n";
+                httpResponse += buffer.str();
+
+                /* std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  httpResponse << "\n"; */
+                Error.defaultErMap[404] = httpResponse;
+	std::string ip = "0.0.0.0";
+	s._server_name = "localhost";
+	s.ipAddressToipNum(ip.c_str());
+	s._sizetPort = 8080;
+	s._sizetBody = 563218;
+	s._Root = "./pagina";
+
+	l1._location = "/";
+	l1._root = "./pagina";
+	l1._file = "index.html";
+	l1.methods_vector.push_back("get");
+	s.arLoc.push_back(l1);
+
+	l2._location = "/pepe";//// estaba /pepe  y no funcionaba
+	l2._root = "./pagina/pepe";
+	l2._file = "index.html";
+	l2.methods_vector.push_back("get");
+	l2.methods_vector.push_back("post");
+	s.arLoc.push_back(l2);
+	s.arErr.push_back(Error);
+	servers.push_back(s);
+
+	if(checkdefaultsettings(ip.c_str(),s) == 1)
+	{
+		printServers();
+		serverSet();
+		Mselect();
+									
+	}
+}
+
+Server::Server(std::vector<srv> & srv) : servers(srv)
+{
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, &signalHandler);
+	printServers();
+	serverSet();
+	Mselect();
+}
 
 bool Server::checkdefaultsettings(std::string ip,srv &s)
 {
+	std::cout <<  "directoryExists(s.arLoc[0]._location = " << s.arLoc[0]._location << "\n";
+	std::cout <<  "directoryExists(s.arLoc[1]._location = " << s.arLoc[1]._location << "\n";
 	if(s.ipAddressToipNum(ip) == false)
 		return(std::cout << "s.ipAddressToipNum(ip)\n", false);
 	if( directoryExists(s._Root) == false)
@@ -30,8 +96,8 @@ bool Server::checkdefaultsettings(std::string ip,srv &s)
 	if(s.arLoc[0].methods_vector.size() != 1)
 		return(std::cout << "l1.methods_vector.size() == 1\n",false);
 	//std::cout << s.arLoc[1]._location << "\n";
-	if(directoryExists(s.arLoc[1]._location) == false)
-		return(std::cout << "directoryExists(l2._location) \n", false);
+/* 	if(directoryExists(s.arLoc[1]._location) == false)
+		return(std::cout << "directoryExists(l2._location) \n", false); */
 	if(directoryExists(s.arLoc[1]._root) == false)
 		return(std::cout << "directoryExists(l2._root)\n",false);
 	if(fileExists(s.arLoc[1]._file) == false)
@@ -58,53 +124,6 @@ bool Server::fileExists(const std::string& filename)
     return file.good();
 }
 
-Server::Server()
-{
-	signal(SIGINT, signalHandler);
-	signal(SIGTERM, &signalHandler);
-	
-	srv s;
-	Location l1;
-	Location l2;
-	std::string ip = "0.0.0.0";
-	s._server_name = "localhost";
-	s.ipAddressToipNum(ip.c_str());
-	s._sizetPort = 8080;
-	s._sizetBody = 563218;
-	s._Root = "./pagina";
-
-	l1._location = "/";
-	l1._root = "./pagina";
-	l1._file = "index.html";
-	l1.methods_vector.push_back("get");
-	s.arLoc.push_back(l1);
-
-	l2._location = "./pepe";//// estaba /pepe  y no funcionaba
-	l2._root = "./pagina/pepe";
-	l2._file = "index.html";
-	l2.methods_vector.push_back("get");
-	l2.methods_vector.push_back("post");
-	s.arLoc.push_back(l2);
-	
-	servers.push_back(s);
-
-	if(checkdefaultsettings(ip.c_str(),s) == 1)
-	{
-		printServers();
-		serverSet();
-		Mselect();
-									
-	}
-}
-
-Server::Server(std::vector<srv> & srv) : servers(srv)
-{
-	signal(SIGINT, signalHandler);
-	signal(SIGTERM, &signalHandler);
-	printServers();
-	serverSet();
-	Mselect();
-}
 
 void	Server::serverSet()
 {

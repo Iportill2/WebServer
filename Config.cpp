@@ -6,28 +6,32 @@ Config::Config()
 Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
-    if(config_routine(configName) == 1)
-    {
-                        
-        if(checksrvloc() == 1)
-        {
-
-            if(checkduplicateports() == 1)
-            {
-
-            	if(validatePort() == 1)
-                {
-
-                    if(getServerCount() == 1)
-                    {
-                        //printArrayOfSrv();
-                    }
-                }
-            }
-        }
-    }
-
-
+    if(config_routine(configName) == false)
+	{
+		std::cout << "if(config_routine(configName) == false)";    
+        return;
+	}
+    if(checksrvloc() == false)
+	{
+        std::cout << "if(checksrvloc() == false)";
+		return;
+	}
+	if(checkduplicateports() == false)
+	{
+        std::cout << "if(checkduplicateports() == false)";
+		return;
+	}
+    if(validatePort() == false)
+	{
+        std::cout << "if(validatePort() == false)";
+		return;
+	}
+	if(getServerCount() == false)
+	{
+        std::cout << "if(getServerCount() == false)";
+		return;
+	}
+    //printArrayOfSrv();
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()

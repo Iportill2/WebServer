@@ -2,8 +2,9 @@
 
 # include "dependences.hpp"
 # include "srv.hpp"
+class srv;
 class Error
-{
+{   
     private:
 
         int error;
@@ -15,7 +16,7 @@ class Error
         Error(int er, int fdescriptor, srv server);
         ~Error();
 
-        static std::string	status(int error);
+        static std::string	status(int error, srv server);
 		std::string 		toString(const int &num);
-        void				sendError();
+        void				sendError(srv server);
 };

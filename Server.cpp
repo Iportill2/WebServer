@@ -15,45 +15,42 @@
 int Server::sign = 1;
 
 
-bool Server::checkdefaultsettings(std::string ip, Location l1,Location l2,srv s)
+bool Server::checkdefaultsettings(std::string ip,srv &s)
 {
 	if(s.ipAddressToipNum(ip) == false)
 		return(std::cout << "s.ipAddressToipNum(ip)\n", false);
 	if( directoryExists(s._Root) == false)
 		return(std::cout << "directoryExists(s._Root)\n", false);
-	if(directoryExists(l1._location) == false)
+	if(directoryExists(s.arLoc[0]._location) == false)
 		return(std::cout << "directoryExists(l1._location)\n", false);
-	if(directoryExists(l1._root) == false)
+	if(directoryExists(s.arLoc[0]._root) == false)
 		return(std::cout << "directoryExists(l1._root)\n", false);
-	if(fileExists(l1._file) == false)
+	if(fileExists(s.arLoc[0]._file) == false)
 		return(std::cout << "fileExists(l1._file)\n", false);
-	if(l1.methods_vector.size() != 1)
+	if(s.arLoc[0].methods_vector.size() != 1)
 		return(std::cout << "l1.methods_vector.size() == 1\n",false);
-	std::cout << l2._location << "\n";
-	if(directoryExists(l2._location) == false)
+	//std::cout << s.arLoc[1]._location << "\n";
+	if(directoryExists(s.arLoc[1]._location) == false)
 		return(std::cout << "directoryExists(l2._location) \n", false);
-	if(directoryExists(l2._root) == false)
+	if(directoryExists(s.arLoc[1]._root) == false)
 		return(std::cout << "directoryExists(l2._root)\n",false);
-	if(fileExists(l2._file) == false)
+	if(fileExists(s.arLoc[1]._file) == false)
 		return(std::cout << "fileExists(l2._file)\n", false);
-	if(l2.methods_vector.size() != 2)
+	if(s.arLoc[1].methods_vector.size() != 2)
 		return(std::cout << "l2.methods_vector.size() == 2\n",false);
+	
+	std::cout << RED << "bool Server::checkdefaultsettings(std::string ip,srv &s)" << GREEN <<  "OK!\n" << WHITE ;
 	return(true);
 }
 bool Server::directoryExists(const std::string& dirName) 
 {
     struct stat info;
-
-    if (stat(dirName.c_str(), &info) != 0) {
-        // No se puede acceder al directorio
-        return false;
-    } else if (info.st_mode & S_IFDIR) {
-        // Es un directorio
-        return true;
-    } else {
-        // Existe, pero no es un directorio
-        return false;
-    }
+    if (stat(dirName.c_str(), &info) != 0) 
+        return false;// No se puede acceder al directorio
+    else if (info.st_mode & S_IFDIR)
+        return true;// Es un directorio
+    else
+    	return false;// Existe, pero no es un directorio
 }
 bool Server::fileExists(const std::string& filename) 
 {
@@ -91,7 +88,7 @@ Server::Server()
 	
 	servers.push_back(s);
 
-	if(checkdefaultsettings(ip.c_str(),l1,l2,s) == 1)
+	if(checkdefaultsettings(ip.c_str(),s) == 1)
 	{
 		printServers();
 		serverSet();
@@ -233,7 +230,7 @@ void	Server::Mselect()
 						FD_SET (newSocket, &activefdsRead);
 						readMap[newSocket] = it->first;
 						comFds.push_back(newSocket);
-						if (new_socket > maxFD)
+						if (newSocket > maxFD)
 							maxFD = newSocket;
 						isServerSock = 1;
 						std::cout << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;

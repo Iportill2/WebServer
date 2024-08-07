@@ -7,7 +7,7 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
     std::cout <<"Constructor de Autoindex" << std::endl;
     _i = i;
     _fd = fd;
-    _server = server;
+    //_server = server;
     directory_path = server.arLoc[i]._root;
     if(!server.arErr.empty())
         error = server.arErr[0].ErrorRoot;

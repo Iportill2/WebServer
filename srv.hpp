@@ -23,15 +23,15 @@ class srv
     int locationCount;/// esto no esta ya en config???
     std::vector<Location> arLoc;
 
-    std::vector<ErrorPage> arErr;
-
+    std::vector<ErrorPage> arErr;// podemos usar una  variable en vez de un vector
+    //ErrorPage arErr; 
     std::map<std::string, std::string> result;
 
     bool srv_ok;
 
-    srv(){};
+    srv();
     srv(std::string serverBlock);
-    srv(const srv& other);
+    //srv(const srv& other);
     ~srv();
 
 

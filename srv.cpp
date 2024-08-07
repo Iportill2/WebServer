@@ -2,7 +2,18 @@
 #include "srv.hpp"
 #include "Config.hpp"
 #include "Utils.hpp"
-srv::srv(const srv& other)
+srv::srv()
+{
+/*     _host =  "0.0.0.0";
+    _port =  "8080";
+    _server_name =  "localhost";
+    _body =  "777777";
+    _Root = "./pagina";
+    _ipNum = 0; 
+    _sizetPort  = 8080;
+    _sizetBody = 563218; */
+}
+/* srv::srv(const srv& other)
 {
     this->locationCount = other.locationCount;
     this->srv_ok = other.srv_ok;
@@ -26,7 +37,7 @@ srv::srv(const srv& other)
     this-> result = other.result;
 
     this->srv_ok = other.srv_ok;
-}
+} */
 srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;

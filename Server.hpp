@@ -18,9 +18,10 @@
 # include "srv.hpp"
 # include "Respons.hpp"
 
+
 class Request;
 class Respons;
-
+class srv;
 class Server
 {
     private:
@@ -33,7 +34,6 @@ class Server
         sockaddr_in	ad;
         int			id;
         int			sock;
-        int			new_socket;
         int			port;
         
         int			maxFD;
@@ -75,6 +75,6 @@ class Server
         bool directoryExists(const std::string& dirName);
         bool fileExists(const std::string& filename);
 
-        bool checkdefaultsettings(std::string ip, Location l1,Location l2,srv s);
+        bool checkdefaultsettings(std::string ip,srv &s);
 
 };

@@ -4,8 +4,9 @@ std::string Error::ErrorPage404 = "";
 
 Error::Error(int er, int fdescriptor, srv server): error(er), fd(fdescriptor) 
 {
-    if(!server.arErr.empty())
-        ErrorPage404 = server.arErr[0].ErrorRoot;
+    (void)server;
+/*     if(!server.arErr.empty())
+        ErrorPage404 = server.arErr.ErrorRoot; */
     sendError();
 }
 

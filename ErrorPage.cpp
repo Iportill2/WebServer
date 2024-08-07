@@ -96,7 +96,7 @@ ErrorPage::ErrorPage()
     printmap();/////
 }
 
-ErrorPage::ErrorPage(const std::string ErrorPageBlock)
+ErrorPage::ErrorPage(std::string ErrorPageBlock)
 {
     inidefaultErMap();
     printmap();/////

@@ -3,17 +3,13 @@
 #include "dependences.hpp"
 #include "Config.hpp"
 #include "Server.hpp"
-#include "srv.hpp"
 #include "ErrorPage.hpp"
 #include "Error.hpp"
 class ErrprPage;
 class Server;
-class srv;
 class Autoindex //: public Config
 {
     public:
-
-    srv _server;
     std::string directory_path;
     std::string error;
     size_t _i;

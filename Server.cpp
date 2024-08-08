@@ -20,43 +20,43 @@ Server::Server()
 	signal(SIGTERM, &signalHandler);
 	
 	srv s;
+	Location l0;
 	Location l1;
 	Location l2;
 	ErrorPage Error;
-	std::ifstream file("errors/404.html");
-                if (!file)
-                {
-                    throw std::runtime_error("Could not open file: " + Error.ErrorRoot);
-                }
-                std::stringstream buffer;
-                buffer << file.rdbuf();
 
-                std::string c = "404 OK!"; 
-                std::string httpResponse = "HTTP/1.1 " + c + "\r\n";
-   	            httpResponse += "Content-Type: text/html\r\n";
-                httpResponse += "\r\n";
-                httpResponse += buffer.str();
-
-                /* std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  httpResponse << "\n"; */
-                Error.defaultErMap[404] = httpResponse;
 	std::string ip = "0.0.0.0";
 	s._server_name = "localhost";
 	s.ipAddressToipNum(ip.c_str());
 	s._sizetPort = 8080;
-	s._sizetBody = 563218;
-	s._Root = "./pagina";
+	s._sizetBody = 7777777;
+	s._Root = "./default_files";
 
-	l1._location = "/";
-	l1._root = "./pagina";
+	l0._location = "/";
+	l0._root = "./default_files/pagina";
+	l0._file = "index.html";
+	l0.methods_vector.push_back("get");
+
+	l1._location = "/pagina/pepe";//// estaba /pepe  y no funcionaba
+	l1._root = "./default_files/pagina/pepe";
 	l1._file = "index.html";
 	l1.methods_vector.push_back("get");
-	s.arLoc.push_back(l1);
+	l1.methods_vector.push_back("post");
 
-	l2._location = "/pepe";//// estaba /pepe  y no funcionaba
-	l2._root = "./pagina/pepe";
-	l2._file = "index.html";
-	l2.methods_vector.push_back("get");
-	l2.methods_vector.push_back("post");
+	l2._location = "/redirect";
+	l2._redirect = "https://www.elmundotoday.com/";
+
+
+	Error.error_page_404 ="/404.html";
+	Error.errorIndex = atoi("404");
+	Error.location ="/404.html";
+	Error.root ="./errors";// parsear de ./errors a errors
+	Error.internal ="";
+	Error.ErrorRoot = Error.root + Error.location;
+
+
+	s.arLoc.push_back(l0);
+	s.arLoc.push_back(l1);
 	s.arLoc.push_back(l2);
 	s.arErr.push_back(Error);
 	servers.push_back(s);
@@ -81,31 +81,24 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 
 bool Server::checkdefaultsettings(std::string ip,srv &s)
 {
-	std::cout <<  "directoryExists(s.arLoc[0]._location = " << s.arLoc[0]._location << "\n";
-	std::cout <<  "directoryExists(s.arLoc[1]._location = " << s.arLoc[1]._location << "\n";
 	if(s.ipAddressToipNum(ip) == false)
 		return(std::cout << "s.ipAddressToipNum(ip)\n", false);
 	if( directoryExists(s._Root) == false)
 		return(std::cout << "directoryExists(s._Root)\n", false);
-	if(directoryExists(s.arLoc[0]._location) == false)
-		return(std::cout << "directoryExists(l1._location)\n", false);
-	if(directoryExists(s.arLoc[0]._root) == false)
-		return(std::cout << "directoryExists(l1._root)\n", false);
-	if(fileExists(s.arLoc[0]._file) == false)
-		return(std::cout << "fileExists(l1._file)\n", false);
-	if(s.arLoc[0].methods_vector.size() != 1)
-		return(std::cout << "l1.methods_vector.size() == 1\n",false);
-	//std::cout << s.arLoc[1]._location << "\n";
-/* 	if(directoryExists(s.arLoc[1]._location) == false)
-		return(std::cout << "directoryExists(l2._location) \n", false); */
-	if(directoryExists(s.arLoc[1]._root) == false)
-		return(std::cout << "directoryExists(l2._root)\n",false);
-	if(fileExists(s.arLoc[1]._file) == false)
-		return(std::cout << "fileExists(l2._file)\n", false);
-	if(s.arLoc[1].methods_vector.size() != 2)
-		return(std::cout << "l2.methods_vector.size() == 2\n",false);
-	
-	std::cout << RED << "bool Server::checkdefaultsettings(std::string ip,srv &s)" << GREEN <<  "OK!\n" << WHITE ;
+	size_t i = 0;
+	while(i < s.arLoc.size())
+	{
+		if(s.arLoc[i]._redirect.empty())
+		{
+			if(directoryExists(s.arLoc[i]._root) == false)
+				return(std::cout << "directoryExists(l"<< i << "._root)\n", false);
+			if(fileExists(s.arLoc[i]._file) == false)
+				return(std::cout << "fileExists(l"<< i << "._file)\n", false);
+			if(s.arLoc[i].methods_vector.size() < 1)
+				return(std::cout << "l"<< i <<".methods_vector.size() == 1\n",false);
+		}	
+		i++;
+	}
 	return(true);
 }
 bool Server::directoryExists(const std::string& dirName) 

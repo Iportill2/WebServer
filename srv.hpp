@@ -23,6 +23,7 @@ class srv
     int locationCount;/// esto no esta ya en config???
     std::vector<Location> arLoc;
 
+    //ErrorPage ErrPag;
     std::vector<ErrorPage> arErr;// podemos usar una  variable en vez de un vector
     //ErrorPage arErr; 
     std::map<std::string, std::string> result;

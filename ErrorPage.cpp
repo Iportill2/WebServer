@@ -2,16 +2,21 @@
 
 ErrorPage::ErrorPage()
 {
+        std::cout << "YES\n";
     inidefaultErMap();
     iniErRoute();
 
 
 
-std::ifstream file("errors/404.html");
+std::ifstream file("./errors/404.html");
                 if (!file)
                 {
-                    throw std::runtime_error("Could not open file: " + ErrorRoot);
+                    //throw std::runtime_error("Could not open file: " + ErrorRoot);
+                    std::cout << "Could not open file " << ErrorRoot << "\n";
                 }
+                else
+                {
+
                 std::stringstream buffer;
                 buffer << file.rdbuf();
 
@@ -22,17 +27,19 @@ std::ifstream file("errors/404.html");
                 httpResponse += buffer.str();
 
                 /* std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  httpResponse << "\n"; */
+                
                 defaultErMap[404] = httpResponse;
+                }
 
 
-    std:: cout << "error_page_404 = "  << error_page_404 << "\n";
+/*     std:: cout << "error_page_404 = "  << error_page_404 << "\n";
     std:: cout << "location = "  << location << "\n";
     std:: cout << "root = "  << root << "\n";
     std:: cout << "internal = "  << internal << "\n";
     std:: cout << "ErrorRoot = "  << ErrorRoot << "\n";
    // std:: cout << "defaultErMap = "  << defaultErMap[404] << "\n;"
     std:: cout << "defaultErMap[404] = "  << defaultErMap[404] << "\n";
-    std:: cout << "ErRoute[404] = "  << ErRoute[404] << "\n";
+    std:: cout << "ErRoute[404] = "  << ErRoute[404] << "\n"; */
 
     
     //printmap();/////
@@ -40,6 +47,7 @@ std::ifstream file("errors/404.html");
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
 {
+    std::cout << "NO\n";
     inidefaultErMap();
     iniErRoute();
     //printmap();/////

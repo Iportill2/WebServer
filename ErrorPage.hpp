@@ -12,12 +12,10 @@ class ErrorPage //: public Config
     std::string location;
     std::string root;
     std::string internal;
-
+    int errorIndex;
     std::string ErrorRoot;
 
     std::map< int, std::string> defaultErMap;
-    std::map< int, std::string> ErMap;
-    std::map< int, std::string> FinalErMap;
 
     std::map < int , std::string > ErRoute;
 

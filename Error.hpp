@@ -5,11 +5,6 @@
 class srv;
 class Error
 {   
-    private:
-
-        int error;
-		int	fd;
-        static std::string ErrorPage404 ; 
 
     public:
 
@@ -18,5 +13,5 @@ class Error
 
         static std::string	status(int error, srv server);
 		std::string 		toString(const int &num);
-        void				sendError(srv server);
+        void				sendError(srv server, int error, int fd);
 };

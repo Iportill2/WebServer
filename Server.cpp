@@ -47,14 +47,6 @@ Server::Server()
 	l2._redirect = "https://www.elmundotoday.com/";
 
 
-	Error.error_page_404 ="/404.html";
-	Error.errorIndex = atoi("404");
-	Error.location ="/404.html";
-	Error.root ="./errors";// parsear de ./errors a errors
-	Error.internal ="";
-	Error.ErrorRoot = Error.root + Error.location;
-
-
 	s.arLoc.push_back(l0);
 	s.arLoc.push_back(l1);
 	s.arLoc.push_back(l2);
@@ -365,6 +357,13 @@ void Server::printServers()
 			std::cout << std::endl;
 		}
 		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
+		std::cout << GREEN << "----ErrorPage  "  << "-------------------------" << WHITE << std::endl;
+		std::cout << "errorIndex : " << "\"" 	 << servers[i].arErr[0].errorIndex  << "\"" << std::endl;
+		std::cout << "error_page_404 : " << "\"" << servers[i].arErr[0].error_page_404  << "\"" << std::endl;
+		std::cout << "location : " << "\""       << servers[i].arErr[0].location  << "\"" << std::endl;
+		std::cout << "root : "                   << "\"" << servers[i].arErr[0].root  << "\"" << std::endl;
+		std::cout << "internal : " << "\""       << servers[i].arErr[0].internal << "\"" << std::endl;
+		std::cout << "ErrorRoot : " << "\""           << servers[i].arErr[0].ErrorRoot  << "\"" << std::endl;
 	}
 }
 

@@ -1,101 +1,37 @@
 #include "ErrorPage.hpp"
 
+
 ErrorPage::ErrorPage()
 {
-        std::cout << "YES\n";
+    std::cout << "Constructor de ErrorPage por defecto\n";
+    std::string e = "404";//  <------ cambiar esta por un nuero de error que no exista, para probar
+	error_page_404 ="/404.html";
+	errorIndex = atoi(e.c_str());
+	location ="/404.html";
+	root ="./errors";// parsear de ./errors a errors
+	internal ="";
+	ErrorRoot = root + location;
     inidefaultErMap();
-    iniErRoute();
-
-
-
-std::ifstream file("./errors/404.html");
-                if (!file)
-                {
-                    //throw std::runtime_error("Could not open file: " + ErrorRoot);
-                    std::cout << "Could not open file " << ErrorRoot << "\n";
-                }
-                else
-                {
-
-                std::stringstream buffer;
-                buffer << file.rdbuf();
-
-                std::string s = "404 OK!"; 
-                std::string httpResponse = "HTTP/1.1 " + s + "\r\n";
-   	            httpResponse += "Content-Type: text/html\r\n";
-                httpResponse += "\r\n";
-                httpResponse += buffer.str();
-
-                /* std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  httpResponse << "\n"; */
-                
-                defaultErMap[404] = httpResponse;
-                }
-
-
-/*     std:: cout << "error_page_404 = "  << error_page_404 << "\n";
-    std:: cout << "location = "  << location << "\n";
-    std:: cout << "root = "  << root << "\n";
-    std:: cout << "internal = "  << internal << "\n";
-    std:: cout << "ErrorRoot = "  << ErrorRoot << "\n";
-   // std:: cout << "defaultErMap = "  << defaultErMap[404] << "\n;"
-    std:: cout << "defaultErMap[404] = "  << defaultErMap[404] << "\n";
-    std:: cout << "ErRoute[404] = "  << ErRoute[404] << "\n"; */
-
-    
-    //printmap();/////
+    readErrorRoot();
 }
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
 {
-    std::cout << "NO\n";
+    std::cout << "Constructor de ErrorPage con argumentos\n";
+
     inidefaultErMap();
-    iniErRoute();
-    //printmap();/////
-    //std::cout << ErrorPageBlock << "\n";
-    //std::cout <<"Default ErrorPage Constructor" << std::endl;
     if(ErrorParseBlock(ErrorPageBlock) == false)
         return;
-    mergedefaultErMapErRoute();
-
-        std:: cout << "error_page_404 = "  << error_page_404 << "\n";
-    std:: cout << "location = "  << location << "\n";
-    std:: cout << "root = "  << root << "\n";
-    std:: cout << "internal = "  << internal << "\n";
-    std:: cout << "ErrorRoot = "  << ErrorRoot << "\n";
-   // std:: cout << "defaultErMap = "  << defaultErMap[404] << "\n;"
-    std:: cout << "defaultErMap[404] = "  << defaultErMap[404] << "\n";
-    std:: cout << "ErRoute[404] = "  << ErRoute[404] << "\n";
-
-/*                     std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  defaultErMap[404] << "\n";
-                std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"; */
-/*     for (std::map<int, std::string>::iterator it = defaultErMap.begin(); it != defaultErMap.end(); ++it)
-    {
-        std::cout << "Key: " << it->first << " Value: " << it->second << std::endl<< std::endl;
-    } */
-
-    
-}
-void ErrorPage::mergedefaultErMapErRoute()
-{
-    {
-    for (std::map<int, std::string>::iterator it = ErRoute.begin(); it != ErRoute.end(); ++it)
-    {
-        if (it->second.size() != 0)
-        {
-            defaultErMap[it->first] = it->second;
-        }
-    }
-}
+    readErrorRoot();
 }
 ErrorPage::~ErrorPage()
 {
-    //std::cout <<"ErrorPage Destructor" << std::endl;
+
 }
 
 std::string ErrorPage::createHtml_in_mapValue(std::string text)
 {
-
-     std::string httpResponse = "HTTP/1.1 " + text + "\r\n";
+    std::string httpResponse = "HTTP/1.1 " + text + "\r\n";
    	httpResponse += "Content-Type: text/html\r\n";
     httpResponse += "\r\n";
 
@@ -131,14 +67,6 @@ std::string ErrorPage::createHtml_in_mapValue(std::string text)
     httpResponse += "</body>";
     httpResponse += "</html>"; 
     return httpResponse;
-/*     std::ostringstream s;
-    s << "HTTP/1.1 ";
-    s << text;
-    s << "\r\n";
-    s << "Content-Type: text/html\r\n";
-    s << "Content-Length: " << text.size() << "\r\n";
-    s << "\r\n";
-    return(s.str()); */
 }
 void ErrorPage::inidefaultErMap()
 {
@@ -171,7 +99,6 @@ void ErrorPage::inidefaultErMap()
     std::string _503 = "503 Service Unavailable";
     std::string _505 = "505 HTTP Version Not Supported";
 
-
 ////////////////////////////////////////////////////////////////
 
     defaultErMap[200] = createHtml_in_mapValue(_200);
@@ -202,53 +129,30 @@ void ErrorPage::inidefaultErMap()
     defaultErMap[502] = createHtml_in_mapValue(_502);
     defaultErMap[503] = createHtml_in_mapValue(_503);
     defaultErMap[505] = createHtml_in_mapValue(_505);   
-
-
-
-
 }
-void ErrorPage::iniErRoute()
+
+void ErrorPage::readErrorRoot()
 {
-    ErRoute[200] = "";
-    ErRoute[201] = "";
-    ErRoute[202] = "";
-    ErRoute[204] = "";
+    std::ifstream file(ErrorRoot.c_str());
+    if (!file)
+        std::cout << "Could not open file " << ErrorRoot << "\n";
+    else
+    {
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string s = "404 OK!"; 
+        std::string httpResponse = "HTTP/1.1 " + s + "\r\n";
+        httpResponse += "Content-Type: text/html\r\n";
+        httpResponse += "\r\n";
+        httpResponse += buffer.str();
 
-    ErRoute[301] = "";
-    ErRoute[302] = "";
-    ErRoute[303] = "";
-    ErRoute[304] = "";
-
-    ErRoute[400] = "";
-    ErRoute[401] = "";
-    ErRoute[403] = "";
-    ErRoute[404] = "";
-    ErRoute[405] = "";
-    ErRoute[406] = "";
-    ErRoute[408] = "";
-    ErRoute[409] = "";
-    ErRoute[411] = "";
-    ErRoute[413] = "";
-    ErRoute[414] = "";
-    ErRoute[415] = "";
-
-    ErRoute[500] = "";
-    ErRoute[501] = "";
-    ErRoute[502] = "";
-    ErRoute[503] = "";
-    ErRoute[505] = "";  
-}
-void ErrorPage::printmap()
-{
-	std::cout << GREEN << "***************************************\n" << RED ;
-    std::map<int, std::string>::iterator it;
-    for (it = defaultErMap.begin(); it != defaultErMap.end(); ++it) 
-	{
-        std::cout << it->first << " -> " << it->second << std::endl;
+        std::map<int, std::string>::iterator it = defaultErMap.find(errorIndex);
+        if (it != defaultErMap.end()) 
+            defaultErMap[errorIndex] = httpResponse;
+        else 
+            std::cout << "La clave " << errorIndex << " no existe en el mapa.\n";
     }
-	std::cout << GREEN << "***************************************\n" << WHITE ;
 }
-
 bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
 {
     std::string line;
@@ -264,37 +168,22 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
         if (key == "error_page")
         {
             lineStream >> key;
-            int keyInt = std::atoi(key.c_str());
-            std::map<int, std::string>::iterator it;
-            for (it = ErRoute.begin(); it != ErRoute.end(); ++it) 
-            {
-                if(keyInt == it->first)
-                {
-                    lineStream >> key;
-                    if(key[key.size() -1] == ';')
-                        ErRoute[keyInt] = key.substr(0,key.size() - 1);
-                     else
-                        ErRoute[keyInt] = key;
-                break;
-                }
-            }
+            errorIndex = std::atoi(key.c_str());
+            lineStream >> key;
+            if(key[key.size() - 1] == ';')
+                error_page_404 = key.substr(0,key.size() - 1);
+            else
+                error_page_404 = key;
         }
         if(key == "location")
         {
             lineStream >> key;
-            if(key == "=")
-            {
-                lineStream >> key;
-
-                std::string tmp;
-                lineStream >> tmp;
-                if(tmp == "{")
-                {
-                    location = key;
-                }
-                else
-                    location = key.substr(0,key.size() -1);
-            }
+            lineStream >> tmp;
+            std::string tmp;
+            if(key[key.size() - 1] == ';')
+                location = key.substr(0,key.size() - 1);
+            else
+                location = key;
         }
         if(key == "root")
         {
@@ -308,41 +197,11 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
                 return(std::cout << "the directory " << root << " didnt exit\n",0);
             
         }
+        if(location == error_page_404 && !root.empty())
+            ErrorRoot = root + location;
+        readErrorRoot();
         if((key == "internal;" && internal.empty()) || (key == "internal" && internal.empty()))
             internal = "yes";
-    }
-    std::map<int, std::string>::iterator it;
-    for (it = ErRoute.begin(); it != ErRoute.end(); ++it) 
-    {
-        if(location == it->second)
-        {
-            if(!location.empty() && !root.empty())
-            {
-/*                 if(fileExistsA(location) == false)
-                    return(std::cout << "the location " << location << " didnt exit\n",0); */
-                ErrorRoot = root + location ;
-                if(fileExistsA(ErrorRoot) == false)
-                    return(std::cout << "the ErrorRoot " << ErrorRoot << " didnt exit\n",0);
-                std::ifstream file(ErrorRoot.c_str());
-                if (!file)
-                {
-                    throw std::runtime_error("Could not open file: " + ErrorRoot);
-                }
-                std::stringstream buffer;
-                buffer << file.rdbuf();
-
-                std::string httpResponse = "HTTP/1.1 " + error_page_404 + "\r\n";
-   	            httpResponse += "Content-Type: text/html\r\n";
-                httpResponse += "\r\n";
-                httpResponse += buffer.str();
-
-                /* std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  httpResponse << "\n"; */
-                ErRoute[404] = httpResponse;
-/*                 std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n" <<  ErRoute[404] << "\n";
-                std::cout << "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH\n"; */
-            }
-            break;
-        }
     }
     return(1);
 }

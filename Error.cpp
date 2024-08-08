@@ -1,14 +1,9 @@
 
 #include "Error.hpp"
-std::string Error::ErrorPage404 = "";
 
-Error::Error(int er, int fdescriptor, srv server): error(er), fd(fdescriptor) 
+Error::Error(int er, int fdescriptor, srv server)
 {
-
-/*     if(!server.arErr.empty())
-        ErrorPage404 = server.arErr.ErrorRoot; */
-    sendError(server);
-    //std::cout << "server.arErr[0].defaultErMap[error]= " << server.arErr[0].defaultErMap[error] << "\n";
+    sendError(server, er, fdescriptor);
 }
 
 Error::~Error() {}
@@ -24,7 +19,7 @@ std::string Error::toString(const int &num)
     return (s.str());
 }
 
-void    Error::sendError(srv server)
+void    Error::sendError(srv server, int error, int fd)
 {
     std::string httpResponse = status(error,server);
     write(fd, httpResponse.c_str(), httpResponse.size());

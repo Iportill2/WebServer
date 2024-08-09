@@ -352,6 +352,7 @@ void Server::printServers()
 			std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
 			std::cout << "redirect " << "\"" << servers[i].arLoc[j]._redirect  << "\"" << std::endl;
 			std::cout << "cgi " << "\"" << servers[i].arLoc[j]._cgi  << "\"" << std::endl;
+			std::cout << "internal " << "\"" << servers[i].arLoc[j]._internal  << "\"" << std::endl;
 			for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
 				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
 			std::cout << std::endl;

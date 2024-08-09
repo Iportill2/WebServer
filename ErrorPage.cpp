@@ -4,14 +4,16 @@
 ErrorPage::ErrorPage()
 {
     std::cout << "Constructor de ErrorPage por defecto\n";
+
+    inidefaultErMap();
     std::string e = "404";//  <------ cambiar esta por un nuero de error que no exista, para probar
-	error_page_404 ="/404.html";
 	errorIndex = atoi(e.c_str());
+	error_page_404 ="/404.html";
 	location ="/404.html";
 	root ="./errors";// parsear de ./errors a errors
 	internal ="";
-	ErrorRoot = root + location;
-    inidefaultErMap();
+    if(root.size() > 0 && location.size() && location == error_page_404)
+	    ErrorRoot = root + location;
     readErrorRoot();
 }
 
@@ -22,6 +24,8 @@ ErrorPage::ErrorPage(std::string ErrorPageBlock)
     inidefaultErMap();
     if(ErrorParseBlock(ErrorPageBlock) == false)
         return;
+    if(root.size() > 0 && location.size() && location == error_page_404)
+	    ErrorRoot = root + location;
     readErrorRoot();
 }
 ErrorPage::~ErrorPage()
@@ -155,6 +159,7 @@ void ErrorPage::readErrorRoot()
 }
 bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
 {
+    std::cout << MAGENTA << ErrorParseBlock<< "\n";
     std::string line;
     std::istringstream stream(ErrorParseBlock);
     std::string tmp;
@@ -197,11 +202,9 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
                 return(std::cout << "the directory " << root << " didnt exit\n",0);
             
         }
-        if(location == error_page_404 && !root.empty())
-            ErrorRoot = root + location;
-        readErrorRoot();
+
         if((key == "internal;" && internal.empty()) || (key == "internal" && internal.empty()))
-            internal = "yes";
+            internal = "on";
     }
     return(1);
 }

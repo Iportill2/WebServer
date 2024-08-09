@@ -13,6 +13,9 @@ class Location
     std::string _autoindex;
     std::string _cgi;
     std::string _redirect;
+
+    std::string _internal;
+
     int redirect_num;
     bool lock_ok;
 

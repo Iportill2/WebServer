@@ -7,8 +7,8 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
     std::cout <<"Constructor de Autoindex" << std::endl;
     _i = i;
     _fd = fd;
-    //_server = server;
     directory_path = server.arLoc[i]._root;
+	std::cout << RED << directory_path << WHITE <<"\n";
     if(!server.arErr.empty())
         error = server.ErrorRoot;
     handle_request(directory_path); 
@@ -24,10 +24,15 @@ void Autoindex::handle_request(const std::string& directory_path)
     std::ostringstream oss;
 
     if (is_directory(directory_path)) 
+	{
+		std::cout << RED << "gereateautoindex" << WHITE <<"\n";
         response = generate_autoindex(directory_path);
+
+	}
     else 
     {
-        std::ifstream file( error.c_str());
+		std::cout << RED << "NO gereateautoindex\n" << WHITE <<"\n";
+        std::ifstream file( directory_path.c_str());
 
         if (file)
         {
@@ -38,7 +43,10 @@ void Autoindex::handle_request(const std::string& directory_path)
             file.close();
         }
         else
+		{
+			std::cout << RED << "HOLA\n" << WHITE <<"\n";
             return; 
+		}
     }
 
     // metemos la info del html y del index que hemos creado para el index en un ostringstream
@@ -110,8 +118,8 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
                         response += "</h1></body></html>";
                         std::cout<< RED << response << WHITE << std::endl;
                         close(i);
-                        //std::string s ="<html><body><h1>"+ response;
-                        //s +"</h1></body></html>";
+/*                         std::string s ="<html><body><h1>"+ response;
+                        s +"</h1></body></html>"; */
                         html << response;
                         return html.str();
                     }

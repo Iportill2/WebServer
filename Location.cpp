@@ -116,21 +116,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             _internal = "on";
 
 
-/*         if (key == "internal" && _internal.empty())
-        {
-            lineStream >> _internal;
-            if(_internal[_internal.size()-1] == ';')
-                _internal = _internal.substr(0, _internal.size() - 1);
-            else
-                std::cout << "PATATA\n"; */
 
-/*             std::cout << MAGENTA<< "XXX\n";
-            if(!_internal.empty())
-                return(std::cout << RED << "internal twice" << WHITE << std::endl,0);
-            lineStream >> _internal;
-            if(_internal[_internal.size()-1] == ';')
-                _internal = _internal.substr(0, _internal.size() - 1); */
-       // }
 	}
 
     return(1);

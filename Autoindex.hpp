@@ -14,6 +14,9 @@ class Autoindex //: public Config
     std::string error;
     size_t _i;
     int _fd;
+    
+
+    // Autoindex ai (server,fd, i);
     Autoindex(srv &server, int fd, size_t i);
     ~Autoindex();
 

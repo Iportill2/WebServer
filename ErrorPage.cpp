@@ -9,12 +9,6 @@ ErrorPage::ErrorPage()
     std::string e = "404";//  <------ cambiar esta por un nuero de error que no exista, para probar
 	errorIndex = atoi(e.c_str());
 	error_page_404 ="/404.html";
-	location ="/404.html";
-	root ="./errors";// parsear de ./errors a errors
-	internal ="";
-    if(root.size() > 0 && location.size() && location == error_page_404)
-	    ErrorRoot = root + location;
-    readErrorRoot();
 }
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
@@ -24,9 +18,6 @@ ErrorPage::ErrorPage(std::string ErrorPageBlock)
     inidefaultErMap();
     if(ErrorParseBlock(ErrorPageBlock) == false)
         return;
-    if(root.size() > 0 && location.size() && location == error_page_404)
-	    ErrorRoot = root + location;
-    readErrorRoot();
 }
 ErrorPage::~ErrorPage()
 {
@@ -135,34 +126,11 @@ void ErrorPage::inidefaultErMap()
     defaultErMap[505] = createHtml_in_mapValue(_505);   
 }
 
-void ErrorPage::readErrorRoot()
-{
-    std::ifstream file(ErrorRoot.c_str());
-    if (!file)
-        std::cout << "Could not open file " << ErrorRoot << "\n";
-    else
-    {
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        std::string s = "404 OK!"; 
-        std::string httpResponse = "HTTP/1.1 " + s + "\r\n";
-        httpResponse += "Content-Type: text/html\r\n";
-        httpResponse += "\r\n";
-        httpResponse += buffer.str();
 
-        std::map<int, std::string>::iterator it = defaultErMap.find(errorIndex);
-        if (it != defaultErMap.end()) 
-            defaultErMap[errorIndex] = httpResponse;
-        else 
-            std::cout << "La clave " << errorIndex << " no existe en el mapa.\n";
-    }
-}
 bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
 {
-    std::cout << MAGENTA << ErrorParseBlock<< "\n";
     std::string line;
     std::istringstream stream(ErrorParseBlock);
-    std::string tmp;
 
     while (std::getline(stream, line)) 
 	{
@@ -180,31 +148,6 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
             else
                 error_page_404 = key;
         }
-        if(key == "location")
-        {
-            lineStream >> key;
-            lineStream >> tmp;
-            std::string tmp;
-            if(key[key.size() - 1] == ';')
-                location = key.substr(0,key.size() - 1);
-            else
-                location = key;
-        }
-        if(key == "root")
-        {
-            lineStream >> line;
-            if(line[line.size() - 1] == ';')
-                root = line.substr(0,line.size() - 1);
-            else
-                root = line;
-
-            if(directoryExistsA(root) == 0)
-                return(std::cout << "the directory " << root << " didnt exit\n",0);
-            
-        }
-
-        if((key == "internal;" && internal.empty()) || (key == "internal" && internal.empty()))
-            internal = "on";
     }
     return(1);
 }

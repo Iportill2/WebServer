@@ -8,15 +8,8 @@ class ErrorPage
     public:
 
     std::string error_page_404;
-    std::string location;
-    std::string root;
-    std::string internal;
     int errorIndex;
-    std::string ErrorRoot;
-
     std::map< int, std::string> defaultErMap;
-
-
 
     ErrorPage();
     ErrorPage(std::string ErrorPageBlock);
@@ -28,8 +21,6 @@ class ErrorPage
 
     bool directoryExistsA(const std::string& dirName);
     bool fileExistsA(const std::string& filename);
-
-    void readErrorRoot();
 
 };
 #endif

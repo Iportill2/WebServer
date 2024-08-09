@@ -20,6 +20,9 @@ class srv
     size_t _sizetPort;
     size_t _sizetBody;
 
+
+    std::string ErrorRoot;
+
     int locationCount;/// esto no esta ya en config???
     std::vector<Location> arLoc;
 
@@ -57,7 +60,9 @@ class srv
 
     void deletespaces(std::string &s);
     bool parseServerBlock(const std::string& s) ;
-    bool stringToSizeT(const std::string& s, size_t &n);     
+    bool stringToSizeT(const std::string& s, size_t &n);   
+
+    void readErrorRoot();  
 
 };
 #endif

@@ -343,7 +343,7 @@ void Server::printServers()
 		std::cout << "port: " << "\"" << servers[i]._sizetPort  << "\"" << std::endl;
 		std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
 		std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
-		
+		std::cout << "ErrorRoot: " << "\"" << servers[i].ErrorRoot  << "\"" << std::endl;
 		std::cout << std::endl;
 		for (size_t j = 0; j < servers[i].arLoc.size(); j++)
 		{
@@ -361,10 +361,10 @@ void Server::printServers()
 		std::cout << GREEN << "----ErrorPage  "  << "-------------------------" << WHITE << std::endl;
 		std::cout << "errorIndex : " << "\"" 	 << servers[i].arErr[0].errorIndex  << "\"" << std::endl;
 		std::cout << "error_page_404 : " << "\"" << servers[i].arErr[0].error_page_404  << "\"" << std::endl;
-		std::cout << "location : " << "\""       << servers[i].arErr[0].location  << "\"" << std::endl;
-		std::cout << "root : "                   << "\"" << servers[i].arErr[0].root  << "\"" << std::endl;
-		std::cout << "internal : " << "\""       << servers[i].arErr[0].internal << "\"" << std::endl;
-		std::cout << "ErrorRoot : " << "\""           << servers[i].arErr[0].ErrorRoot  << "\"" << std::endl;
+		//std::cout << "location : " << "\""       << servers[i].arErr[0].location  << "\"" << std::endl;
+		//std::cout << "root : "                   << "\"" << servers[i].arErr[0].root  << "\"" << std::endl;
+		//std::cout << "internal : " << "\""       << servers[i].arErr[0].internal << "\"" << std::endl;
+		//std::cout << "ErrorRoot : " << "\""           << servers[i].arErr[0].ErrorRoot  << "\"" << std::endl;
 	}
 }
 

@@ -10,7 +10,7 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
     //_server = server;
     directory_path = server.arLoc[i]._root;
     if(!server.arErr.empty())
-        error = server.arErr[0].ErrorRoot;
+        error = server.ErrorRoot;
     handle_request(directory_path); 
    
 }

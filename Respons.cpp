@@ -1,6 +1,7 @@
 
 # include "Respons.hpp"
-#include "Error.hpp"
+# include "Error.hpp"
+# include "Dinamic.hpp"
 
 Respons::Respons(Request * request, srv & sv, int fDescriptor) : rq(request), server(sv), fd(fDescriptor) {}
 
@@ -93,7 +94,7 @@ bool	Respons::checkMethod()
 	return 0;
 }
 
-int Respons::createRespons()
+int Respons::createRespons() //entra por aqui
 {
 	if (!checkServerName())
 	{
@@ -125,7 +126,7 @@ int Respons::createRespons()
 	}
 
 	//std::cout <<  "Extension en createResponse: " << _extension << std::endl;
-	if (locat == 2)
+	if (locat == 2)//REDIRECTION
 	{
 		std::string httpResponse = "HTTP/1.1 302 Found\r\n";
         httpResponse += "Location: " + _url + "\r\n";
@@ -147,24 +148,35 @@ int Respons::createRespons()
 
 void	Respons::htmlRespond()
 {
+	//std::cout << "***********--------------********************************" << std::endl;
 	if (rq->getMethod() == "get")
 	{
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
-   		httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
-  	 	 httpResponse += "\r\n"; // Línea en blanco
+		if (!rq->getFile().empty())
+		{
+			Download res(fd);
+			res.sendFile(rq->getFile());
+			Dinamic d(fd);
+		}
+		else
+		{
 
-		std::ifstream file(_url.c_str());  // Abre el archivo en modo lectura
-  	  	if (!file.is_open()) {  // Verifica si el archivo se abrió correctamente
-  	      std::cerr << "Can't open : " << _url << std::endl;
- 	   }
+			std::string httpResponse = "HTTP/1.1 200 OK\r\n"; // Línea de estado
+   			httpResponse += "Content-Type: text/html\r\n"; // Encabezado Content-Type
+  	 		httpResponse += "\r\n"; // Línea en blanco
 
-    	std::stringstream buffer;
-   		buffer << file.rdbuf();  // Lee el contenido del archivo en el buffer
-    	file.close(); 
+			std::ifstream file(_url.c_str());  // Abre el archivo en modo lectura
+  	  		if (!file.is_open()) {  // Verifica si el archivo se abrió correctamente
+  	      	std::cerr << "Can't open : " << _url << std::endl;
+ 	  		}
 
-		httpResponse += buffer.str();
+    		std::stringstream buffer;
+   			buffer << file.rdbuf();  // Lee el contenido del archivo en el buffer
+    		file.close(); 
 
-		write(fd, httpResponse.c_str(), httpResponse.size());
+			httpResponse += buffer.str();
+
+			write(fd, httpResponse.c_str(), httpResponse.size());
+		}
 	}
 	else if (rq->getMethod() == "post")
 	{
@@ -184,6 +196,22 @@ void	Respons::htmlRespond()
 			if (!cgiOn)
 				Error r(403, fd);
 		}
+		else if (rq->getUri() == "/dinamic")
+		{
+			int up = 0;
+			for(size_t i = 0; i < server.arLoc.size(); i++)
+			{
+				if (server.arLoc[i].getLocation() == "/dinamic")
+				{
+					up = 1;
+					Dinamic d(fd);
+					//Load res(rq->getBody(), fd);
+					//Load res(rq, fd);
+				}
+			}
+			if (!up)
+				Error r(404, fd);
+		}
 		else if (rq->getUri() == "/upload")
 		{
 			int up = 0;
@@ -192,42 +220,77 @@ void	Respons::htmlRespond()
 				if (server.arLoc[i].getLocation() == "/upload")
 				{
 					up = 1;
-					Load res(rq->getBody(), fd);
+
+					Load res(rq, fd);
+					Dinamic d(fd);
 				}
 			}
 			if (!up)
 				Error r(404, fd);
 		}
+		else if (rq->getUri() == "/download")
+		{
+			int up = 0;
+			for(size_t i = 0; i < server.arLoc.size(); i++)
+			{
+				if (server.arLoc[i].getLocation() == "/download")
+				{
+					up = 1;
+					Download res(fd);
+					res.sendForm();
+					//Dinamic d(fd);
+				}
+			}
+			if (!up)
+				Error r(404, fd);
+		}
+
+		/* else if (rq->getUri() == "/downb")
+		{
+			int up = 0;
+			for(size_t i = 0; i < server.arLoc.size(); i++)
+			{
+				if (server.arLoc[i].getLocation() == "/downb")
+				{
+					up = 1;
+					Download res(fd);
+					res.sendFile(rq->getFile());
+					Dinamic d(fd);
+				}
+			}
+			if (!up)
+				Error r(404, fd);
+		} */
 	}
 }
 
 void	Respons::jpgRespond()
 {
-		std::ifstream file(_url.c_str(), std::ios::binary);
-    	std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string image = oss.str();
-	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/jpeg\r\n";
-        httpResponse += "\r\n";
-        httpResponse += image;
+	std::ifstream file(_url.c_str(), std::ios::binary);
+    std::ostringstream oss;
+    oss << file.rdbuf();
+	std::string image = oss.str();
 
-        write(fd, httpResponse.c_str(), httpResponse.size());
+	std::string httpResponse = "HTTP/1.1 200 OK\r\n";
+    httpResponse += "Content-Type: image/jpeg\r\n";
+    httpResponse += "\r\n";
+    httpResponse += image;
+
+    write(fd, httpResponse.c_str(), httpResponse.size());
 }
 void	Respons::pngRespond()
 {
 	std::ifstream file(_url.c_str(), std::ios::binary);
-    	std::ostringstream oss;
-    	oss << file.rdbuf();
-		std::string favi = oss.str();
+    std::ostringstream oss;
+    oss << file.rdbuf();
+	std::string favi = oss.str();
 	
-		std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-        httpResponse += "Content-Type: image/png\r\n";
-        httpResponse += "\r\n";
-        httpResponse += favi;
+	std::string httpResponse = "HTTP/1.1 200 OK\r\n";
+    httpResponse += "Content-Type: image/png\r\n";
+    httpResponse += "\r\n";
+    httpResponse += favi;
 
-        write(fd, httpResponse.c_str(), httpResponse.size());
+    write(fd, httpResponse.c_str(), httpResponse.size());
 }
 
 //FUNCIONES PARA PRUEBAS---------------------------------------------------

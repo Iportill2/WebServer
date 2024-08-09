@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:00:00 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/11 15:49:38 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/08 13:37:27 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int main(int argc, char **argv)
         std::cout << GREEN <<"Loading default configuration..."<< WHITE << std::endl << std::endl;
         Server  server;
     }
-    
     else if(argc == 2)
     {
         Config confs(argv[1]);
@@ -41,15 +40,11 @@ int main(int argc, char **argv)
     return (0);
 }
 
-/* int main(int ac, char **av)
+/* #include "Directory.hpp"
+
+int main()
 {
-    if(ac== 1)
-        return Config(), 1;
-    else if(ac == 2)
-    {
-        std::string filename (av[1]);
-        return Config(filename), 1;
-    }
-    else
-        return std::cout << "Error: Ejecuta ./my_server o ./my_server server.conf" << std::endl, 0;
+    Directory d("uploaded_files");
+
+    return 0;
 } */

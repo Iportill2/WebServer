@@ -15,7 +15,7 @@ class Config :public Utils
 
     int srvCount;
     int locationCount;
-    std::vector<srv > array_of_srv;
+    std::vector<srv> array_of_srv;
     
     int server_id ;
 public:

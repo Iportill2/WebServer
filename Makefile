@@ -11,7 +11,10 @@ SRC_FILES = main.cpp \
 			Location.cpp \
 			Respons.cpp \
 			Cgi.cpp \
-			Load.cpp
+			Load.cpp \
+			Download.cpp \
+			Directory.cpp \
+			Dinamic.cpp 
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

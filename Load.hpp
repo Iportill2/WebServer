@@ -1,25 +1,31 @@
 #pragma once
 
 # include "dependences.hpp"
+# include "Request.hpp"
 
 class Load
 {
     private:
 
-    	std::string body;
-		std::string	value;
-		std::string result;
-		char 		res[128];
+        Request   * rq;
 		int			fd;
-		
+
+        std::string	boundary_clave;
+        std::string boundary_content;
+        std::string file_name;
+        std::string file_content;
+        std::string content_type;
+        std::string last_line;
+
+        bool        finish;
 
     public:
 
-        Load(std::string  bd, int f);
+        Load(Request * r, int f);
+
+        Load(std::string  bd, int f);//OBSOLETO
         ~Load();
 
-        void 		parse();
-        void 		exec();
-        //std::string	getResult();
-		void		sendResult();
+        void    parse();
+        void    createTextFile();
 };

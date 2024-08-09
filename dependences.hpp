@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/18 17:22:42 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:46:49 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@
 # include <sys/wait.h>
 # include <algorithm>
 # include <cctype>
+# include <dirent.h>
 //COLORES
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////

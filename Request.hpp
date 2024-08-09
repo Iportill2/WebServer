@@ -18,6 +18,8 @@ class Request
         std::string body;
         std::string boundary;
 
+        std::string file;
+
     public:
     
         Request(std::string buf);
@@ -31,6 +33,7 @@ class Request
         std::string getPort();
         std::string getBody();
         std::string getBoundary();
+        std::string getFile();
 
         size_t		getContentLen();
 

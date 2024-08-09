@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/19 11:43:19 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/08 14:16:02 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ Server::Server()
 
 	s._server_name = "localhost";
 	s.ipAddressToipNum("0.0.0.0");
-	s._sizetPort = 8080;
-	s._sizetBody = 563218;
+	s._sizetPort = 8090;
+	s._sizetBody = 10000;
 	s._Root = "./pagina";
 
 	l1._location = "/";
@@ -66,10 +66,13 @@ void	Server::serverSet()
 	
 	for(size_t i = 0; i < servers.size(); i++)
 	{
+		//std::cout << "Hay vamos!!!!!!" << std::endl;
 		sockaddr_in	address;
 		address.sin_family = AF_INET;
     	address.sin_port = htons(servers[i]._sizetPort);
+		//address.sin_port = htons(8030);
     	address.sin_addr.s_addr = htonl(servers[i]._ipNum);
+		//address.sin_addr.s_addr = htonl(0);
 	
 
 		int	soc = socket(AF_INET, SOCK_STREAM, 0);
@@ -83,6 +86,7 @@ void	Server::serverSet()
 	
 		serversMap[soc] = i;
 		maxFD = soc;
+		//std::cout << "maxFD ARRIBA= " << maxFD << std::endl;
 		sizeOfAddress = sizeof(address);
 		
 		//std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << servers[i]._sizetPort << " fd " << soc << std::endl;
@@ -119,6 +123,8 @@ void	Server::Mselect()
 	
 	struct timeval timeout;
 	
+	//------------------------------------
+	
 	while(sign)
 	{
 		FD_ZERO(&readyfdsRead);
@@ -150,6 +156,7 @@ void	Server::Mselect()
 
 			while (i != o)
 			{
+				//std::cout << "i->first: " << i->first << std::endl;
 				FD_SET (i->first, &activefdsRead);
 				i++;
 			}
@@ -173,7 +180,7 @@ void	Server::Mselect()
 		
 				while (it != out)
 				{
-					//std::cout << "Mira si el fd " << i << " es una llamada " << std::endl;
+					std::cout << "Mira si el fd " << i << " es una llamada " << std::endl;
 					//std::cout << "it->first = " << it->first << std::endl;
 					if (i == it->first)
 					{
@@ -181,12 +188,15 @@ void	Server::Mselect()
 						//fcntl(newSocket, F_SETFL, O_NONBLOCK);
 						FD_SET (newSocket, &activefdsRead);
 						readMap[newSocket] = it->first;
+						//std::cout << "newSocket = " << newSocket << std::endl;
 						comFds.push_back(newSocket);
-						if (new_socket > maxFD)
+						if (newSocket > maxFD)
 							maxFD = newSocket;
 						isServerSock = 1;
 						std::cout << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;
+						//std::cout << "maxFD= " << maxFD << std::endl;
 						i = maxFD + 1;
+						std::cout << "i= " << i << std::endl;
 						break;
 					}
 					it++;
@@ -196,7 +206,7 @@ void	Server::Mselect()
 					std::cout << "No es llamada es comunicacion, lee la peticion del socket " << i << std::endl;
 					memset(buffer, 0, sizeof(buffer));
 					int bytes = read(i, buffer, sizeof(buffer));
-					std::cout << std::endl << BLUE << buffer << WHITE << std::endl << std::endl;
+					//std::cout << std::endl << BLUE << buffer << WHITE << std::endl << std::endl;
 					if (bytes <= 0)
 					{
 						std::cout << "fd " << i << " went \"a tomar por culo\"" << std::endl << std::endl;
@@ -206,7 +216,9 @@ void	Server::Mselect()
 						i = maxFD + 1;
 					}
 					else
-					{ 
+					{
+						std::cout << "BUFFER: \"" << buffer << "\"" << std::endl << std::endl;
+						
 						std::cout << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
 						Request * r = new Request(buffer);
 						rq[i] = r;

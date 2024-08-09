@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/20 13:27:51 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/07 12:54:03 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ class Server
         sockaddr_in	ad;
         int			id;
         int			sock;
-        int			new_socket;
         int			port;
         
         int			maxFD;

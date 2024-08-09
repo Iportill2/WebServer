@@ -58,6 +58,18 @@ void    Request::parse()
     if (uri.size() > 1 && uri[uri.size() - 1] == '/')
         uri = uri.substr(0, uri.size() - 1);
     //std::cout << RED << "URI en parse: " << uri << WHITE << std::endl;
+    if (uri.size() > 15 && uri.substr(0, 15)  == "/download?file=")
+    {
+        file = uri.substr(15);
+        uri = "/download";
+        std::cout << "File:" << file << std::endl;
+        size_t hueco = file.find("%20");
+        while (hueco != std::string::npos)
+        {
+			file.replace(hueco, 3, " ");
+			hueco = file.find("%20");
+		}
+    }
 }
 
 std::string Request::getMethod() {return method;}
@@ -67,6 +79,7 @@ std::string Request::getPort() {return port;}
 std::string Request::getBody() {return body;}
 std::string Request::getBoundary() {return boundary;}
 size_t		Request::getContentLen() {return content_len;}
+std::string Request::getFile() {return file;}
 
 //FUNCIONES PARA PRUEBAS----------------------------------------------------------
 void Request::printRequest()

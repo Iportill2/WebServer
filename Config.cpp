@@ -52,19 +52,21 @@ bool Config::checkduplicateports()
     //std::cout << RED << "@"<< array_of_srv[e]._port << WHITE << std::endl;
     while(i < array_of_srv.size())
     {
+        e = 0;
         while(e < i)
         {
-            if (array_of_srv[i]._port == array_of_srv[e]._port)
+            if ((array_of_srv[i]._port == array_of_srv[e]._port) && (array_of_srv[i]._host == array_of_srv[e]._host))
             {
-                return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,0;
+                std::cout << "i=" << i <<"/" << "e=" << e << std::endl;
+                std::cout << array_of_srv[i]._port << "=" <<array_of_srv[e]._port << std::endl;
+                std::cout << array_of_srv[i]._host << "=" <<array_of_srv[e]._host << std::endl;
+                return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,false;
             }
-            else
             e++;
         }
-        e = 0;
         i++;
     }
-    return 1;
+    return true;
 }
 
 bool Config::checksrvloc()

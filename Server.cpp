@@ -64,6 +64,16 @@ Server::Server()
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
+	size_t i =0;
+	while(i < servers.size())
+	{
+		if(servers[i].srv_ok == 0)
+		{
+			std::cout << "ERROR srv_ok\n";
+			return;
+		}
+		i++;
+	}
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
 	printServers();
@@ -344,6 +354,7 @@ void Server::printServers()
 		std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
 		std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
 		std::cout << "ErrorRoot: " << "\"" << servers[i].ErrorRoot  << "\"" << std::endl;
+		std::cout << "srv_ok: " << "\"" << servers[i].srv_ok  << "\"" << std::endl;
 		std::cout << std::endl;
 		for (size_t j = 0; j < servers[i].arLoc.size(); j++)
 		{
@@ -360,7 +371,7 @@ void Server::printServers()
 		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
 		std::cout << GREEN << "----ErrorPage  "  << "-------------------------" << WHITE << std::endl;
 		std::cout << "errorIndex : " << "\"" 	 << servers[i].arErr[0].errorIndex  << "\"" << std::endl;
-		std::cout << "error_page_404 : " << "\"" << servers[i].arErr[0].error_page_404  << "\"" << std::endl;
+		std::cout << "error_page_404 : " << "\"" << servers[i].arErr[0].error_page_404  << "\"" << std::endl<< std::endl<< std::endl<< std::endl;
 		//std::cout << "location : " << "\""       << servers[i].arErr[0].location  << "\"" << std::endl;
 		//std::cout << "root : "                   << "\"" << servers[i].arErr[0].root  << "\"" << std::endl;
 		//std::cout << "internal : " << "\""       << servers[i].arErr[0].internal << "\"" << std::endl;

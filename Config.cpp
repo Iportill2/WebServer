@@ -5,6 +5,7 @@ Config::Config()
 }
 Config::Config(std::string configName)
 {
+    ok = 0;
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == false)
 	{
@@ -31,6 +32,12 @@ Config::Config(std::string configName)
         std::cout << "if(getServerCount() == false)";
 		return;
 	}
+    if(getArrayOfServers().empty())
+    {
+        std::cout << "getArrayOfServers().empty())";
+		return;
+    }
+    ok = 1;
     //printArrayOfSrv();
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }

@@ -4,6 +4,7 @@
 #include "Utils.hpp"
 srv::srv()
 {
+    srv_ok = 1;
 /*  _host =  "0.0.0.0";
     _port =  "8080";
     _server_name =  "localhost";

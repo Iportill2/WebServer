@@ -28,8 +28,8 @@ int main(int argc, char **argv)
     else if(argc == 2)
     {
         Config confs(argv[1]);
-    
-        if (confs.getArrayOfServers().empty())
+
+        if(confs.ok == 0)
         {
             std::cout << std::endl << RED <<"Invalid configuration file" << std::endl;
             std::cout << GREEN << "Loading default configuration..." << WHITE << std::endl << std::endl;

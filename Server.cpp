@@ -55,7 +55,7 @@ Server::Server()
 
 	if(checkdefaultsettings(ip.c_str(),s) == 1)
 	{
-		printServers();
+		//printServers();
 		serverSet();
 		Mselect();
 									
@@ -77,7 +77,7 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 	}
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
-	printServers();
+	//printServers();
 	serverSet();
 	Mselect();
 }

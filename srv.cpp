@@ -47,8 +47,8 @@ srv::srv(std::string serverBlock)
     size_t i =0;
     while(arLoc.size() > i)
     {
-        std::map<int, std::string>::iterator it = arErr[0].error_page.begin();
-        while(it != arErr[0].error_page.end())
+        std::map<int, std::string>::iterator it = arErr[arErr.size() -1].error_page.begin();
+        while(it != arErr[arErr.size() -1].error_page.end())
         {
             if(arLoc[i]._location == it->second)
             {
@@ -58,7 +58,10 @@ srv::srv(std::string serverBlock)
         }
         i++;
     }
-    readErrorRoot();
+        for (std::map<int, std::string>::iterator it = ErrorRoot.begin(); it != ErrorRoot.end(); ++it) {
+        std::cout << "Key: " << it->first << ", Value: " << it->second << "\n";
+    }
+    //readErrorRoot();
     //std::cout << "srv_ok:"<< srv_ok << std::endl;
     return;
 }
@@ -67,12 +70,13 @@ srv::~srv()
     //std::cout << "srv Destructor" << std::endl;
 }
 
-void srv::readErrorRoot()
+void srv::readErrorRoot(int i,std::string s)
 {
+    
     for (size_t i = 0; i < arErr[arErr.size()-1].errorIndex.size(); ++i)
     {
         std::map<int, std::string>::iterator it = arErr[arErr.size()-1].defaultErMap.find(arErr[arErr.size()-1].errorIndex[i]);
-        if (it != arErr[arErr.size()-1].defaultErMap.end()) 
+        while (it != arErr[arErr.size()-1].defaultErMap.end() ) 
         {
             std::string fullPath = ErrorRoot[it->first];
             std::ifstream file(fullPath.c_str());
@@ -90,11 +94,12 @@ void srv::readErrorRoot()
 
                 arErr[arErr.size()-1].defaultErMap[arErr[arErr.size()-1].errorIndex[i]] = httpResponse;
             }
+            it++;
         }
-        else 
+/*         else 
         {
             std::cout << "La clave " << arErr[0].errorIndex[i] << " no existe en el mapa.\n";
-        }
+        } */
     }
 }
 std::vector<Location> &  srv::getlocations()

@@ -63,7 +63,7 @@ class srv
     bool parseServerBlock(const std::string& s) ;
     bool stringToSizeT(const std::string& s, size_t &n);   
 
-    void readErrorRoot();  
+    void readErrorRoot(int i,std::string s);  
 
 };
 #endif

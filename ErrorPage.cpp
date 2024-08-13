@@ -19,7 +19,7 @@ ErrorPage::ErrorPage(std::string ErrorPageBlock)
     inidefaultErMap();
     if(ErrorParseBlock(ErrorPageBlock) == false)
         return;
-    printErrorPageDetails();
+   // printErrorPageDetails();
 }
 ErrorPage::~ErrorPage()
 {

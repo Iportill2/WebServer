@@ -9,8 +9,8 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
     _fd = fd;
     directory_path = server.arLoc[i]._root;
 	std::cout << RED << directory_path << WHITE <<"\n";
-    if(!server.arErr.empty())
-        error = server.ErrorRoot;
+/*     if(!server.arErr.empty())
+        error = server.ErrorRoot; */
     handle_request(directory_path); 
    
 }

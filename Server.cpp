@@ -64,6 +64,7 @@ Server::Server()
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
+	
 	size_t i =0;
 	while(i < servers.size())
 	{
@@ -345,37 +346,48 @@ void Server::printRequest()
 
 void Server::printServers()
 {
-	for (size_t i = 0; i < servers.size(); i++)
-	{
-		std::cout << GREEN << "----SERVER  " << i + 1 << "-------------------------" << WHITE << std::endl;
-		std::cout << "server name : " << "\"" << servers[i]._server_name  << "\"" << std::endl;
-		std::cout << "ip_num: " << "\"" << servers[i]._ipNum  << "\"" << std::endl;
-		std::cout << "port: " << "\"" << servers[i]._sizetPort  << "\"" << std::endl;
-		std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
-		std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
-		std::cout << "ErrorRoot: " << "\"" << servers[i].ErrorRoot  << "\"" << std::endl;
-		std::cout << "srv_ok: " << "\"" << servers[i].srv_ok  << "\"" << std::endl;
-		std::cout << std::endl;
-		for (size_t j = 0; j < servers[i].arLoc.size(); j++)
-		{
-			std::cout << YELLOW << "-----Location  " << WHITE << "\"" << servers[i].arLoc[j]._location  << "\"" << std::endl;
-			std::cout << "root " << "\"" << servers[i].arLoc[j]._root  << "\"" << std::endl;
-			std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
-			std::cout << "redirect " << "\"" << servers[i].arLoc[j]._redirect  << "\"" << std::endl;
-			std::cout << "cgi " << "\"" << servers[i].arLoc[j]._cgi  << "\"" << std::endl;
-			std::cout << "internal " << "\"" << servers[i].arLoc[j]._internal  << "\"" << std::endl;
-			for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
-				std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
-			std::cout << std::endl;
-		}
-		//std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
-		std::cout << GREEN << "----ErrorPage  "  << "-------------------------" << WHITE << std::endl;
-		std::cout << "errorIndex : " << "\"" 	 << servers[i].arErr[0].errorIndex  << "\"" << std::endl;
-		std::cout << "error_page_404 : " << "\"" << servers[i].arErr[0].error_page_404  << "\"" << std::endl<< std::endl<< std::endl<< std::endl;
-		//std::cout << "location : " << "\""       << servers[i].arErr[0].location  << "\"" << std::endl;
-		//std::cout << "root : "                   << "\"" << servers[i].arErr[0].root  << "\"" << std::endl;
-		//std::cout << "internal : " << "\""       << servers[i].arErr[0].internal << "\"" << std::endl;
-		//std::cout << "ErrorRoot : " << "\""           << servers[i].arErr[0].ErrorRoot  << "\"" << std::endl;
-	}
+    for (size_t i = 0; i < servers.size(); i++)
+    {
+        std::cout << GREEN << "----SERVER  " << i + 1 << "-------------------------" << WHITE << std::endl;
+        std::cout << "server name : " << "\"" << servers[i]._server_name  << "\"" << std::endl;
+        std::cout << "ip_num: " << "\"" << servers[i]._ipNum  << "\"" << std::endl;
+        std::cout << "port: " << "\"" << servers[i]._sizetPort  << "\"" << std::endl;
+        std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
+        std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
+		for (std::map<int, std::string>::iterator it = servers[i].ErrorRoot.begin(); it != servers[i].ErrorRoot.end(); ++it) {
+        std::cout << "EroorRoot Key: " << it->first << ", Value: " << it->second << "\n";
+    }
+
+        //std::cout << "ErrorRoot: " << "\"" << servers[i].ErrorRoot  << "\"" << std::endl;
+        std::cout << "srv_ok: " << "\"" << servers[i].srv_ok  << "\"" << std::endl;
+        std::cout << std::endl;
+        for (size_t j = 0; j < servers[i].arLoc.size(); j++)
+        {
+            std::cout << YELLOW << "-----Location  " << WHITE << "\"" << servers[i].arLoc[j]._location  << "\"" << std::endl;
+            std::cout << "root " << "\"" << servers[i].arLoc[j]._root  << "\"" << std::endl;
+            std::cout << "file " << "\"" << servers[i].arLoc[j]._file  << "\"" << std::endl;
+            std::cout << "redirect " << "\"" << servers[i].arLoc[j]._redirect  << "\"" << std::endl;
+            std::cout << "cgi " << "\"" << servers[i].arLoc[j]._cgi  << "\"" << std::endl;
+            std::cout << "internal " << "\"" << servers[i].arLoc[j]._internal  << "\"" << std::endl;
+            for (size_t k = 0; k < servers[i].arLoc[j].methods_vector.size(); k++)
+                std::cout << "method " << k + 1 << " : " << "\"" <<servers[i].arLoc[j].methods_vector[k] << "\"" << std::endl;
+            std::cout << std::endl;
+        }
+        //std::cout << MAGENTA << "--------------------------------------" << WHITE <<std::endl;
+/*     for (size_t v = 0; v < servers[i].arErr.size(); v++)
+    { */
+        std::cout << RED << "----ErrorPage  "  << "-------------------------" << WHITE << std::endl;
+        for (size_t x = 0; x < servers[i].arErr[servers[i].arErr.size()-1].errorIndex.size(); x++)
+        {
+            std::cout << CYAN << "errorIndex : " << "\"" 	 << servers[i].arErr[servers[i].arErr.size()-1].errorIndex[x]  << "\"" << std::endl;
+        }
+        for (std::map<int, std::string>::iterator it = servers[i].arErr[servers[i].arErr.size()-1].error_page.begin(); it != servers[i].arErr[servers[i].arErr.size()-1].error_page.end(); ++it)
+        {
+            std::cout << GREEN << "error_page[" <<it->first << "]: " << "\"" << it->second << "\"" << WHITE <<  std::endl;
+        }
+
+    /* }	 */
+
+    }
 }
 

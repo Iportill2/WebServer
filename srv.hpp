@@ -21,7 +21,8 @@ class srv
     size_t _sizetBody;
 
 
-    std::string ErrorRoot;
+    //std::string ErrorRoot;
+    std::map <int, std::string> ErrorRoot;
 
     int locationCount;/// esto no esta ya en config???
     std::vector<Location> arLoc;

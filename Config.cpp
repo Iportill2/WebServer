@@ -22,6 +22,11 @@ Config::Config(std::string configName)
         std::cout << "if(checkduplicateports() == false)";
 		return;
 	}
+    if(checkduplicateports_server_name() == false)
+    {
+        //std::cout << "if(checkduplicateports_server_name() == false)";
+        return;
+    }
     if(validatePort() == false)
 	{
         std::cout << "if(validatePort() == false)";
@@ -44,6 +49,30 @@ Config::Config(std::string configName)
 Config::~Config()
 {
     //std::cout << "Config Destructor" << std::endl;
+}
+
+bool Config::checkduplicateports_server_name()
+{
+    size_t i = 1;
+    size_t e = 0;
+    //std::cout << RED << "@"<< array_of_srv[e]._port << WHITE << std::endl;
+    while(i < array_of_srv.size())
+    {
+        e = 0;
+        while(e < i)
+        {
+            if ((array_of_srv[i]._port == array_of_srv[e]._port) && (array_of_srv[i]._server_name == array_of_srv[e]._server_name))
+            {
+                std::cout << "i=" << i <<"/" << "e=" << e << std::endl;
+                std::cout << array_of_srv[i]._port << "=" <<array_of_srv[e]._port << std::endl;
+                std::cout << array_of_srv[i]._server_name << "=" <<array_of_srv[e]._server_name << std::endl;
+                return std::cout << RED << "checkduplicateports_server_name()" << WHITE << std::endl,false;
+            }
+            e++;
+        }
+        i++;
+    }
+    return true;
 }
 bool Config::checkduplicateports()
 {
@@ -178,6 +207,7 @@ bool  Config::config_routine(std::string configName)
         if(pairbrackets(file_content) == 0)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
         //std::cout << "pepe" << std::endl;
+        
         if(createSrv() == 0)
             return(0);
        // std::cout << "peep" << std::endl;
@@ -233,6 +263,7 @@ bool Config::createSrv()
         {
             srv newServer(sub);
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+            //std::cout << "XXX\n";
             if(newServer.srv_ok == 1)
                 array_of_srv.push_back(newServer);
         } 

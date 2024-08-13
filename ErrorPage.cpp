@@ -6,9 +6,10 @@ ErrorPage::ErrorPage()
     std::cout << "Constructor de ErrorPage por defecto\n";
 
     inidefaultErMap();
-    std::string e = "404";//  <------ cambiar esta por un nuero de error que no exista, para probar
-	errorIndex = atoi(e.c_str());
-	error_page_404 ="/404.html";
+    std::string e = "404";//  <------ cambiar esta por un numero de error que no exista, para probar
+    int i = atoi(e.c_str());
+    error_page[i] = "/404.html";
+	errorIndex.push_back(i);
 }
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
@@ -18,10 +19,31 @@ ErrorPage::ErrorPage(std::string ErrorPageBlock)
     inidefaultErMap();
     if(ErrorParseBlock(ErrorPageBlock) == false)
         return;
+    printErrorPageDetails();
 }
 ErrorPage::~ErrorPage()
 {
 
+}
+
+void ErrorPage::printErrorPageDetails() {
+    std::cout << MAGENTA << "Error Page Details:\n";
+
+    std::cout << "error_page:\n";
+    for (std::map<int, std::string>::iterator it = error_page.begin(); it != error_page.end(); ++it) {
+        std::cout << "Error Code: " << it->first << ", Page: " << it->second << "\n";
+    }
+
+    std::cout << "errorIndex:\n";
+    for (size_t i = 0; i < errorIndex.size(); i++) {
+        std::cout << "Index " << i << ": " << errorIndex[i] << "\n";
+    }
+
+/*     std::cout << "defaultErMap:\n";
+    for (std::map<int, std::string>::iterator it = defaultErMap.begin(); it != defaultErMap.end(); ++it) {
+        std::cout << "Error Code: " << it->first << ", Default Error: " << it->second << "\n";
+    } */
+    std::cout << WHITE << std::endl;
 }
 
 std::string ErrorPage::createHtml_in_mapValue(std::string text)
@@ -129,6 +151,7 @@ void ErrorPage::inidefaultErMap()
 
 bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
 {
+    //std::cout << MAGENTA << ErrorParseBlock << WHITE <<std::endl;
     std::string line;
     std::istringstream stream(ErrorParseBlock);
 
@@ -140,13 +163,15 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
 		lineStream >> key;
         if (key == "error_page")
         {
+            int temp;
             lineStream >> key;
-            errorIndex = std::atoi(key.c_str());
+            temp = std::atoi(key.c_str());
+            errorIndex.push_back(temp);
             lineStream >> key;
             if(key[key.size() - 1] == ';')
-                error_page_404 = key.substr(0,key.size() - 1);
+                error_page.insert(std::make_pair(temp, key.substr(0,key.size() - 1)));
             else
-                error_page_404 = key;
+                error_page.insert(std::make_pair(temp, key));
         }
     }
     return(1);

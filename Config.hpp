@@ -41,6 +41,7 @@ class Config :public Utils
     bool checksrvloc();
     std::string &  skip_p_t_esp(std::string &s);
     bool checkduplicateports();
+    bool checkduplicateports_server_name();
     
 };
 

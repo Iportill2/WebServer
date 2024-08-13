@@ -47,16 +47,20 @@ srv::srv(std::string serverBlock)
     size_t i =0;
     while(arLoc.size() > i)
     {
-        if(arLoc[i]._location == arErr[0].error_page_404)
+        std::map<int, std::string>::iterator it = arErr[0].error_page.begin();
+        while(it != arErr[0].error_page.end())
         {
-            ErrorRoot = arLoc[i]._root + arLoc[i]._location ;
+            if(arLoc[i]._location == it->second)
+            {
+                ErrorRoot[it->first] = arLoc[i]._root + arLoc[i]._location ;
+            }
+            ++it;
         }
         i++;
     }
     readErrorRoot();
     //std::cout << "srv_ok:"<< srv_ok << std::endl;
-        return;
-
+    return;
 }
 srv::~srv()
 {
@@ -65,24 +69,32 @@ srv::~srv()
 
 void srv::readErrorRoot()
 {
-    std::ifstream file(ErrorRoot.c_str());
-    if (!file)
-        std::cout << "Could not open file " << ErrorRoot << "\n";
-    else
+    for (size_t i = 0; i < arErr[arErr.size()-1].errorIndex.size(); ++i)
     {
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        std::string s = "404 OK!"; 
-        std::string httpResponse = "HTTP/1.1 " + s + "\r\n";
-        httpResponse += "Content-Type: text/html\r\n";
-        httpResponse += "\r\n";
-        httpResponse += buffer.str();
+        std::map<int, std::string>::iterator it = arErr[arErr.size()-1].defaultErMap.find(arErr[arErr.size()-1].errorIndex[i]);
+        if (it != arErr[arErr.size()-1].defaultErMap.end()) 
+        {
+            std::string fullPath = ErrorRoot[it->first];
+            std::ifstream file(fullPath.c_str());
+            if (!file)
+                std::cout << "Could not open file " << fullPath << "\n";
+            else
+            {
+                std::stringstream buffer;
+                buffer << file.rdbuf();
+                std::string s = "404 OK!"; 
+                std::string httpResponse = "HTTP/1.1 " + s + "\r\n";
+                httpResponse += "Content-Type: text/html\r\n";
+                httpResponse += "\r\n";
+                httpResponse += buffer.str();
 
-        std::map<int, std::string>::iterator it = arErr[0].defaultErMap.find(arErr[0].errorIndex);
-        if (it != arErr[0].defaultErMap.end()) 
-            arErr[0].defaultErMap[arErr[0].errorIndex] = httpResponse;
+                arErr[arErr.size()-1].defaultErMap[arErr[arErr.size()-1].errorIndex[i]] = httpResponse;
+            }
+        }
         else 
-            std::cout << "La clave " << arErr[0].errorIndex << " no existe en el mapa.\n";
+        {
+            std::cout << "La clave " << arErr[0].errorIndex[i] << " no existe en el mapa.\n";
+        }
     }
 }
 std::vector<Location> &  srv::getlocations()
@@ -154,8 +166,8 @@ bool srv::parseServerBlock(const std::string& s)
             {
                 //std::cout << RED << "key:"<< key << WHITE << std::endl;
                 arErr.push_back(line);
-                /* std::string errorstring;
-                std::cout << YELLOW << line << WHITE <<"\n";
+                 std::string errorstring;
+                //std::cout << YELLOW << line << WHITE <<"\n";
                 errorstring = line + '\n';
                 while (1)
                 {
@@ -165,12 +177,12 @@ bool srv::parseServerBlock(const std::string& s)
                         break;
                     }
                     errorstring += line + '\n';
-                    if (line.find('}') != std::string::npos)
+                    if (line.find('l') != std::string::npos)
                     {
                         arErr.push_back(errorstring);
                         break;
                     }
-                } */
+                } 
             }
         }
         if (key == "location")

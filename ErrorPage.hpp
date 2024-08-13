@@ -7,9 +7,10 @@ class ErrorPage
 {
     public:
 
-    std::string error_page_404;
-    int errorIndex;
+    std::map<int, std::string> error_page;
+    std::vector<int> errorIndex;
     std::map< int, std::string> defaultErMap;
+   // int errorIndex;
 
     ErrorPage();
     ErrorPage(std::string ErrorPageBlock);
@@ -21,6 +22,6 @@ class ErrorPage
 
     bool directoryExistsA(const std::string& dirName);
     bool fileExistsA(const std::string& filename);
-
+    void printErrorPageDetails();
 };
 #endif

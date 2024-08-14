@@ -14,7 +14,8 @@ ErrorPage::ErrorPage()
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
 {
-    std::cout << "Constructor de ErrorPage con argumentos\n";
+    std::cout << GREEN << "Constructor de ErrorPage con argumentos\n" << WHITE;
+    //std::cout << MAGENTA << ErrorPageBlock << std::endl;
 
     inidefaultErMap();
     if(ErrorParseBlock(ErrorPageBlock) == false)
@@ -23,7 +24,7 @@ ErrorPage::ErrorPage(std::string ErrorPageBlock)
 }
 ErrorPage::~ErrorPage()
 {
-
+std::cout << RED << "Destructor de ErrorPage \n"<< WHITE ;
 }
 
 void ErrorPage::printErrorPageDetails() {
@@ -172,6 +173,13 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
                 error_page.insert(std::make_pair(temp, key.substr(0,key.size() - 1)));
             else
                 error_page.insert(std::make_pair(temp, key));
+        }
+        else
+        {
+            int e = 0;
+            std::string key;
+            errorIndex.push_back(e);
+            error_page.insert(std::make_pair(e, key));
         }
     }
     return(1);

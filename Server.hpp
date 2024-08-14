@@ -72,8 +72,6 @@ class Server
 		void printRequest();
         void printServers();
 
-        bool directoryExists(const std::string& dirName);
-        bool fileExists(const std::string& filename);
 
         bool checkdefaultsettings(std::string ip,srv &s);
 

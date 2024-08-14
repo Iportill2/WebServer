@@ -210,6 +210,7 @@ bool  Config::config_routine(std::string configName)
         
         if(createSrv() == 0)
             return(0);
+    
        // std::cout << "peep" << std::endl;
         return(1);
     } 
@@ -231,7 +232,6 @@ bool Config::createSrv()
     std::stack<char> stak;
 
     srv Ser;
-    
     while(i < file_content.size())
     {
         tmp = i;
@@ -262,6 +262,7 @@ bool Config::createSrv()
         if (pos != std::string::npos) 
         {
             srv newServer(sub);
+            
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
             //std::cout << "XXX\n";
             if(newServer.srv_ok == 1)

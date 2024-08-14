@@ -30,7 +30,7 @@ Server::Server()
 	s.ipAddressToipNum(ip.c_str());
 	s._sizetPort = 8080;
 	s._sizetBody = 7777777;
-	s._Root = "./default_files";
+	s._Root = "./jamon";
 
 	l0._location = "/";
 	l0._root = "./default_files/pagina";
@@ -55,7 +55,7 @@ Server::Server()
 
 	if(checkdefaultsettings(ip.c_str(),s) == 1)
 	{
-		//printServers();
+		printServers();
 		serverSet();
 		Mselect();
 									
@@ -77,7 +77,7 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 	}
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
-	//printServers();
+	printServers();
 	serverSet();
 	Mselect();
 }
@@ -86,16 +86,16 @@ bool Server::checkdefaultsettings(std::string ip,srv &s)
 {
 	if(s.ipAddressToipNum(ip) == false)
 		return(std::cout << "s.ipAddressToipNum(ip)\n", false);
-	if( directoryExists(s._Root) == false)
+	if( Utils::isDirectory(s._Root.c_str()) == false)
 		return(std::cout << "directoryExists(s._Root)\n", false);
 	size_t i = 0;
 	while(i < s.arLoc.size())
 	{
 		if(s.arLoc[i]._redirect.empty())
 		{
-			if(directoryExists(s.arLoc[i]._root) == false)
+			if(Utils::isDirectory(s.arLoc[i]._root.c_str()) == false)
 				return(std::cout << "directoryExists(l"<< i << "._root)\n", false);
-			if(fileExists(s.arLoc[i]._file) == false)
+			if(Utils::isFile(s.arLoc[i]._file.c_str()) == false)
 				return(std::cout << "fileExists(l"<< i << "._file)\n", false);
 			if(s.arLoc[i].methods_vector.size() < 1)
 				return(std::cout << "l"<< i <<".methods_vector.size() == 1\n",false);
@@ -104,21 +104,7 @@ bool Server::checkdefaultsettings(std::string ip,srv &s)
 	}
 	return(true);
 }
-bool Server::directoryExists(const std::string& dirName) 
-{
-    struct stat info;
-    if (stat(dirName.c_str(), &info) != 0) 
-        return false;// No se puede acceder al directorio
-    else if (info.st_mode & S_IFDIR)
-        return true;// Es un directorio
-    else
-    	return false;// Existe, pero no es un directorio
-}
-bool Server::fileExists(const std::string& filename) 
-{
-    std::ifstream file(filename.c_str());
-    return file.good();
-}
+
 
 
 void	Server::serverSet()
@@ -355,7 +341,7 @@ void Server::printServers()
         std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
         std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
 		for (std::map<int, std::string>::iterator it = servers[i].ErrorRoot.begin(); it != servers[i].ErrorRoot.end(); ++it) {
-        std::cout << "EroorRoot Key: " << it->first << ", Value: " << it->second << "\n";
+        std::cout << MAGENTA<< "EroorRoot Key: " << it->first << ", Value: " << it->second << WHITE<<  "\n";
     }
 
         //std::cout << "ErrorRoot: " << "\"" << servers[i].ErrorRoot  << "\"" << std::endl;

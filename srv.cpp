@@ -5,102 +5,122 @@
 srv::srv()
 {
     srv_ok = 1;
-/*  _host =  "0.0.0.0";
-    _port =  "8080";
-    _server_name =  "localhost";
-    _body =  "777777";
-    _Root = "./pagina";
-    _ipNum = 0; 
-    _sizetPort  = 8080;
-    _sizetBody = 563218; */
 }
-/* srv::srv(const srv& other)
-{
-    this->locationCount = other.locationCount;
-    this->srv_ok = other.srv_ok;
 
-
-    this->_host = other._host;
-    this-> _port = other._port;
-    this->_server_name = other._server_name;
-    this-> _body = other._body;
-    this-> _Root = other._Root;
-    this-> _ipNum = other._ipNum;
-
-    this-> _sizetPort = other._sizetPort;
-    this-> _sizetBody = other._sizetBody;
-
-    this->locationCount = other.locationCount;
-    this-> arLoc = other.arLoc;
-
-    this-> arErr = other.arErr;
-
-    this-> result = other.result;
-
-    this->srv_ok = other.srv_ok;
-} */
 
 srv::srv(std::string serverBlock)
 {
     //std::cout << "Default srv Constructor" << std::endl;
-    srv_ok = parseServerBlock(serverBlock);   
-    size_t i =0;
-    while(arLoc.size() > i)
+    srv_ok = parseServerBlock(serverBlock);
+    if(srv_ok == 0)
+        return;
+    if(!arErr.empty() && !arErr[0].error_page.empty() && !arLoc.empty())
     {
-        std::map<int, std::string>::iterator it = arErr[arErr.size() -1].error_page.begin();
-        while(it != arErr[arErr.size() -1].error_page.end())
+        size_t i =0;
+        while(i < arLoc.size() )
         {
-            if(arLoc[i]._location == it->second)
+            std::map<int, std::string>::iterator it = arErr[0].error_page.begin();
+            while (it != arErr[0].error_page.end())
             {
-                ErrorRoot[it->first] = arLoc[i]._root + arLoc[i]._location ;
+                if(arLoc[i]._location == it->second)
+                {
+                    if(arErr[0].error_page.find(it->first) != arErr[0].error_page.end())
+                    {
+                        ErrorRoot.insert(std::make_pair(it->first, arLoc[i]._root + arErr[0].error_page[it->first]));
+                        std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
+                    }
+                }
+                ++it;
             }
-            ++it;
+            i++;
         }
-        i++;
     }
-        for (std::map<int, std::string>::iterator it = ErrorRoot.begin(); it != ErrorRoot.end(); ++it) {
-        std::cout << "Key: " << it->first << ", Value: " << it->second << "\n";
-    }
-    //readErrorRoot();
-    //std::cout << "srv_ok:"<< srv_ok << std::endl;
-    return;
+    readErrorRoot();
 }
 srv::~srv()
 {
-    //std::cout << "srv Destructor" << std::endl;
 }
 
-void srv::readErrorRoot(int i,std::string s)
+void srv::readErrorRoot()
 {
-    
-    for (size_t i = 0; i < arErr[arErr.size()-1].errorIndex.size(); ++i)
+    if(!arErr.empty() && !arErr[0].defaultErMap.empty() && !ErrorRoot.empty())
     {
-        std::map<int, std::string>::iterator it = arErr[arErr.size()-1].defaultErMap.find(arErr[arErr.size()-1].errorIndex[i]);
-        while (it != arErr[arErr.size()-1].defaultErMap.end() ) 
+        for (std::map<int, std::string>::iterator it = ErrorRoot.begin(); it != ErrorRoot.end(); ++it) 
         {
-            std::string fullPath = ErrorRoot[it->first];
-            std::ifstream file(fullPath.c_str());
-            if (!file)
-                std::cout << "Could not open file " << fullPath << "\n";
-            else
+            if (arErr[0].defaultErMap.find(it->first) != arErr[0].defaultErMap.end()) 
             {
-                std::stringstream buffer;
-                buffer << file.rdbuf();
-                std::string s = "404 OK!"; 
-                std::string httpResponse = "HTTP/1.1 " + s + "\r\n";
-                httpResponse += "Content-Type: text/html\r\n";
-                httpResponse += "\r\n";
-                httpResponse += buffer.str();
+                
+                std::ifstream file(it->second.c_str());
+                if (file) 
+                {
+                    std::string st;
+                    std::stringstream buffer;
+                    buffer << file.rdbuf();
 
-                arErr[arErr.size()-1].defaultErMap[arErr[arErr.size()-1].errorIndex[i]] = httpResponse;
+                    if(it->first == 200)
+                        st = "200 OK";
+                    else if(it->first == 201)
+                        st= "201 Created";
+                    else if(it->first == 202) 
+                        st = "202 Accepted";
+                    else if(it->first == 204) 
+                        st = "204 No Content";
+                    else if(it->first == 301) 
+                        st = "301 Moved Permanently";
+                    else if(it->first == 302) 
+                        st = "302 Found";
+                    else if(it->first == 303) 
+                        st = "303 See Other";
+                    else if(it->first == 304) 
+                        st = "304 Not Modified";
+                    else if(it->first == 400) 
+                        st = "400 Bad Request";
+                    else if(it->first == 401) 
+                        st = "401 Unauthorized";
+                    else if(it->first == 403) 
+                        st = "403 FORBIDDEN";
+                    else if(it->first == 404) 
+                        st = "404 Not Found POTOTO";
+                    else if(it->first == 405) 
+                        st = "405 Method Not Allowed";
+                    else if(it->first == 406) 
+                        st = "406 Not Acceptable";
+                    else if(it->first == 408) 
+                        st = "408 Request Timeout";
+                    else if(it->first == 409) 
+                        st = "409 Conflict";
+                    else if(it->first == 411) 
+                        st = "411 Length Required";
+                    else if(it->first == 413) 
+                        st = "413 Payload Too Large";
+                    else if(it->first == 414) 
+                        st = "414 URI Too Long";
+                    else if(it->first == 415) 
+                        st = "415 Unsupported Media Type";
+                    else if(it->first == 500) 
+                        st = "500 Internal Server Error";
+                    else if(it->first == 501) 
+                        st = "501 Not Implemented";
+                    else if(it->first == 502) 
+                        st = "502 Bad Gateway";
+                    else if(it->first == 503) 
+                        st = "503 Service Unavailable";
+                    else if(it->first == 505) 
+                        st = "505 HTTP Version Not Supported";
+                    std::string httpResponse = "HTTP/1.1 " + st + "\r\n";
+                    httpResponse += "\r\n";
+                    httpResponse += buffer.str();
+                    arErr[0].defaultErMap[it->first] = httpResponse;
+                } 
+                else 
+                    std::cout << "Could not open file " << it->second << "\n";
             }
-            it++;
         }
-/*         else 
-        {
-            std::cout << "La clave " << arErr[0].errorIndex[i] << " no existe en el mapa.\n";
-        } */
     }
+/*     for (std::map<int, std::string>::iterator it = arErr[0].defaultErMap.begin(); it != arErr[0].defaultErMap.end(); ++it) 
+    {
+        std::cout << GREEN << it->first << CYAN << it->second << RED << "*******************************************************************************************\n"<< WHITE << std::endl;
+    } */
 }
 std::vector<Location> &  srv::getlocations()
 {
@@ -170,8 +190,8 @@ bool srv::parseServerBlock(const std::string& s)
         {
             {
                 //std::cout << RED << "key:"<< key << WHITE << std::endl;
-                arErr.push_back(line);
-                 std::string errorstring;
+                //arErr.push_back(line);
+                std::string errorstring;
                 //std::cout << YELLOW << line << WHITE <<"\n";
                 errorstring = line + '\n';
                 while (1)
@@ -184,6 +204,7 @@ bool srv::parseServerBlock(const std::string& s)
                     errorstring += line + '\n';
                     if (line.find('l') != std::string::npos)
                     {
+                    std::cout << BLUE << errorstring << WHITE << std::endl;
                         arErr.push_back(errorstring);
                         break;
                     }
@@ -216,7 +237,11 @@ bool srv::parseServerBlock(const std::string& s)
         std::cout << "|" << _host << "|" << _port << "|" << _body << "|" << _Root << "|"<< std::endl;
         return(0);
     }
-        
+    if(arErr.empty())//para evitar el segfault en arErr
+    {
+        std::string s = "";
+        arErr.push_back(s);
+    }
 	if(checkstring() == 0)
         return 0;
 

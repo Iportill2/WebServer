@@ -36,6 +36,6 @@ class Location
 
     std::string toLowerCase(const std::string& str);
     void checkAndAddMethods(const std::string& input);
-
+    bool setlocationconfig(std::string & variable,std::string print, std::istringstream & lineStream );
 };
 #endif

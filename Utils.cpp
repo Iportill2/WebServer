@@ -62,17 +62,13 @@ void Utils::deletespaces(std::string &s)
     {
         while(s[i] == ' ')
             i++;
-		if(s[i] != ' ')
-		{
-        	temp.push_back(s[i]);
-        	i++;
-		}
+        if(i < s.size() && s[i] != ' ')
+        {
+            temp += s[i];
+            i++;
+        }
     }
-	s = temp;
-    //checker
-	//std::cout << "s:"<< "|" << s << "|" << std::endl;
-	//std::cout << "temp:"<< "|" << temp << "|" << std::endl;
-	//return(s);
+    s = temp;
 }
 
 

@@ -31,8 +31,6 @@ class Config :public Utils
 	// size_t size(const char *s);
     bool createSrv();
 
-    void printArrayOfSrv() const;
-    /////
     bool validatePort();
 
     std::vector<srv> & getArrayOfServers();

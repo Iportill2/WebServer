@@ -22,9 +22,6 @@ Location::~Location()
 
 bool Location::parselocationBlock(const std::string& locationBlock) 
  {
-
-    //std::cout << CYAN << locationBlock << WHITE << std::endl;
-
     std::string line;
     std::istringstream stream(locationBlock);
     std::string tmp;
@@ -36,34 +33,20 @@ bool Location::parselocationBlock(const std::string& locationBlock)
 		std::string key;
 
 		lineStream >> key;
-
-
         if (key == "location")
         {
-            if(!_location.empty())
-                return(std::cout << RED << "location twice" << WHITE << std::endl, 0);
-            lineStream >> _location;
-            if(_location[_location.size()-1] == '{')
-                _location = _location.substr(0, _location.size() - 1);
-            //porner el ese en caso de que no tenga ; ??? 
+            if(setlocationconfig(_location,key, lineStream ) == false)
+                return(false);
         }
-
         if (key == "root")
         {
-            if(!_root.empty())
-                return(std::cout << RED << "root twice" << WHITE << std::endl,0);
-            lineStream >> _root;
-            if(_root[_root.size()-1] == ';')
-                _root = _root.substr(0, _root.size() - 1);
-
+            if(setlocationconfig(_root,key, lineStream ) == false)
+                return(false);
         }
         if (key == "file")
         {
-            if(!_file.empty())
-                return(std::cout << RED << "file twice" << WHITE << std::endl,0);
-            lineStream >> _file;
-            if(_file[_file.size()-1] == ';')
-                _file = _file.substr(0, _file.size() - 1);
+            if(setlocationconfig(_file,key, lineStream ) == false)
+                return(false);
         }
         if (key == "methods;"  || key == "methods" )
         {
@@ -119,7 +102,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
 
 	}
 
-    return(1);
+    return(true);
 }
 
 std::string Location::toLowerCase(const std::string& str) 
@@ -127,4 +110,16 @@ std::string Location::toLowerCase(const std::string& str)
     std::string lowerStr = str;
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
     return lowerStr;
+}
+bool Location::setlocationconfig(std::string & variable,std::string print, std::istringstream & lineStream )
+{
+    std::string temp;
+    if(!variable.empty())
+        return(std::cout << RED << "twice "<< print <<" in server" << WHITE << std::endl,false);
+    lineStream >> temp;
+    if (temp[temp.size() - 1] == ';')
+        variable = temp.substr(0, temp.size() - 1);
+    else
+        variable = temp;
+    return(true);
 }

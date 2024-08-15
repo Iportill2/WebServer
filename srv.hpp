@@ -59,11 +59,12 @@ class srv
     void findAndExtractRoot(const std::string& serverBlock, size_t pos); 
 
 
-    void deletespaces(std::string &s);
+    //void deletespaces(std::string &s);
     bool parseServerBlock(const std::string& s) ;
     bool stringToSizeT(const std::string& s, size_t &n);   
 
     void readErrorRoot();  
+    bool setserverconfig(std::string & variable,std::string print, std::istringstream & lineStream );
 
 };
 #endif

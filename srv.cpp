@@ -152,11 +152,16 @@ bool srv::parseServerBlock(const std::string& s)
 		std::string key;
 
 		lineStream >> key;
+        std::cout << MAGENTA << key << WHITE <<std::endl;
         if (key == "listen")
         {
             if(!listen.empty())
                 return(std::cout << RED << "twice listen in server" << WHITE << std::endl,false);
             lineStream >> listen;
+            if(listen.size() != 13)
+                return(std::cout <<RED << "Please type server ip:port like this xx\n"<< WHITE,false);
+            std::cout << YELLOW << listen << WHITE <<std::endl;
+            std::cout << YELLOW << listen.size() << WHITE <<std::endl;
             if (listen[listen.size() - 1] == ';')
             {
                 listen = listen.substr(0, listen.size() - 1);
@@ -168,6 +173,7 @@ bool srv::parseServerBlock(const std::string& s)
                 if(_host.empty())
                 {
                     _host = listen.substr(0, i - 0);
+
                     std::cout << CYAN << "_host=""\"" << _host << """\"" <<WHITE  <<std::endl;///
                 }
                 else
@@ -176,7 +182,7 @@ bool srv::parseServerBlock(const std::string& s)
                 if(_port.empty())
                 {
                     _port = listen.substr(i, listen.size() - i);
-                    std::cout << CYAN << "_port=""\"" << _port << """\"" <<WHITE  <<std::endl;///
+                    //std::cout << CYAN << "_port=""\"" << _port << """\"" <<WHITE  <<std::endl;///
                 }
                 else
                     return(std::cout << RED << "twice port in server" << WHITE << std::endl,false);
@@ -273,12 +279,14 @@ bool srv::checkstring()
 {
     if(!_host.empty() )
 	{
+        //std::cout << CYAN << "_host=""\"" << _host << """\"" <<WHITE  <<std::endl;///
         Utils::deletespaces(_host);
 		if(ipAddressToipNum(_host) == false)
 			return (false);
 	}
     if(!_port.empty() )
 	{
+        //std::cout << CYAN << "_port=""\"" << _port << """\"" <<WHITE  <<std::endl;///
         Utils::deletespaces(_port);
 		if(stringToSizeT(_port, _sizetPort) == false)
 			return(std::cout << "Error doing the conversion from _port to __sizetport" << std::endl,false);

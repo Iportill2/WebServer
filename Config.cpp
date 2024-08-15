@@ -27,6 +27,8 @@ Config::Config(std::string configName)
         //std::cout << "if(checkduplicateports_server_name() == false)";
         return;
     }
+	    //std::cout << CYAN << "_host=""\"" << array_of_srv[0]._host << """\"" <<WHITE  <<std::endl;///
+        //std::cout << CYAN << "_port=""\"" << array_of_srv[0]._port << """\"" <<WHITE  <<std::endl;///
     if(validatePort() == false)
 	{
         std::cout << "if(validatePort() == false)";
@@ -223,7 +225,6 @@ bool Config::createSrv()
             srv newServer(sub);
             
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
-            //std::cout << "XXX\n";
             if(newServer.srv_ok == 1)
                 array_of_srv.push_back(newServer);
         } 
@@ -278,8 +279,8 @@ bool Config::validatePort()
     while(i < array_of_srv.size())
     {
 
-                    std::cout << CYAN << "_host=""\"" << array_of_srv[i]._host << """\"" <<WHITE  <<std::endl;///
-                    std::cout << CYAN << "_port=""\"" << array_of_srv[i]._port << """\"" <<WHITE  <<std::endl;///
+/*                     std::cout << CYAN << "_host=""\"" << array_of_srv[i]._host << """\"" <<WHITE  <<std::endl;///
+                    std::cout << CYAN << "_port=""\"" << array_of_srv[i]._port << """\"" <<WHITE  <<std::endl;/// */
 
 
 

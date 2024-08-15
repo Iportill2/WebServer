@@ -40,16 +40,16 @@ int main(int argc, char **argv)
     }
     return (0);
 }
-
-/* int main(int ac, char **av)
+/* int main()
 {
-    if(ac== 1)
-        return Config(), 1;
-    else if(ac == 2)
+    std::string s = "0.0.0.0:8080;";
+    size_t i =0;
+    while(s[i])
     {
-        std::string filename (av[1]);
-        return Config(filename), 1;
+        std::cout<< i <<"="<< s[i] << std::endl; 
+        i++;
     }
-    else
-        return std::cout << "Error: Ejecuta ./my_server o ./my_server server.conf" << std::endl, 0;
+        std::cout << "************************************\n";
+        std::cout<< s.size() <<"="<< s[s.size()] << std::endl; 
+
 } */

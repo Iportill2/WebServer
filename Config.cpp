@@ -23,12 +23,7 @@ Config::Config(std::string configName)
 		return;
 	}
     if(checkduplicateports_server_name() == false)
-    {
-        //std::cout << "if(checkduplicateports_server_name() == false)";
         return;
-    }
-	    //std::cout << CYAN << "_host=""\"" << array_of_srv[0]._host << """\"" <<WHITE  <<std::endl;///
-        //std::cout << CYAN << "_port=""\"" << array_of_srv[0]._port << """\"" <<WHITE  <<std::endl;///
     if(validatePort() == false)
 	{
         std::cout << "if(validatePort() == false)";
@@ -56,7 +51,6 @@ bool Config::checkduplicateports_server_name()
 {
     size_t i = 1;
     size_t e = 0;
-    //std::cout << RED << "@"<< array_of_srv[e]._port << WHITE << std::endl;
     while(i < array_of_srv.size())
     {
         e = 0;
@@ -104,23 +98,18 @@ bool Config::checksrvloc()
     size_t i = 0;
     while (i < array_of_srv.size())
     {
-        if(array_of_srv[i].srv_ok == 0)
+        if(array_of_srv[i].srv_ok == false)
             return(std::cout << RED << "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE << std::endl,false);
-        //std::cout << GREEN<< "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE<< std::endl;
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
         {
             size_t u = 0;
             while (u < array_of_srv[i].arLoc[e].methods_vector.size())
-            {
-               // std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
                 ++u;
-            }
             ++e;
         }
         ++i;
     }
-    //std::cout << YELLOW << array_of_srv[3].arLoc[0]._location << WHITE << std::endl;
     return true;
 }
 bool Config::pairbrackets(const std::string s)
@@ -168,15 +157,10 @@ bool  Config::config_routine(std::string configName)
 {
     if(openFile(configName) == true)
     {
-        
-/*         std::cout << file_content.size() << std::endl;
-        std::cout << file_content << std::endl; */
-
         if(file_content.empty())
             return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,false);
         if(pairbrackets(file_content) == false)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,false);
-        
         if(createSrv() == false)
             return(false);
         return(true);
@@ -214,7 +198,6 @@ bool Config::createSrv()
                 stak.pop();
             i++;
         }
-    std::cout << MAGENTA << "XXX\n";
         size_t length = i - tmp;
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
@@ -278,19 +261,12 @@ bool Config::validatePort()
     size_t i = 0;
     while(i < array_of_srv.size())
     {
-
-/*                     std::cout << CYAN << "_host=""\"" << array_of_srv[i]._host << """\"" <<WHITE  <<std::endl;///
-                    std::cout << CYAN << "_port=""\"" << array_of_srv[i]._port << """\"" <<WHITE  <<std::endl;/// */
-
-
-
-
         if(array_of_srv[i]._sizetPort == 0)
             return(std::cout << array_of_srv[i]._sizetPort << std::endl,false);
         if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
             std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
         else
-            return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,0;
+            return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,false;
         ++i;
     }
     return true;

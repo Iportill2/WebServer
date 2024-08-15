@@ -36,7 +36,6 @@ class srv
 
     srv();
     srv(std::string serverBlock);
-    //srv(const srv& other);
     ~srv();
 
 
@@ -52,14 +51,11 @@ class srv
 	///locations
 	std::vector<Location> & getlocations();
 
-    /// 
     unsigned long ipToDecimal(const std::string& ip);
     bool checkstring();
     bool ipAddressToipNum(std::string ipAddress);
     void findAndExtractRoot(const std::string& serverBlock, size_t pos); 
 
-
-    //void deletespaces(std::string &s);
     bool parseServerBlock(const std::string& s) ;
     bool stringToSizeT(const std::string& s, size_t &n);   
 

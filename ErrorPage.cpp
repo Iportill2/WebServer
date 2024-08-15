@@ -3,7 +3,7 @@
 
 ErrorPage::ErrorPage()
 {
-    std::cout << "Constructor de ErrorPage por defecto\n";
+    //std::cout << "Constructor de ErrorPage por defecto\n";
 
     inidefaultErMap();
     std::string e = "404";//  <------ cambiar esta por un numero de error que no exista, para probar
@@ -14,7 +14,7 @@ ErrorPage::ErrorPage()
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
 {
-    std::cout << GREEN << "Constructor de ErrorPage con argumentos\n" << WHITE;
+    //std::cout << GREEN << "Constructor de ErrorPage con argumentos\n" << WHITE;
     //std::cout << MAGENTA << ErrorPageBlock << std::endl;
 
     inidefaultErMap();
@@ -24,7 +24,7 @@ ErrorPage::ErrorPage(std::string ErrorPageBlock)
 }
 ErrorPage::~ErrorPage()
 {
-std::cout << RED << "Destructor de ErrorPage \n"<< WHITE ;
+    //std::cout << RED << "Destructor de ErrorPage \n"<< WHITE ;
 }
 
 void ErrorPage::printErrorPageDetails() {

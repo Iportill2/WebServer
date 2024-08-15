@@ -10,13 +10,12 @@ srv::srv()
 
 srv::srv(std::string serverBlock)
 {
-    //std::cout << "Default srv Constructor" << std::endl;
     srv_ok = parseServerBlock(serverBlock);
-    if(srv_ok == 0)
+    if(srv_ok == false)
         return;
     if(!arErr.empty() && !arErr[0].error_page.empty() && !arLoc.empty())
     {
-        size_t i =0;
+        size_t i = 0;
         while(i < arLoc.size() )
         {
             std::map<int, std::string>::iterator it = arErr[0].error_page.begin();
@@ -27,7 +26,7 @@ srv::srv(std::string serverBlock)
                     if(arErr[0].error_page.find(it->first) != arErr[0].error_page.end())
                     {
                         ErrorRoot.insert(std::make_pair(it->first, arLoc[i]._root + arErr[0].error_page[it->first]));
-                        std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
+                        //std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
                     }
                 }
                 ++it;
@@ -152,19 +151,17 @@ bool srv::parseServerBlock(const std::string& s)
 		std::string key;
 
 		lineStream >> key;
-        std::cout << MAGENTA << key << WHITE <<std::endl;
+        //std::cout << MAGENTA << key << WHITE <<std::endl;
         if (key == "listen")
         {
             if(!listen.empty())
                 return(std::cout << RED << "twice listen in server" << WHITE << std::endl,false);
             lineStream >> listen;
-            if(listen.size() != 13)
-                return(std::cout <<RED << "Please type server ip:port like this xx\n"<< WHITE,false);
-            std::cout << YELLOW << listen << WHITE <<std::endl;
-            std::cout << YELLOW << listen.size() << WHITE <<std::endl;
             if (listen[listen.size() - 1] == ';')
             {
                 listen = listen.substr(0, listen.size() - 1);
+            }
+
                 //std::cout << "listen:" << listen << std::endl;
                 while(listen[i]!= ':')
                 {
@@ -173,8 +170,8 @@ bool srv::parseServerBlock(const std::string& s)
                 if(_host.empty())
                 {
                     _host = listen.substr(0, i - 0);
-
-                    std::cout << CYAN << "_host=""\"" << _host << """\"" <<WHITE  <<std::endl;///
+                    Utils::deletespaces(_host);
+                    //std::cout << CYAN << "_host=""\"" << _host << """\"" <<WHITE  <<std::endl;///
                 }
                 else
                     return(std::cout << RED << "twice host in server" << WHITE << std::endl,false);
@@ -182,11 +179,11 @@ bool srv::parseServerBlock(const std::string& s)
                 if(_port.empty())
                 {
                     _port = listen.substr(i, listen.size() - i);
+                    Utils::deletespaces(_port);
                     //std::cout << CYAN << "_port=""\"" << _port << """\"" <<WHITE  <<std::endl;///
                 }
                 else
                     return(std::cout << RED << "twice port in server" << WHITE << std::endl,false);
-            }
         }
         if (key == "server_name")
         {
@@ -310,26 +307,8 @@ bool srv::stringToSizeT(const std::string& s, size_t &n)
     std::istringstream iss(s);
     iss >> n;
     if (iss.fail()) 
-	{
+		return(false);
         // Lanzar una excepción si la conversión falla
         //throw std::runtime_error("Cannot convert string to size_t: " + s);
-		return(false);
-    }
 	return(true);
 }
-/* void srv::deletespaces(std::string &s)
-{
-    size_t i = 0;
-    std::string temp;
-    while(i < s.size())
-    {
-        while(s[i] == ' ')
-            i++;
-        if(i < s.size() && s[i] != ' ')
-        {
-            temp += s[i];
-            i++;
-        }
-    }
-    s = temp;
-} */

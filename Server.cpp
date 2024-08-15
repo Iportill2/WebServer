@@ -30,7 +30,7 @@ Server::Server()
 	s.ipAddressToipNum(ip.c_str());
 	s._sizetPort = 8080;
 	s._sizetBody = 7777777;
-	s._Root = "./jamon";
+	s._Root = "./default_files";
 
 	l0._location = "/";
 	l0._root = "./default_files/pagina";
@@ -341,7 +341,7 @@ void Server::printServers()
         std::cout << "body size: " << "\"" << servers[i]._sizetBody  << "\"" << std::endl;
         std::cout << "root: " << "\"" << servers[i]._Root  << "\"" << std::endl;
 		for (std::map<int, std::string>::iterator it = servers[i].ErrorRoot.begin(); it != servers[i].ErrorRoot.end(); ++it) {
-        std::cout << MAGENTA<< "EroorRoot Key: " << it->first << ", Value: " << it->second << WHITE<<  "\n";
+        std::cout /* << MAGENTA */<< "EroorRoot Key: " << it->first << ", Value: " << it->second << WHITE<<  "\n";
     }
 
         //std::cout << "ErrorRoot: " << "\"" << servers[i].ErrorRoot  << "\"" << std::endl;

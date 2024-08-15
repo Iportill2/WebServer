@@ -28,7 +28,7 @@ ErrorPage::~ErrorPage()
 }
 
 void ErrorPage::printErrorPageDetails() {
-    std::cout << MAGENTA << "Error Page Details:\n";
+    std::cout << MAGENTA << "Error Page Details:\n"<< WHITE;
 
     std::cout << "error_page:\n";
     for (std::map<int, std::string>::iterator it = error_page.begin(); it != error_page.end(); ++it) {
@@ -44,7 +44,7 @@ void ErrorPage::printErrorPageDetails() {
     for (std::map<int, std::string>::iterator it = defaultErMap.begin(); it != defaultErMap.end(); ++it) {
         std::cout << "Error Code: " << it->first << ", Default Error: " << it->second << "\n";
     } */
-    std::cout << WHITE << std::endl;
+
 }
 
 std::string ErrorPage::createHtml_in_mapValue(std::string text)

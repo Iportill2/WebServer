@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/05 12:41:20 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:46:49 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/select.h>
 # include <csignal>
 # include <cstring>
+
 # include <map>
 # include <vector> 
 # include <sys/stat.h>
@@ -34,7 +35,16 @@
 # include <sstream>
 # include <algorithm>
 # include <stack>
-
+# include <arpa/inet.h>
+# include <stdexcept>
+# include <limits>
+# include <set>
+# include <fcntl.h>
+# include <sys/time.h>
+# include <sys/wait.h>
+# include <algorithm>
+# include <cctype>
+# include <dirent.h>
 //COLORES
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////

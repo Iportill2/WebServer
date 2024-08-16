@@ -1,6 +1,6 @@
 #ifndef LOCATION_HPP
 # define LOCATION_HPP
-
+#include "Utils.hpp"
 #include "dependences.hpp"
 class Location
 {
@@ -12,12 +12,19 @@ class Location
     std::string _methods;
     std::string _autoindex;
     std::string _cgi;
-    std::string _redirect_302;
-    Location() = default;
+    std::string _redirect;
+
+    std::string _internal;
+
+    int redirect_num;
+    bool lock_ok;
+
+    std::vector <std::string> methods_vector;
+    Location(){};
     Location(const std::string locationBlock);
     ~Location();
 
-    void parselocationBlock(const std::string& locationBlock);
+    bool parselocationBlock(const std::string& locationBlock);
 
     std::string getLocation() const { return _location; }
     std::string getRoot() const { return _root; }
@@ -25,7 +32,10 @@ class Location
     std::string getMethods() const { return _methods; }
     std::string getAutoindex() const { return _autoindex; }
     std::string getCgi() const { return _cgi; }
-    std::string getRedirect302() const { return _redirect_302; }
+    std::string getRedirect302() const { return _redirect; }
 
+    std::string toLowerCase(const std::string& str);
+    void checkAndAddMethods(const std::string& input);
+    bool setlocationconfig(std::string & variable,std::string print, std::istringstream & lineStream );
 };
 #endif

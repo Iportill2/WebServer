@@ -1,0 +1,1 @@
+En "location /load?", he cambiado "file index.html" por "file index3.html" que llama a upload.php pero parece que no pasa nada

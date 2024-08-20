@@ -80,7 +80,7 @@ bool	Respons::checkAuthorized()
 	_extension = _url.substr(point);
 	//std::cout << "Extension = " << "\"" <<  _extension  << "\"" << std::endl;
 
-	if(_extension != ".html" && _extension != ".jpg" && _extension != ".png" && _extension != ".ico")
+	if(_extension != ".html" && _extension != ".jpg" && _extension != ".png" && _extension != ".ico" && _extension != ".php")
 		return 0;
 	return 1;
 }
@@ -151,11 +151,21 @@ void	Respons::htmlRespond()
 	//std::cout << "***********--------------********************************" << std::endl;
 	if (rq->getMethod() == "get")
 	{
-		if (!rq->getFile().empty())
+		if (!rq->getDownFile().empty() && rq->getUri() == "/download")
 		{
+			if(rq->getUri() == "/download")
+				std::cout << "LOCATON----------------" << rq->getUri() << std::endl;
 			Download res(fd);
-			res.sendFile(rq->getFile());
+			res.sendFile(rq->getDownFile());
 			Dinamic d(fd);
+		}
+		else if (!rq->getDownFile().empty() && rq->getUri() == "/delete")
+		{
+			if(rq->getUri() == "/delete")
+				std::cout << "LOCATON----------------" << rq->getUri() << std::endl;
+			Delete res(fd);
+			res.sendFile(rq->getDownFile());
+			//Dinamic d(fd);
 		}
 		else
 		{
@@ -245,22 +255,22 @@ void	Respons::htmlRespond()
 				Error r(404, fd);
 		}
 
-		/* else if (rq->getUri() == "/downb")
+		else if (rq->getUri() == "/delete")
 		{
 			int up = 0;
 			for(size_t i = 0; i < server.arLoc.size(); i++)
 			{
-				if (server.arLoc[i].getLocation() == "/downb")
+				if (server.arLoc[i].getLocation() == "/dinamic")
 				{
 					up = 1;
-					Download res(fd);
-					res.sendFile(rq->getFile());
-					Dinamic d(fd);
+					Delete res(fd);
+					res.sendForm();
+					//Dinamic d(fd);
 				}
 			}
 			if (!up)
 				Error r(404, fd);
-		} */
+		}
 	}
 }
 

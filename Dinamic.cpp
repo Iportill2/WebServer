@@ -38,9 +38,12 @@ void    Dinamic::createResponse()
     response += "<button type=\"submit\">Subir archivo</button>  ";
     response += "</form>";
     
-    response += "<form method=\"POST\" style=\"display: inline;\">";
-    response += "<button type=\"submit\" formaction=\"/download\">Descargar archivo</button>  ";
-    response += "<button type=\"submit\" formaction=\"/delete\">Borrar archivo</button>  ";
+    response += "<form method=\"POST\" action=\"/download\" style=\"display: inline;\">";
+    response += "<button type=\"submit\">Descargar archivo</button>  ";
+    response += "</form>";
+
+    response += "<form method=\"POST\" action=\"/delete\" style=\"display: inline;\">";
+    response += "<button type=\"submit\">Borrar archivo</button>  ";
     response += "</form>";
 
     response += "</body>";

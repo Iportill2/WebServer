@@ -16,13 +16,16 @@ class Request
         size_t		content_len;
 
         std::string body;
-        std::string boundary;
+        std::string downfile;
 
-        std::string file;
+        std::string boundary;
+        std::string boundaryContent;
+        std::string upfileContent;
+        std::string upfileName;
 
     public:
     
-        Request(std::string buf);
+        Request();
         ~Request();
         
         void    parse();
@@ -33,9 +36,17 @@ class Request
         std::string getPort();
         std::string getBody();
         std::string getBoundary();
-        std::string getFile();
+        std::string getDownFile();
+
+        std::string getUpFileContent();
+        std::string getUpFileName();
+
 
         size_t		getContentLen();
+
+		void        stractBoundary(std::string bound);
+
+        void addBuffer(char * buf, int bytes);
 
         //FUNCIONES PARA PRUEBAS
         void printRequest();

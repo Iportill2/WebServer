@@ -21,8 +21,8 @@ void    Directory::openDir()
     	v.push_back(entry->d_name);
 	}
 
-	for(size_t i = 0; i < v.size(); i++)
-		std::cout << v[i] << std::endl;
+	/* for(size_t i = 0; i < v.size(); i++)
+		std::cout << v[i] << std::endl; */
 
     closedir(directory);
 }

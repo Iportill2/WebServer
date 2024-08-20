@@ -4,7 +4,7 @@
 
 Load::Load(Request * r, int f) : rq(r), fd(f)
 {
-    parse();
+    //parse();
     createTextFile();
 }
 
@@ -70,10 +70,10 @@ void    Load::parse()
     	file_content = file_content.substr(0, jump);
     }
 
-	std::cout << "---------boundary_content--------" << std::endl << GREEN << boundary_content << WHITE << std::endl;
+	/* std::cout << "---------boundary_content--------" << std::endl << GREEN << boundary_content << WHITE << std::endl;
     std::cout << "my File name: "  << file_name << std::endl;
     std::cout << "my Content-Type: "  << content_type << std::endl;
-	std::cout << "my File-content: "  << file_content << std::endl;
+	std::cout << "my File-content: "  << file_content << std::endl; */
     /* if (finish)
         std::cout << "--- FINAL DEL MENSAJE ---" << std::endl;
     else
@@ -82,12 +82,12 @@ void    Load::parse()
 
 void    Load::createTextFile()
 {
-    std::string path = "uploaded_files/" + file_name;
-    std::ofstream file(path.c_str());
+    std::string path = "uploaded_files/" + rq->getUpFileName();
+    std::ofstream file(path.c_str(), std::ios::out | std::ios::binary);
 
     if (file.is_open())
     {
-        file << file_content;
+        file << rq->getUpFileContent();
         file.close();
     }
 }

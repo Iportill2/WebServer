@@ -8,6 +8,7 @@
 # include "Cgi.hpp"
 # include "Load.hpp"
 # include "Download.hpp"
+# include "Delete.hpp"
 
 class Request;
 class srv;

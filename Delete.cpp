@@ -1,12 +1,12 @@
-#include "Download.hpp"
+#include "Delete.hpp"
 
-Download::Download(int f) : fd(f)
+Delete::Delete(int f) : fd(f)
 {
 	Directory d("uploaded_files");
     dir = d.getDir();
 	//sendForm();
 }
-   void Download::sendForm()
+   void Delete::sendForm()
    {
 		response = "HTTP/1.1 200 OK\r\n";
    		response += "Content-Type: text/html\r\n";
@@ -22,30 +22,30 @@ Download::Download(int f) : fd(f)
     	response += "</head>";
 
     	response += "<body>";
-    	response += "<h3>Elige el archivo que quieres descargar:</h3>";
+    	response += "<h3>Elige el archivo que quieres borrar:</h3>";
 
     	for(size_t i = 2; i < dir.size(); i ++)
-    	    response += "<a href=\"/download?file=" + dir[i] + "\">" + dir[i] + "</a><br>";
+    	    response += "<a href=\"/Delete?file=" + dir[i] + "\">" + dir[i] + "</a><br>";
 
 		response += "<br><br><a href=\"/dinamic\"> VOLVER </a><br>";
 
     	write (fd, response.c_str(), response.size());
    }
 
-void Download::sendFile(std::string fi)
+void Delete::sendFile(std::string fi)
 {
 	std::string path = "uploaded_files/" + fi;
 	std::cout << "PATH:" << path << std::endl;
 	std::ifstream file(path.c_str(), std::ios::binary);
 
 	if(Utils::isFile(path.c_str()))
-		std::cout << "ES UN ARCHIVO" << std::endl;
+		std::cout << "ES UN ARCHIVO en delete" << std::endl;
 	else
-		std::cout << "NOOOOOO ES UN ARCHIVO" << std::endl;
+		std::cout << "NOOOOOO ES UN ARCHIVO EN DELETE" << std::endl;
 	
     if (file)
 	{
-        // Obtener el tamaño del archivo
+        /* // Obtener el tamaño del archivo
         file.seekg(0, std::ios::end);
         std::streamsize size = file.tellg();
         file.seekg(0, std::ios::beg);
@@ -62,10 +62,10 @@ void Download::sendFile(std::string fi)
         if (file.read(buffer.data(), size)) {
             response.append(buffer.begin(), buffer.end());
         }
-		write (fd, response.c_str(), response.size());
+		write (fd, response.c_str(), response.size()); */
     }
 	else
 		std::cout << "NO HAY FILE" << std::endl;
 }
 
-Download::~Download(){}
+Delete::~Delete(){}

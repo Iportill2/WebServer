@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/07 12:54:03 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:37:28 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,7 @@ class Server
 {
     private:
 
-        typedef struct s_client
-        {
-            int fd;
-        }   t_client;
+        
         
         sockaddr_in	ad;
         int			id;
@@ -38,7 +35,9 @@ class Server
         int			maxFD;
         int         sizeOfAddress;           
         
-        char		buffer[3000000];
+        char		buffer[60000];//tres millones antes
+        std::string prueba;
+        std::string bf;
         
         std::vector<int>    comFds;
         std::vector<srv>    servers;

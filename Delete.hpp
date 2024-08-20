@@ -3,7 +3,7 @@
 # include "dependences.hpp"
 # include "Directory.hpp"
 
-class Download
+class Delete
 {
     private:
 
@@ -13,8 +13,8 @@ class Download
 
     public:
 
-		Download(int f);
-		~Download();
+		Delete(int f);
+		~Delete();
 
 		void	sendForm();
 		void	sendFile(std::string fi);

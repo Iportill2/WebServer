@@ -9,34 +9,40 @@ Respons::~Respons() {}
 
 int	Respons::checkLocation()
 {
-
+	std::string url;
 	for(size_t i = 0; i < server.arLoc.size(); i++)
 	{
 		if(rq->getUri() == server.arLoc[i]._location)
 		{
-			if (server.arLoc[i]._location == "/redirect")
-			{
-				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
-				return(_url = server.arLoc[i]._redirect, 2);
-			}
-			if (server.arLoc[i]._autoindex == "on")
-			{
-
-				Autoindex ai (server,fd, i);
-				//Autoindex ai(server.arLoc[i]._root,fd);
-				return 0;
-			}
-			_loc = i;
-			std::string url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
-			//std::cout << "url1 = " << url << std::endl;
-			if (Utils::isFile(url.c_str()))
-				return (_url = url, 1);
+			std::string word = "/redirect";
+			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
+			if (pos != std::string::npos)					
+				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
 			else
-				return (0);
-			break;
+			{
+    			//std::cout << "Word not found" << std::endl;
+				if (server.arLoc[i]._autoindex == "on")
+				{
+					Autoindex ai (server,fd, i);
+					//Autoindex ai(server.arLoc[i]._root,fd);
+					return 0;
+				}
+				_loc = i;
+				std::cout << MAGENTA << "UUU\n" << WHITE;
+				if(server.arLoc[i]._root.size() > 1)
+					url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
+				std::cout << CYAN << "UUU\n" << WHITE;
+				//std::cout << "url1 = " << url << std::endl;
+				if (Utils::isFile(url.c_str()))
+					return (_url = url, 1);
+				else
+					return (0);
+				break;
+			}
+			
 		}
+	
 	}
-
 	size_t pos = rq->getUri().find('/', 1);
 	std::string str = "/";
 

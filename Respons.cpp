@@ -14,12 +14,10 @@ int	Respons::checkLocation()
 	{
 		if(rq->getUri() == server.arLoc[i]._location)
 		{
-			if (server.arLoc[i]._location == "/redirect")
-			{
-				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
-				return(_url = server.arLoc[i]._redirect, 2);
-			}
-
+			std::string word = "/redirect"; //checkear que root este vacio???
+			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
+			if (pos != std::string::npos)					
+				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
 			_loc = i;
 			if(server.arLoc[i]._root.size() > 1)
 				url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;

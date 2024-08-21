@@ -22,7 +22,7 @@ int	Respons::checkLocation()
 			if (server.arLoc[i]._autoindex == "on")
 			{
 				Autoindex ai (server,fd, i);
-				return 0;
+				return 0;//  0 ???
 			}
 			_loc = i;
 			if(server.arLoc[i]._root.size() > 1)

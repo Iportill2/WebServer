@@ -15,6 +15,7 @@ class Autoindex //: public Config
     size_t _i;
     int _fd;
     
+    //srv _server;
 
     // Autoindex ai (server,fd, i);
     Autoindex(srv &server, int fd, size_t i);

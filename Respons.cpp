@@ -12,12 +12,18 @@ int	Respons::checkLocation()
 	std::string url;
 	for(size_t i = 0; i < server.arLoc.size(); i++)
 	{
+		std::cout << MAGENTA << rq->getUri() << WHITE << std::endl;
 		if(rq->getUri() == server.arLoc[i]._location)
 		{
 			std::string word = "/redirect"; //checkear que root este vacio???
 			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
 			if (pos != std::string::npos)					
 				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
+			if (server.arLoc[i]._autoindex == "on")
+			{
+				Autoindex ai (server,fd, i);
+				return 0;
+			}
 			_loc = i;
 			if(server.arLoc[i]._root.size() > 1)
 				url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
@@ -26,8 +32,8 @@ int	Respons::checkLocation()
 				return (_url = url, 1);
 			else
 			{
-				std::cout << "url1 = " << _url << std::endl;
-				_url = "./landing_page";
+				/* std::cout << "url1 = " << _url << std::endl;
+				_url = "./landing_page"; */
 				return (0);
 			}
 			break;

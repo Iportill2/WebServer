@@ -14,35 +14,28 @@ int	Respons::checkLocation()
 	{
 		if(rq->getUri() == server.arLoc[i]._location)
 		{
-			std::string word = "/redirect";
-			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
-			if (pos != std::string::npos)					
-				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
+			if (server.arLoc[i]._location == "/redirect")
+			{
+				//std::cout << std::endl << "Gaby, fofo y miliki" << std::endl << std::endl;
+				return(_url = server.arLoc[i]._redirect, 2);
+			}
+
+			_loc = i;
+			if(server.arLoc[i]._root.size() > 1)
+				url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
+			//std::cout << "url1 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
 			else
 			{
-    			//std::cout << "Word not found" << std::endl;
-				if (server.arLoc[i]._autoindex == "on")
-				{
-					Autoindex ai (server,fd, i);
-					//Autoindex ai(server.arLoc[i]._root,fd);
-					return 0;
-				}
-				_loc = i;
-				std::cout << MAGENTA << "UUU\n" << WHITE;
-				if(server.arLoc[i]._root.size() > 1)
-					url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
-				std::cout << CYAN << "UUU\n" << WHITE;
-				//std::cout << "url1 = " << url << std::endl;
-				if (Utils::isFile(url.c_str()))
-					return (_url = url, 1);
-				else
-					return (0);
-				break;
+				std::cout << "url1 = " << _url << std::endl;
+				_url = "./landing_page";
+				return (0);
 			}
-			
+			break;
 		}
-	
 	}
+
 	size_t pos = rq->getUri().find('/', 1);
 	std::string str = "/";
 
@@ -74,6 +67,69 @@ int	Respons::checkLocation()
 	
 	return (0);
 }
+
+
+/* int	Respons::checkLocation()
+{
+	std::string url;
+	for(size_t i = 0; i < server.arLoc.size(); i++)
+	{
+		if(rq->getUri() == server.arLoc[i]._location)
+		{
+			std::cout << YELLOW << "XXX\n" << WHITE;
+			std::string word = "/redirect"; //checkear que root este vacio???
+			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
+			if (pos != std::string::npos)					
+				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
+			else
+			{
+    			//std::cout << "Word not found" << std::endl;
+				if (server.arLoc[i]._autoindex == "on")
+				{
+					Autoindex ai (server,fd, i);
+					return 0;
+				}
+				_loc = i;
+				if(server.arLoc[i]._root.size() > 1)
+					url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
+				if (Utils::isFile(url.c_str()))
+					return (_url = url, 1);
+				else
+					return (0);
+				break;
+			}
+		}
+	}
+	size_t pos = rq->getUri().find('/', 1);
+	std::string str = "/";
+	std::cout << YELLOW << "ZZZ\n" << WHITE;
+	for(size_t i = 0; i< server.arLoc.size(); i++)
+	{
+		if (rq->getUri().substr(0, pos) == server.arLoc[i]._location)
+		{
+			_loc = i;
+			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri().substr(pos);
+			//std::cout << "url2 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
+			else
+				return (0);
+			break;
+		}
+	}
+	for(size_t i = 0; i< server.arLoc.size(); i++)
+	{
+		if (server.arLoc[i]._location == "/")
+		{
+			_loc = i;
+			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri();
+			//std::cout << "url3 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
+		}	
+	}
+	return (0);
+} */
 
 bool	Respons::checkServerName()
 {
@@ -112,10 +168,12 @@ int Respons::createRespons() //entra por aqui
 	{
 		//std::cout << "SERVERNAME ERROR" << std::endl;
 		Error r(400, fd, server);
-		return 1;
+		return 1; 
 	}
+	std::cout << MAGENTA << "\n" << WHITE;
 	int locat = checkLocation();
-	if (!locat)
+
+	if (!locat) // == 0
 	{
 		//std::cout << "PAGE NOT FOUND" << std::endl;
 		Error r(404, fd, server);
@@ -124,8 +182,9 @@ int Respons::createRespons() //entra por aqui
 	//std::cout << "---FINAL url = " << _url << std::endl;
 	//std::cout << "location = " << locat << std::endl;
 
-	if (locat != 2 && !checkAuthorized())
+	if (locat != 2 && !checkAuthorized()) 
 	{
+
 		//std::cout << "PAGE FORBIDDEN" << std::endl;
 		Error r(403, fd, server);
 		return 1;
@@ -154,7 +213,6 @@ int Respons::createRespons() //entra por aqui
 		jpgRespond();
 	else if (_extension == ".png")
 		pngRespond();
-
 	return 0;
 }
 
@@ -353,3 +411,64 @@ void Respons::printConf()
     }
     std::cout << "---------------------------------------------------------------------" << std::endl;
 }
+/* int	Respons::checkLocation()
+{
+	std::string url;
+	for(size_t i = 0; i < server.arLoc.size(); i++)
+	{
+		if(rq->getUri() == server.arLoc[i]._location)
+		{
+			std::cout << YELLOW << "XXX\n" << WHITE;
+			std::string word = "/redirect"; //checkear que root este vacio???
+			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
+			if (pos != std::string::npos)					
+				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
+			else
+			{
+    			//std::cout << "Word not found" << std::endl;
+				if (server.arLoc[i]._autoindex == "on")
+				{
+					Autoindex ai (server,fd, i);
+					return 0;
+				}
+				_loc = i;
+				if(server.arLoc[i]._root.size() > 1)
+					url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
+				if (Utils::isFile(url.c_str()))
+					return (_url = url, 1);
+				else
+					return (0);
+				break;
+			}
+		}
+	}
+	size_t pos = rq->getUri().find('/', 1);
+	std::string str = "/";
+	std::cout << YELLOW << "ZZZ\n" << WHITE;
+	for(size_t i = 0; i< server.arLoc.size(); i++)
+	{
+		if (rq->getUri().substr(0, pos) == server.arLoc[i]._location)
+		{
+			_loc = i;
+			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri().substr(pos);
+			//std::cout << "url2 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
+			else
+				return (0);
+			break;
+		}
+	}
+	for(size_t i = 0; i< server.arLoc.size(); i++)
+	{
+		if (server.arLoc[i]._location == "/")
+		{
+			_loc = i;
+			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri();
+			//std::cout << "url3 = " << url << std::endl;
+			if (Utils::isFile(url.c_str()))
+				return (_url = url, 1);
+		}	
+	}
+	return (0);
+} */

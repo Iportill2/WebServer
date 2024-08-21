@@ -3,7 +3,7 @@
 
 ErrorPage::ErrorPage()
 {
-    //std::cout << "Constructor de ErrorPage por defecto\n";
+    std::cout << "Constructor de ErrorPage por defecto\n";
 
     inidefaultErMap();
     std::string e = "404";//  <------ cambiar esta por un numero de error que no exista, para probar
@@ -14,8 +14,8 @@ ErrorPage::ErrorPage()
 
 ErrorPage::ErrorPage(std::string ErrorPageBlock)
 {
-    //std::cout << GREEN << "Constructor de ErrorPage con argumentos\n" << WHITE;
-    //std::cout << MAGENTA << ErrorPageBlock << std::endl;
+    std::cout << GREEN << "Constructor de ErrorPage con argumentos\n" << WHITE;
+    //std::cout << MAGENTA << ErrorPageBlock << WHITE << std::endl;
 
     inidefaultErMap();
     if(ErrorParseBlock(ErrorPageBlock) == false)
@@ -28,7 +28,7 @@ ErrorPage::~ErrorPage()
 }
 
 void ErrorPage::printErrorPageDetails() {
-    std::cout << MAGENTA << "Error Page Details:\n"<< WHITE;
+/*     std::cout << MAGENTA << "Error Page Details:\n"<< WHITE;
 
     std::cout << "error_page:\n";
     for (std::map<int, std::string>::iterator it = error_page.begin(); it != error_page.end(); ++it) {
@@ -38,7 +38,7 @@ void ErrorPage::printErrorPageDetails() {
     std::cout << "errorIndex:\n";
     for (size_t i = 0; i < errorIndex.size(); i++) {
         std::cout << "Index " << i << ": " << errorIndex[i] << "\n";
-    }
+    } */
 
 /*     std::cout << "defaultErMap:\n";
     for (std::map<int, std::string>::iterator it = defaultErMap.begin(); it != defaultErMap.end(); ++it) {
@@ -152,7 +152,7 @@ void ErrorPage::inidefaultErMap()
 
 bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
 {
-    //std::cout << MAGENTA << ErrorParseBlock << WHITE <<std::endl;
+    //std::cout << MAGENTA << "ErrorParseBlock="<< ErrorParseBlock << WHITE <<std::endl;
     std::string line;
     std::istringstream stream(ErrorParseBlock);
 
@@ -182,6 +182,13 @@ bool ErrorPage::ErrorParseBlock (const std::string ErrorParseBlock)
             error_page.insert(std::make_pair(e, key));
         }
     }
+
+/*     std::cout << GREEN << "errorIndex=" << errorIndex[0] << std::endl;
+     std::map<int, std::string>::const_iterator it;
+    for (it = defaultErMap.begin(); it != defaultErMap.end(); ++it)
+    {
+        std::cout << MAGENTA << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
+    }  */
     return(1);
 }
 bool ErrorPage::directoryExistsA(const std::string& dirName) 

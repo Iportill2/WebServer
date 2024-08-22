@@ -62,8 +62,8 @@ void Cgi::exec()
 void Cgi::sendResult()
 {
     std::string httpResponse = "HTTP/1.1 200 OK\r\n";
-   	httpResponse += "Content-Type: text/html\r\n";
-  	httpResponse += "\r\n";
+    httpResponse += "Content-Type: text/html\r\n";
+    httpResponse += "\r\n";
 
     httpResponse += "<!DOCTYPE html>";
     httpResponse += "<html lang=\"es\">";
@@ -77,12 +77,10 @@ void Cgi::sendResult()
     httpResponse += "<body>";
     httpResponse += "<h2>Resultado: " + result + "</h2>";
     httpResponse += "<img src=\"/landing_page/cgi/nu.jpg\" alt=\"Imagen de un Ñu\">";
+    httpResponse += "<p><a href=\"/landing_page\">Volver a la página de inicio</a></p>";
     httpResponse += "</body>";
     httpResponse += "</html>";
 
-    //std::string prueba = "MAMON";
-    //write (fd, prueba.c_str(), sizeof(prueba));
-
-    write (fd, httpResponse.c_str(), httpResponse.size());
-    //std::cout << "-----------hola------------" << std::endl;
+    // Enviar la respuesta HTTP al cliente
+    write(fd, httpResponse.c_str(), httpResponse.size());
 }

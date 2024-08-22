@@ -19,3 +19,7 @@
 -que pasa con el root del server??? lo ponemos por defecto para las locations que no tengan root o que es lo correcto?
 
 -Un Makefile como dios manda?? (cada cosita en su carpetita...)
+
+-Si no hay archivo de configuracion tiene que cojer uno por defecto, no lo ke hemos hecho de setearlo en Server.
+
+-El archivo de configuracion debe decir donde se guardan los archivos ke se suben!!!

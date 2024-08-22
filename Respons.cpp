@@ -72,69 +72,6 @@ int	Respons::checkLocation()
 	return (0);
 }
 
-
-/* int	Respons::checkLocation()
-{
-	std::string url;
-	for(size_t i = 0; i < server.arLoc.size(); i++)
-	{
-		if(rq->getUri() == server.arLoc[i]._location)
-		{
-			std::cout << YELLOW << "XXX\n" << WHITE;
-			std::string word = "/redirect"; //checkear que root este vacio???
-			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
-			if (pos != std::string::npos)					
-				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
-			else
-			{
-    			//std::cout << "Word not found" << std::endl;
-				if (server.arLoc[i]._autoindex == "on")
-				{
-					Autoindex ai (server,fd, i);
-					return 0;
-				}
-				_loc = i;
-				if(server.arLoc[i]._root.size() > 1)
-					url = server.arLoc[i]._root.substr(2) + "/" + server.arLoc[i]._file;
-				if (Utils::isFile(url.c_str()))
-					return (_url = url, 1);
-				else
-					return (0);
-				break;
-			}
-		}
-	}
-	size_t pos = rq->getUri().find('/', 1);
-	std::string str = "/";
-	std::cout << YELLOW << "ZZZ\n" << WHITE;
-	for(size_t i = 0; i< server.arLoc.size(); i++)
-	{
-		if (rq->getUri().substr(0, pos) == server.arLoc[i]._location)
-		{
-			_loc = i;
-			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri().substr(pos);
-			//std::cout << "url2 = " << url << std::endl;
-			if (Utils::isFile(url.c_str()))
-				return (_url = url, 1);
-			else
-				return (0);
-			break;
-		}
-	}
-	for(size_t i = 0; i< server.arLoc.size(); i++)
-	{
-		if (server.arLoc[i]._location == "/")
-		{
-			_loc = i;
-			std::string url = server.arLoc[i]._root.substr(2) + rq->getUri();
-			//std::cout << "url3 = " << url << std::endl;
-			if (Utils::isFile(url.c_str()))
-				return (_url = url, 1);
-		}	
-	}
-	return (0);
-} */
-
 bool	Respons::checkServerName()
 {
 	if (server._server_name.empty())
@@ -263,14 +200,34 @@ void	Respons::htmlRespond()
 	}
 	else if (rq->getMethod() == "post")
 	{
+
+/*
+
+
+		if(rq->getUri() == server.arLoc[i]._location)
+		{
+			std::string word = "/redirect"; //checkear que root este vacio???
+			size_t pos = server.arLoc[i]._location.find(word);//Buscamos la palabra "/redirect" en la location
+			if (pos != std::string::npos)					
+				return(_url = server.arLoc[i]._redirect, 2);//di la encuentra devuelve la pagina a la que se redirige
+*/
+
+
+		std::string word ="/cgi";
+		size_t pos = rq->getUri().find(word);
+
 		if (rq->getContentLen() > server._sizetBody)
 			Error r(413, fd, server);
-		else if(rq->getUri() == "/cgi")
+		//else if(rq->getUri() == "/cgi")
+		else if(pos != std::string ::npos)
 		{
 			int cgiOn = 0;
 			for(size_t i = 0; i < server.arLoc.size(); i++)
 			{
-				if (server.arLoc[i].getLocation() == "/cgi" && server.arLoc[i].getCgi() == "on")
+				
+				size_t pos = server.arLoc[i].getLocation().find(word);
+				//if (server.arLoc[i].getLocation() == "/cgi" && server.arLoc[i].getCgi() == "on")
+				if(pos != std::string ::npos && server.arLoc[i].getCgi() == "on")
 				{
 					cgiOn = 1;
 					Cgi res(rq->getBody(), fd);

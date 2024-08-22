@@ -76,7 +76,7 @@ void Cgi::sendResult()
 
     httpResponse += "<body>";
     httpResponse += "<h2>Resultado: " + result + "</h2>";
-    httpResponse += "<img src= \"nu.jpg\">";
+    httpResponse += "<img src=\"/landing_page/cgi/nu.jpg\" alt=\"Imagen de un Ñu\">";
     httpResponse += "</body>";
     httpResponse += "</html>";
 

@@ -4,11 +4,11 @@
 
 Autoindex::Autoindex(srv& server, int fd, size_t i) 
 {
-    std::cout <<"Constructor de Autoindex" << std::endl;
+    //std::cout <<"Constructor de Autoindex" << std::endl;
     _i = i;
     _fd = fd;
     //directory_path = server.arLoc[i]._root;
-	std::cout << RED << "server.arLoc[i]._root=" << server.arLoc[i]._root << WHITE <<"\n";
+	//std::cout << RED << "server.arLoc[i]._root=" << server.arLoc[i]._root << WHITE <<"\n";
 /*     if(!server.arErr.empty())
         error = server.ErrorRoot; */
     //std::cout << YELLOW << "server.arLoc[i]._location=" << server.arLoc[i]._location <<  WHITE << std::endl;
@@ -17,7 +17,7 @@ Autoindex::Autoindex(srv& server, int fd, size_t i)
 }
 Autoindex::~Autoindex()
 {
-    std::cout << "Destructor de Autoindex" << std::endl;
+    //std::cout << "Destructor de Autoindex" << std::endl;
 }
 void Autoindex::handle_request(const std::string& directory_path) 
 {
@@ -26,13 +26,13 @@ void Autoindex::handle_request(const std::string& directory_path)
 
     if (is_directory(directory_path)) 
 	{
-		std::cout << RED << "gereateautoindex" << WHITE <<"\n";
+		//std::cout << RED << "gereateautoindex" << WHITE <<"\n";
         response = generate_autoindex(directory_path);
 
 	}
     else 
     {
-		std::cout << RED << "NO gereateautoindex\n" << WHITE <<"\n";
+		//std::cout << RED << "NO gereateautoindex\n" << WHITE <<"\n";
         std::ifstream file( directory_path.c_str());
 
         if (file)
@@ -40,12 +40,12 @@ void Autoindex::handle_request(const std::string& directory_path)
             std::stringstream buffer;
             buffer << file.rdbuf();
             response = buffer.str();
-            std::cout<< RED << response << WHITE << std::endl;
+            //std::cout<< RED << response << WHITE << std::endl;
             file.close();
         }
         else
 		{
-			std::cout << RED << "HOLA\n" << WHITE <<"\n";
+			//std::cout << RED << "HOLA\n" << WHITE <<"\n";
             return; 
 		}
     }
@@ -120,7 +120,7 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
         } 
         else 
         {
-            std::cout << GREEN << full_path << std::endl;
+            //std::cout << GREEN << full_path << std::endl;
             if(full_path[0] == '.' && full_path[1] == '/')
                 full_path = full_path.substr(1);
             html << "<td><a href=\"" << full_path  << "\">" << name << "</a></td>";
@@ -133,6 +133,6 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     closedir(dir);
 
     html << "</table></body></html>";
-    std::cout << YELLOW << html.str() << WHITE << std::endl;
+    //std::cout << YELLOW << html.str() << WHITE << std::endl;
     return html.str();
 }

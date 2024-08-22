@@ -21,7 +21,7 @@ void Cgi::parse()
 void Cgi::exec()
 {
     int id;
-    char* args[] = {(char*)"ia.out", (char*)value.c_str(), NULL};
+    char* args[] = {(char*)"a.out", (char*)value.c_str(), NULL};
 
     int pipefd[2];
 

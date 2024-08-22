@@ -22,6 +22,6 @@ std::string Error::toString(const int &num)
 void    Error::sendError(srv & server, int error, int fd)
 {
     std::string httpResponse = status(error,server);
-    write(1, httpResponse.c_str(), httpResponse.size());
+    //write(1, httpResponse.c_str(), httpResponse.size());
     write(fd, httpResponse.c_str(), httpResponse.size());
 }

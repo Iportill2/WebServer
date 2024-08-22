@@ -12,7 +12,7 @@ int	Respons::checkLocation()
 	std::string url;
 	for(size_t i = 0; i < server.arLoc.size(); i++)
 	{
-		std::cout << MAGENTA << rq->getUri() << WHITE << std::endl;
+		//std::cout << MAGENTA << rq->getUri() << WHITE << std::endl;
 		if(rq->getUri() == server.arLoc[i]._location)
 		{
 			std::string word = "/redirect"; //checkear que root este vacio???
@@ -174,7 +174,6 @@ int Respons::createRespons() //entra por aqui
 		Error r(400, fd, server);
 		return 1; 
 	}
-	std::cout << MAGENTA << "\n" << WHITE;
 	int locat = checkLocation();
 
 	if (!locat) // == 0

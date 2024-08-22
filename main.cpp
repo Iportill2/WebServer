@@ -49,3 +49,14 @@ int main()
 
     return 0;
 } */
+
+/*
+    ///config basica de cgi segun chatgpt
+    
+ # CGI configuration for C programs
+    location /cgi-bin/ {
+        fastcgi_pass 127.0.0.1:9000;  # Forward CGI requests to the FastCGI server running on port 9000
+        fastcgi_param SCRIPT_FILENAME /var/www/cgi-bin/$fastcgi_script_name;  # Path to your CGI script
+        include fastcgi_params;  # Include FastCGI parameters
+    }
+*/

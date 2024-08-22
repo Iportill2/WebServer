@@ -2,24 +2,51 @@
 
 #include "Request.hpp"
 
-Request::Request() : content_len(0)
+Request::Request() : content_len(0), kepOnReading(true), firstRead(true)
 {
     
 }
 
 void Request::addBuffer(char * buf, int bytes)
 {
+    if (bytes > 100)
+        part.clear();
     buffer.append(buf, bytes);
-    //std::cout  << GREEN << buf << WHITE << std::endl;
-    //std::cout << "tamaño buffer = " << buffer.size() << std::endl;
+    part.append(buf, bytes);
+
+    if (firstRead)
+    {
+        firstRead = false;
+
+        std::string head;
+        size_t headEnd = buffer.find("\r\n\r\n");
+        if (headEnd != std::string::npos)
+            head = buffer.substr(0, headEnd);
+        else
+            head = buffer;
+        
+        std::string line;
+        std::istringstream stream(head);
+
+        while (std::getline(stream, line))
+        {
+            if (line.find("boundary=") != std::string::npos)
+            {
+                boundary = line.substr(line.find("boundary=") + 9);
+                boundary = boundary.substr(0, boundary.size() - 1);
+                boundaryStart = "--" + boundary;
+                boundaryEnd = "--" + boundary + "--";
+            }
+        }
+    }
 }
 
 Request::~Request() {}
 
 void Request::parse()
 {
-    std::cout << std::endl << YELLOW << buffer << WHITE << std::endl;
-   // std::cout << "tamaño buffer = " << buffer.size() << std::endl;
+    //std::cout << std::endl << YELLOW << buffer << WHITE << std::endl;
+
     std::string line;
     std::istringstream stream(buffer);
 
@@ -53,9 +80,10 @@ void Request::parse()
         else if (key == "Content-Length:")
             lineStream >> content_len;
         else if (line.find("boundary=") != std::string::npos)
-            stractBoundary(line.substr(line.find("boundary=") + 9));
+            stractBoundary();
         else if (line == "\r")
             break;
+        //std::cout << "ER conten len: " << content_len << std::endl;
     }
     line.clear();
     while (std::getline(stream, line))
@@ -63,7 +91,7 @@ void Request::parse()
 
     if (uri.size() > 1 && uri[uri.size() - 1] == '/')
         uri = uri.substr(0, uri.size() - 1);
-    // std::cout << RED << "URI en parse: " << uri << WHITE << std::endl;
+    
     if (uri.size() > 15 && uri.substr(0, 15) == "/download?file=")
     {
         downfile = uri.substr(15);
@@ -87,32 +115,35 @@ void Request::parse()
     }
 }
 
-void Request::stractBoundary(std::string bound)
+void Request::stractBoundary()
 {
-    boundary = bound.substr(0, bound.size() - 1);
-    //std::cout << std::endl << "-----------Boundary en REQUEST------------" << std::endl << YELLOW << boundary << WHITE << std::endl;
-
-    std::string boundaryStart = "--" + boundary;
-    std::string boundaryEnd = "--" + boundary + "--";
-
     size_t in = buffer.find(boundaryStart) + boundaryStart.size() + 1;
     boundaryContent = buffer.substr(in, buffer.find(boundaryEnd) - in - 2);
 
     upfileContent = boundaryContent.substr(boundaryContent.find("\r\n\r\n") + 4);
-    
-    std::string requestHead = buffer.substr(0, buffer.find("\r\n\r\n"));
-    //std::cout << std::endl << "-----------RequestHead en REQUEST------------" << std::endl << MAGENTA << requestHead << WHITE << std::endl;
 
-    std::string boundaryHead = boundaryContent.substr(0, boundaryContent.find("\r\n\r\n"));
-    //std::cout << std::endl << "-----------BoundaryHead en REQUEST------------" << std::endl << MAGENTA << boundaryHead << WHITE << std::endl;
+    upfileName = boundaryContent.substr(boundaryContent.find("filename=\"") + 10);
+    upfileName = upfileName.substr(0, upfileName.find("\""));
+
+    /* size_t inPrueba = buffer.find(boundaryStart);
+    if (inPrueba != std::string::npos)
+        std::string boundaryContentPrueba = buffer.substr(inPrueba);
+    std::cout << MAGENTA << boundaryContentPrueba << WHITE << std::endl;
+    std::cout << "Er boundary size: " << boundaryContentPrueba.size() << std::endl; */
+;
+    
+    /* std::string requestHead = buffer.substr(0, buffer.find("\r\n\r\n"));
+    std::cout << std::endl << "-----------RequestHead en REQUEST------------" << std::endl << MAGENTA << requestHead << WHITE << std::endl; */
+
+    /* std::string boundaryHead = boundaryContent.substr(0, boundaryContent.find("\r\n\r\n"));
+    std::cout << std::endl << "-----------BoundaryHead en REQUEST------------" << std::endl << MAGENTA << boundaryHead << WHITE << std::endl; */
 
    /*  std::string boundaryconfinal = buffer.substr(in);
     size_t final = boundaryconfinal.find(boundary); 
     if (final != std::string::npos)
         std::cout << "ENCONTRADO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl; */
 
-    upfileName = boundaryContent.substr(boundaryContent.find("filename=\"") + 10);
-    upfileName = upfileName.substr(0, upfileName.find("\""));
+
     //std::cout << std::endl << "-----------UpfileName en REQUEST------------" << std::endl << YELLOW << upfileName << WHITE << std::endl;
 }
 

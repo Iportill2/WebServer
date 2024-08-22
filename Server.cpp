@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/20 18:07:09 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:22:56 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,13 @@ void	Server::serverSet()
 	
 	for(size_t i = 0; i < servers.size(); i++)
 	{
-		//std::cout << "Hay vamos!!!!!!" << std::endl;
 		sockaddr_in	address;
 		address.sin_family = AF_INET;
     	address.sin_port = htons(servers[i]._sizetPort);
-		//address.sin_port = htons(8030);
     	address.sin_addr.s_addr = htonl(servers[i]._ipNum);
-		//address.sin_addr.s_addr = htonl(0);
 	
-
 		int	soc = socket(AF_INET, SOCK_STREAM, 0);
 		setsockopt(soc, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &option, sizeof(option));
-		//fcntl(soc, F_SETFL, O_NONBLOCK);
 		
 		if (bind (soc, (sockaddr *)&address, sizeof(address)) == -1)
 			std::cout << "Puerto ocupau atontau" << std::endl;
@@ -86,20 +81,11 @@ void	Server::serverSet()
 	
 		serversMap[soc] = i;
 		maxFD = soc;
-		//std::cout << "maxFD ARRIBA= " << maxFD << std::endl;
+		
 		sizeOfAddress = sizeof(address);
 		
 		//std::cout << "MONTAMOS  SERVER " << i + 1  << " PUERTO " << servers[i]._sizetPort << " fd " << soc << std::endl;
 	}
-	/* std::map<int, int>::iterator i = serversMap.begin();
-	std::map<int, int>::iterator o = serversMap.end();
-
-	while (i != o)
-	{
-		std::cout << "socket: " << i->first << " -> Server: " << i->second << " -> server name: " << servers[i->second]._server_name << std::endl;
-		i++;
-	} */
-	//std::cout << std::endl;
 }
 
 void	Server::Mselect()
@@ -132,7 +118,7 @@ void	Server::Mselect()
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		std::cout  << "👾 " << std::flush;
+		//std::cout  << "👾 " << std::flush;
 		
     	timeout.tv_sec = 0;
     	timeout.tv_usec = 500000;
@@ -167,7 +153,7 @@ void	Server::Mselect()
 			if (FD_ISSET(i, &readyfdsRead))
 			{
 				std::cout << std::endl << "Select selecciona fd de lectura " << i <<  std::endl;
-				int isServerSock = 0;
+				isServerSock = 0;
 				
 				std::map<int, int>::iterator it = serversMap.begin();
 				std::map<int, int>::iterator out = serversMap.end();
@@ -179,6 +165,10 @@ void	Server::Mselect()
 					{
 						int newSocket = accept(i, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
 						//fcntl(newSocket, F_SETFL, O_NONBLOCK);
+						
+						Request * r = new Request;
+						rq[newSocket] = r;
+						
 						FD_SET (newSocket, &activefdsRead);
 						readMap[newSocket] = it->first;
 						comFds.push_back(newSocket);
@@ -187,56 +177,52 @@ void	Server::Mselect()
 						isServerSock = 1;
 						std::cout << std::endl << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;
 						i = maxFD + 1;
-						//std::cout << "i= " << i << std::endl;
+						
 						break;
 					}
 					it++;
 				}
 				if (!isServerSock)
 				{
-                    Request * r = new Request;
 					std::cout << std::endl << GREEN <<"No es llamada es comunicacion, LEE la peticion del socket " << i << WHITE << std::endl;
+					
 					memset(buffer, 0, sizeof(buffer));
-					int bytes;
-                    int bytesReaded = read(i, buffer, sizeof(buffer) - 1);
-					bytes = bytesReaded;
-                    while (bytesReaded > 0)
-                    {
-                        r->addBuffer(buffer, bytesReaded);
-						memset(buffer, 0, sizeof(buffer));
-						fcntl(i, F_SETFL, O_NONBLOCK);
-                        bytesReaded = read(i, buffer, sizeof(buffer) - 1);
-                        bytes += bytesReaded; 
-                    }
-					if (bytes <= 0)
+                    int bytes = recv(i, buffer, sizeof(buffer) - 1, 0);
+					fcntl(i, F_SETFL, O_NONBLOCK);
+					std::cout << "bytes: " << bytes << std::endl;
+					
+					
+					if (bytes > 0)
 					{
-						std::cout << std::endl << "fd " << i << " went \"a tomar por culo\"" << std::endl << std::endl;
-						FD_CLR(i, &activefdsRead);
-						readMap.erase(i);
-            			close(i);
-						i = maxFD + 1;
+						rq[i]->addBuffer(buffer, bytes);
+						rq[i]->firstRead = false;
 					}
-					else
+					if (rq[i]->getBoundary().empty() || rq[i]->part.find(rq[i]->boundaryEnd) != std::string::npos)
 					{
-						
-						std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
-						//Request * r = new Request(buffer, bytesReaded);
-                        r->parse();
-						rq[i] = r;
+						std::cout << "LA BOLA ENTRO" << std::endl;
+						rq[i]->parse();
 						FD_SET(i, &activefdsWrite);
 						FD_CLR(i, &activefdsRead);
-						i = maxFD + 1;
+						std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
 					}
+					i = maxFD + 1;
 				}
 			}
 			else if (FD_ISSET(i, &readyfdsWrite))
 			{
 				std::cout << std::endl << GREEN << "Select selecciona fd de escritura " << i << " y es respondido!!!" << WHITE << std::endl;
 				Respond(i);
-				close (i);
+				rq.erase(i);
 				readMap.erase(i);
 				FD_CLR(i, &activefdsWrite);
+				close (i);
 				i = maxFD + 1;
+				std::cout << "......................................." << std::endl;
+				std::cout << "......................................." << std::endl;
+				//std::cout << "Requests activas: " << rq.size() << std::endl;
+				std::cout << "......................................." << std::endl;
+				std::cout << "......................................." << std::endl;
+				std::cout << "......................................." << std::endl;
 			}
 		}
 	}
@@ -287,7 +273,6 @@ void Server::printRequest()
 
 	while(iti != ito)
 	{
-		//std::cout << "FD " << iti->first << std::endl;
 		iti->second->printRequest();
 		iti++;
 	}

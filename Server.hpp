@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/20 17:37:28 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:20:04 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ class Server
         int			port;
         
         int			maxFD;
-        int         sizeOfAddress;           
+        int         sizeOfAddress;
+        int         isServerSock;
         
+		//int			bytes;
+
         char		buffer[60000];//tres millones antes
         std::string prueba;
         std::string bf;
@@ -43,8 +46,9 @@ class Server
         std::vector<srv>    servers;
 		
         std::map<int, int>  serversMap; // clave = socket bindeado, valor = servidor
-		std::map<int, int>  readMap; // clave = socket mensajero, valor = socket bindeado              
-		std::map<int, int>  writeMap; // clave = socket mensajero, valor = servidor 
+		std::map<int, int>  readMap; // clave = socket mensajero, valor = socket bindeado
+        
+		//std::map<int, int>  writeMap; // clave = socket mensajero, valor = servidor 
 
 		std::map <int, Request *> rq;
 

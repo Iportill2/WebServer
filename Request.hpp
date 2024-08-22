@@ -23,11 +23,19 @@ class Request
         std::string upfileContent;
         std::string upfileName;
 
+
     public:
     
         Request();
         ~Request();
         
+        bool        kepOnReading;
+        bool        firstRead;
+        
+        std::string part;
+        std::string boundaryStart;
+        std::string boundaryEnd;
+
         void    parse();
 
         std::string getMethod();
@@ -44,7 +52,7 @@ class Request
 
         size_t		getContentLen();
 
-		void        stractBoundary(std::string bound);
+		void        stractBoundary();
 
         void addBuffer(char * buf, int bytes);
 

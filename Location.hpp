@@ -14,6 +14,8 @@ class Location
     std::string _cgi;
     std::string _redirect;
 
+    std::string _cgi_exefilename;
+
     std::string _internal;
 
     int redirect_num;
@@ -25,7 +27,7 @@ class Location
     ~Location();
 
     bool parselocationBlock(const std::string& locationBlock);
-
+    std::string get_cgi_exefilename() const { return _cgi_exefilename; }
     std::string getLocation() const { return _location; }
     std::string getRoot() const { return _root; }
     std::string getFile() const { return _file; }

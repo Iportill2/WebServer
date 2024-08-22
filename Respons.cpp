@@ -34,6 +34,7 @@ int	Respons::checkLocation()
 			{
 				/* std::cout << "url1 = " << _url << std::endl;
 				_url = "./landing_page"; */
+
 				return (0);
 			}
 			break;
@@ -105,6 +106,7 @@ bool	Respons::checkMethod()
 
 int Respons::createRespons() //entra por aqui
 {
+	std::cout << "\nENTRA\n";
 	if (!checkServerName())
 	{
 		//std::cout << "SERVERNAME ERROR" << std::endl;
@@ -115,7 +117,7 @@ int Respons::createRespons() //entra por aqui
 
 	if (!locat) // == 0
 	{
-		//std::cout << "PAGE NOT FOUND" << std::endl;
+		std::cout <<MAGENTA<< "PAGE NOT FOUND" <<WHITE<< std::endl;
 		Error r(404, fd, server);
 		return 1;
 	}
@@ -153,6 +155,7 @@ int Respons::createRespons() //entra por aqui
 		jpgRespond();
 	else if (_extension == ".png")
 		pngRespond();
+	
 	return 0;
 }
 
@@ -230,7 +233,7 @@ void	Respons::htmlRespond()
 				if(pos != std::string ::npos && server.arLoc[i].getCgi() == "on")
 				{
 					cgiOn = 1;
-					Cgi res(rq->getBody(), fd);
+					Cgi res(rq->getBody(), fd, server.arLoc[i].get_cgi_exefilename());
 				}
 			}
 			if (!cgiOn)

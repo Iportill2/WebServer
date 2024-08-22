@@ -8,7 +8,10 @@ Location::Location(const std::string locationBlock)
 
     lock_ok = parselocationBlock(locationBlock);
     //std::cout << "lock_ok:"<< lock_ok << std::endl;
-		return;
+	std::cout << CYAN << "exefilename=" << _cgi_exefilename << WHITE << std::endl;
+    std::cout << CYAN << "exefilename[exefilename.size() - 1]=" << _cgi_exefilename[_cgi_exefilename.size() - 1] << WHITE << std::endl;
+    
+    return;
 
 /*     deletespaces(_location);
     checkAndAddMethods(_methods); */
@@ -46,6 +49,11 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         if (key == "file")
         {
             if(setlocationconfig(_file,key, lineStream ) == false)
+                return(false);
+        }
+        if( key == "exefilename")
+        {
+            if(setlocationconfig(_cgi_exefilename, key, lineStream) == false)
                 return(false);
         }
         if (key == "methods;"  || key == "methods" )
@@ -101,7 +109,6 @@ bool Location::parselocationBlock(const std::string& locationBlock)
 
 
 	}
-
     return(true);
 }
 

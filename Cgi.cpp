@@ -1,7 +1,7 @@
 
 #include "Cgi.hpp"
 
-Cgi::Cgi(std::string  bd, int f) : body(bd), fd(f)
+Cgi::Cgi(std::string  bd, int f, std::string exename) : body(bd), fd(f), exe_name(exename)
 {
     std::cout << "Body en cgi: " << "\"" << body << "\"" << std::endl;
     parse();
@@ -14,14 +14,14 @@ Cgi::~Cgi(){}
 
 void Cgi::parse()
 {
-    value = body.substr(7);
+    value = body.substr(7);//numero= el tamaño es 7
     std::cout << "Value en cgi: " << "\"" << value << "\"" << std::endl;
 }
 
 void Cgi::exec()
 {
     int id;
-    char* args[] = {(char*)"a.out", (char*)value.c_str(), NULL};
+    char* args[] = {(char*)exe_name.c_str(), (char*)value.c_str(), NULL};
 
     int pipefd[2];
 
@@ -33,8 +33,10 @@ void Cgi::exec()
     {
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-        execve("cgi/./ia.out", args, NULL);
+        execve(args[0], args, NULL);
         std::cout << std::endl << std::endl;
+        std::cerr << "Error: No se pudo ejecutar el archivo" << std::endl;
+        exit(1); // Terminar el proceso hijo si execve falla
     }
     else
     {

@@ -18,6 +18,7 @@
 
 int main(int argc, char **argv)
 {
+    
     if (argc == 1)
     {
         std::cout << std::endl << BLUE << "Configuration file not provided" << std::endl;
@@ -27,6 +28,7 @@ int main(int argc, char **argv)
     
     else if(argc == 2)
     {
+        
         Config confs(argv[1]);
 
         if(confs.ok == 0)
@@ -36,7 +38,9 @@ int main(int argc, char **argv)
             Server server;
         }
         else
+        {
             Server server(confs.getArrayOfServers());
+        }
     }
     return (0);
 }

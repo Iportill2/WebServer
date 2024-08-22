@@ -113,7 +113,10 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
         if (is_directory(full_path)) 
         {
             if(full_path[0] == '.' && full_path[1] == '/')
+            {
                 full_path = full_path.substr(1);
+                std::cout << YELLOW << "full_path=" << full_path << WHITE << std::endl;
+            }
             html << "<td><a href=\"" << full_path << "/\">" << name << "/</a></td>";
             html << "<td>-</td>";  // Sin tamaño para directorios
             //html << "<td>" << filestat.st_size << " bytes</td>";
@@ -122,7 +125,10 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
         {
             //std::cout << GREEN << full_path << std::endl;
             if(full_path[0] == '.' && full_path[1] == '/')
+            {
+                std::cout << GREEN << "full_path=" << full_path << WHITE << std::endl;
                 full_path = full_path.substr(1);
+            }
             html << "<td><a href=\"" << full_path  << "\">" << name << "</a></td>";
             html << "<td>" << filestat.st_size << " bytes</td>";
         }

@@ -64,6 +64,7 @@ Server::Server()
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
+	
 	size_t i =0;
 	while(i < servers.size())
 	{
@@ -178,7 +179,7 @@ void	Server::Mselect()
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		std::cout << "------------------SELECT------------------" << std::endl;
+		std::cout << "👽" << std::flush;
 		
     	timeout.tv_sec = 0;
     	timeout.tv_usec = 500000;

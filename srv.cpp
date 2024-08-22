@@ -10,6 +10,7 @@ srv::srv()
 
 srv::srv(std::string serverBlock)
 {
+    std::cout << MAGENTA << "aH!" <<std::endl;
     srv_ok = parseServerBlock(serverBlock);
     if(srv_ok == false)
         return;

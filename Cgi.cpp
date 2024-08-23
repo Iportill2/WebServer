@@ -20,6 +20,7 @@ void Cgi::parse()
 
 void Cgi::exec()
 {
+    std::cout << "\nENTRA\n";
     int id;
     char* args[] = {(char*)exe_name.c_str(), (char*)value.c_str(), NULL};
 

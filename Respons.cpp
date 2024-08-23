@@ -106,7 +106,7 @@ bool	Respons::checkMethod()
 
 int Respons::createRespons() //entra por aqui
 {
-	std::cout << "\nENTRA\n";
+	//std::cout << "\nENTRA\n";
 	if (!checkServerName())
 	{
 		//std::cout << "SERVERNAME ERROR" << std::endl;

@@ -4,12 +4,12 @@
 Location::Location(const std::string locationBlock)
 {
     lock_ok = 1;
+    _cgi_exefilename = "";
     //std::cout << "Default location Constructor" << std::endl;
 
     lock_ok = parselocationBlock(locationBlock);
     //std::cout << "lock_ok:"<< lock_ok << std::endl;
-	std::cout << CYAN << "exefilename=" << _cgi_exefilename << WHITE << std::endl;
-    std::cout << CYAN << "exefilename[exefilename.size() - 1]=" << _cgi_exefilename[_cgi_exefilename.size() - 1] << WHITE << std::endl;
+	
     
     return;
 
@@ -51,10 +51,14 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             if(setlocationconfig(_file,key, lineStream ) == false)
                 return(false);
         }
-        if( key == "exefilename")
+        if( key == "exe")
         {
             if(setlocationconfig(_cgi_exefilename, key, lineStream) == false)
                 return(false);
+            size_t len = _cgi_exefilename.size();
+/*             std::cout << "len=" <<len <<std::endl; */
+            if(_cgi_exefilename[len -4] != '.' && _cgi_exefilename[len -3] != 'o' && _cgi_exefilename[len -2] != 'u'&& _cgi_exefilename[len -1] != 't' && len < 5 )
+                return(std::cout << RED << "the executable dont finish in .out"<< std::endl, false);
         }
         if (key == "methods;"  || key == "methods" )
         {
@@ -107,7 +111,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             _internal = "on";
 
 
-
+     
 	}
     return(true);
 }
@@ -120,6 +124,7 @@ std::string Location::toLowerCase(const std::string& str)
 }
 bool Location::setlocationconfig(std::string & variable,std::string print, std::istringstream & lineStream )
 {
+    //std::cout << RED <<"a"<<WHITE;
     std::string temp;
     if(!variable.empty())
         return(std::cout << RED << "twice "<< print <<" in server" << WHITE << std::endl,false);
@@ -128,5 +133,10 @@ bool Location::setlocationconfig(std::string & variable,std::string print, std::
         variable = temp.substr(0, temp.size() - 1);
     else
         variable = temp;
+/*     if(variable[variable.size()] == 't' && variable[variable.size()-1] == 'u' && variable[variable.size()-1] && variable[variable.size()-1]== 'o' && variable[variable.size()-1] == '.')
+    { */
+        
+        //return(false);
+/*     } */
     return(true);
 }

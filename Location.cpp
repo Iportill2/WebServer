@@ -59,6 +59,9 @@ bool Location::parselocationBlock(const std::string& locationBlock)
 /*             std::cout << "len=" <<len <<std::endl; */
             if(_cgi_exefilename[len -4] != '.' && _cgi_exefilename[len -3] != 'o' && _cgi_exefilename[len -2] != 'u'&& _cgi_exefilename[len -1] != 't' && len < 5 )
                 return(std::cout << RED << "the executable dont finish in .out"<< std::endl, false);
+            struct stat buffer;
+            if((stat(_cgi_exefilename.c_str(), &buffer) == 0) == false)//checkeamos y el archivo existe en la ruta guardada en _cgi_exefilename
+                return(std::cout << RED << "the executable dont exist in that route"<< std::endl, false);
         }
         if (key == "methods;"  || key == "methods" )
         {

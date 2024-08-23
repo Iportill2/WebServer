@@ -233,7 +233,7 @@ void	Respons::htmlRespond()
 				if(pos != std::string ::npos && server.arLoc[i].getCgi() == "on")
 				{
 					cgiOn = 1;
-					Cgi res(rq->getBody(), fd, server.arLoc[i].get_cgi_exefilename());
+					Cgi res(rq->getBody(), fd, server.arLoc[i].get_cgi_exefilename(),server);
 				}
 			}
 			if (!cgiOn)

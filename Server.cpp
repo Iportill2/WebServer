@@ -6,48 +6,13 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/22 17:22:56 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/09/01 14:24:42 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
 int Server::sign = 1;
-
-Server::Server()
-{
-	signal(SIGINT, signalHandler);
-	signal(SIGTERM, &signalHandler);
-	
-	srv s;
-	Location l1;
-	Location l2;
-
-	s._server_name = "localhost";
-	s.ipAddressToipNum("0.0.0.0");
-	s._sizetPort = 8090;
-	s._sizetBody = 10000;
-	s._Root = "./pagina";
-
-	l1._location = "/";
-	l1._root = "./pagina";
-	l1._file = "index.html";
-	l1.methods_vector.push_back("get");
-	s.arLoc.push_back(l1);
-
-	l2._location = "/pepe";
-	l2._root = "./pagina/pepe";
-	l2._file = "index.html";
-	l2.methods_vector.push_back("get");
-	l2.methods_vector.push_back("post");
-	s.arLoc.push_back(l2);
-	
-	servers.push_back(s);
-
-	printServers();
-	serverSet();
-	Mselect();
-}
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
@@ -152,7 +117,7 @@ void	Server::Mselect()
 				
 			if (FD_ISSET(i, &readyfdsRead))
 			{
-				std::cout << std::endl << "Select selecciona fd de lectura " << i <<  std::endl;
+				std::cout << std::endl << GREEN << "Select selecciona fd de lectura " << i <<  WHITE << std::endl;
 				isServerSock = 0;
 				
 				std::map<int, int>::iterator it = serversMap.begin();
@@ -191,19 +156,28 @@ void	Server::Mselect()
 					fcntl(i, F_SETFL, O_NONBLOCK);
 					std::cout << "bytes: " << bytes << std::endl;
 					
-					
-					if (bytes > 0)
+					if (bytes == 0 || bytes == -1)
+					{
+						if (bytes == 0)
+							std::cout << "Client of socket " << i << "closed connection. Client removed" << WHITE << std::endl;
+						else if (bytes == -1)
+							std::cout << RED << "Error in socket " << i << "closed connection. Client removed" << WHITE << std::endl;
+						FD_CLR(i, &activefdsRead);
+						rq.erase(i);
+						close (i);
+					}
+					else if (bytes > 0)
 					{
 						rq[i]->addBuffer(buffer, bytes);
 						rq[i]->firstRead = false;
-					}
-					if (rq[i]->getBoundary().empty() || rq[i]->part.find(rq[i]->boundaryEnd) != std::string::npos)
-					{
-						std::cout << "LA BOLA ENTRO" << std::endl;
-						rq[i]->parse();
-						FD_SET(i, &activefdsWrite);
-						FD_CLR(i, &activefdsRead);
-						std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
+						if (rq[i]->getBoundary().empty() || rq[i]->part.find(rq[i]->boundaryEnd) != std::string::npos)
+						{
+							std::cout << "LA BOLA ENTRO" << std::endl;
+							rq[i]->parse();
+							FD_SET(i, &activefdsWrite);
+							FD_CLR(i, &activefdsRead);
+							std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
+						}
 					}
 					i = maxFD + 1;
 				}

@@ -35,8 +35,12 @@ class Request
         std::string part;
         std::string boundaryStart;
         std::string boundaryEnd;
+        std::map<std::string, std::string> data;
 
         void    parse();
+        void    stractGetData();
+        void    stractPostData();
+        void    procesData(std::string dat);
 
         std::string getMethod();
         std::string getUri();

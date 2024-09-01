@@ -108,7 +108,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             lineStream >> _redirect;
             if(_redirect[_redirect.size()-1] == ';')
                 _redirect = _redirect.substr(0, _redirect.size() - 1);
-        //std::cout << "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
+            std::cout << "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
 		} 
 	}
     return(1);

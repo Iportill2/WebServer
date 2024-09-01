@@ -15,7 +15,8 @@ SRC_FILES = main.cpp \
 			Download.cpp \
 			Directory.cpp \
 			Dinamic.cpp \
-			Delete.cpp
+			Delete.cpp \
+			Autoindex.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

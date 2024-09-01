@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/22 17:20:04 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:47:50 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ class Server
 
     public:
 
-        Server();
         Server(std::vector<srv> & srv);
         ~Server();
         

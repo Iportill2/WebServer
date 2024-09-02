@@ -54,6 +54,7 @@ void Cgi::handle_alarm(int sig)
         kill(child_pid, SIGTERM); // Usar SIGTERM para permitir limpieza
 }
 
+
 bool Cgi::exec() {
     int id;
     char* args[] = {(char*)exe_name.c_str(), (char*)value.c_str(), NULL};

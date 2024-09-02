@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/16 18:17:43 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:47:50 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,7 @@ class Server
 {
     private:
 
-        typedef struct s_client
-        {
-            int fd;
-        }   t_client;
+        
         
         sockaddr_in	ad;
         int			id;
@@ -36,23 +33,28 @@ class Server
         int			port;
         
         int			maxFD;
-        int         sizeOfAddress;           
+        int         sizeOfAddress;
+        int         isServerSock;
         
-        char		buffer[3000000];
+		//int			bytes;
+
+        char		buffer[60000];//tres millones antes
+        std::string prueba;
+        std::string bf;
         
         std::vector<int>    comFds;
         std::vector<srv>    servers;
 		
         std::map<int, int>  serversMap; // clave = socket bindeado, valor = servidor
-		std::map<int, int>  readMap; // clave = socket mensajero, valor = socket bindeado              
-		std::map<int, int>  writeMap; // clave = socket mensajero, valor = servidor 
+		std::map<int, int>  readMap; // clave = socket mensajero, valor = socket bindeado
+        
+		//std::map<int, int>  writeMap; // clave = socket mensajero, valor = servidor 
 
 		std::map <int, Request *> rq;
 
 
     public:
 
-        Server();
         Server(std::vector<srv> & srv);
         ~Server();
         
@@ -67,7 +69,6 @@ class Server
 
         void        setRequest(std::string & buf);
 
-        bool        checkdefaultsettings(std::string ip,srv &s);
 		//FUNCIONES PARA PRUEBAS
 		void printRequest();
         void printServers();

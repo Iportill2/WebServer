@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:00:00 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/16 18:14:12 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/26 12:43:41 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,41 @@ int main(int argc, char **argv)
 {
     if (argc == 1)
     {
-        std::cout << std::endl << BLUE << "Configuration file not provided" << std::endl;
-        std::cout << GREEN <<"Loading default configuration..."<< WHITE << std::endl << std::endl;
-        Server  server;
-    }
-    
-    else if(argc == 2)
-    {
-        Config confs(argv[1]);
-
-        if(confs.ok == 0)
+        std::cout << std::endl << YELLOW << "Configuration file not provided." << std::endl;
+        std::cout << GREEN <<"Loading default configuration..."<< WHITE  << std::endl;
+        Config confs("conf/1.conf");
+        if (confs.getArrayOfServers().empty())
         {
-            std::cout << std::endl << RED <<"Invalid configuration file" << std::endl;
-            std::cout << GREEN << "Loading default configuration..." << WHITE << std::endl << std::endl;
-            Server server;
+            std::cout << RED << "Default configuration failed. Bye, bye." << WHITE << std::endl << std::endl;
+            return (1);    
         }
         else
             Server server(confs.getArrayOfServers());
     }
+    else if(argc == 2)
+    {
+        Config confs(argv[1]);
+    
+        if (confs.getArrayOfServers().empty())
+        {
+			std::cout << std::endl << RED << "Configuration file failed." << std::endl;
+       		std::cout << GREEN <<"Loading default configuration..."<< WHITE  << std::endl;
+			Config confsDef("conf/1.conf");
+            if (confsDef.getArrayOfServers().empty())
+       		{
+            	std::cout << RED << "Default configuration failed. Bye, bye." << WHITE << std::endl << std::endl;
+            	return (1);    
+        	}
+        	else
+            	Server server(confsDef.getArrayOfServers());
+        }
+		else
+			Server server(confs.getArrayOfServers());
+	}
+	else
+	{
+		std::cout << std::endl << RED << "Too much arguments melon. Bye, bye." << WHITE << std::endl << std::endl;
+	}
     return (0);
 }
 

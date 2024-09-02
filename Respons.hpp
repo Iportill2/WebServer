@@ -9,6 +9,8 @@
 # include "Load.hpp"
 # include "Download.hpp"
 # include "Delete.hpp"
+# include "Error.hpp"
+# include "Dinamic.hpp"
 # include "Autoindex.hpp"
 
 class Request;
@@ -23,6 +25,7 @@ class Respons
 		int			fd;
 
 		std::string _url;
+		std::string	_defaultRoot;
 		std::string _extension;
 		size_t		_loc;
 
@@ -32,10 +35,19 @@ class Respons
 		~Respons();
 
 		int		createRespons();
+		void	setBestLocation();
+		void	redirect(std::string & url);
+		bool	manageData();
+		
+		int		getResponse();
+		int		postResponse();
+		int		deleteResponse();
+		int		cgiResponse();
+		
 		bool	checkServerName();
-		int		checkLocation();
 		bool	checkAuthorized();
 		bool	checkMethod();
+		bool	checkBodySize();
 
 		void	htmlRespond();
 		void	jpgRespond();
@@ -43,7 +55,7 @@ class Respons
 		
 		
 
-	//FUNCIONES PARA PRUEBAS
-	void printRequest();
-	void printConf();
+		//FUNCIONES PARA PRUEBAS
+		void printRequest();
+		void printConf();
 };

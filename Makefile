@@ -16,8 +16,8 @@ SRC_FILES = main.cpp \
 			Directory.cpp \
 			Dinamic.cpp \
 			Delete.cpp \
-			ErrorPage.cpp \
-			Autoindex.cpp
+			Autoindex.cpp \
+			ErrorPage.cpp
 
 OBJS = $(SRC_FILES:.cpp=.o)
 

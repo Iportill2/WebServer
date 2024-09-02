@@ -1,71 +1,101 @@
 #include "Delete.hpp"
 
-Delete::Delete(int f) : fd(f)
+Delete::Delete(std::string & ur, int f, srv & serv) : fd(f)
 {
-	Directory d("uploaded_files");
-    dir = d.getDir();
-	//sendForm();
+	url = ur;
+	server = serv;
 }
-   void Delete::sendForm()
-   {
-		response = "HTTP/1.1 200 OK\r\n";
-   		response += "Content-Type: text/html\r\n";
-  		response += "\r\n";
 
-    	response += "<!DOCTYPE html>";
-    	response += "<html lang=\"es\">";
-
-    	response += "<head>";
-    	response += "<meta charset=\"UTF-8\">";
-    	response += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">";
-    	response += "<title>Gestion de archivos</title>";
-    	response += "</head>";
-
-    	response += "<body>";
-    	response += "<h3>Elige el archivo que quieres borrar:</h3>";
-
-    	for(size_t i = 2; i < dir.size(); i ++)
-    	    response += "<a href=\"/Delete?file=" + dir[i] + "\">" + dir[i] + "</a><br>";
-
-		response += "<br><br><a href=\"/dinamic\"> VOLVER </a><br>";
-
-    	write (fd, response.c_str(), response.size());
-   }
-
-void Delete::sendFile(std::string fi)
+bool	Delete::DeleteFile(std::string ur)
 {
-	std::string path = "uploaded_files/" + fi;
-	std::cout << "PATH:" << path << std::endl;
-	std::ifstream file(path.c_str(), std::ios::binary);
+	std::cout << "Erasing:" << ur << std::endl;
+	if (remove(ur.c_str()) == 0)
+        return (std::cout  << ur << " erased." << std::endl, true);
+    else
+		return (std::cerr << "Unable to erase " << ur << "\n", false);
+}
 
-	if(Utils::isFile(path.c_str()))
-		std::cout << "ES UN ARCHIVO en delete" << std::endl;
-	else
-		std::cout << "NOOOOOO ES UN ARCHIVO EN DELETE" << std::endl;
-	
-    if (file)
+bool		Delete::DeleteFolder(std::string ur)
+{
+	Directory d(ur);
+	std::string	filePath;
+
+    dir = d.getDir();
+
+	for (size_t i = 2; i < dir.size(); i++)
 	{
-        /* // Obtener el tamaño del archivo
-        file.seekg(0, std::ios::end);
-        std::streamsize size = file.tellg();
-        file.seekg(0, std::ios::beg);
+		filePath = ur + "/" + dir[i];
+		if(Utils::isFile(filePath.c_str()) == true)
+		{
+			if(DeleteFile(filePath) == false)
+				return (false);
+		}
+		else if(Utils::isDirectory(filePath.c_str()) == true)
+			DeleteFolder(filePath.c_str());
+	}
+	if (rmdir(ur.c_str()) != 0)
+		return (std::cerr << "Unable to erase " << ur << "\n", false);
 
-        // Crear la respuesta HTTP
-        response = "HTTP/1.1 200 OK\r\n";
-        response += "Content-Type: application/octet-stream\r\n";
-        response += "Content-Disposition: attachment; filename=\"" + fi + "\"\r\n";
-        response += "Content-Length: " + Utils::toString(size) + "\r\n";
-        response += "\r\n";
+	return true;
+}
 
-        // Leer el archivo y añadirlo al cuerpo de la respuesta
-        std::vector<char> buffer(size);
-        if (file.read(buffer.data(), size)) {
-            response.append(buffer.begin(), buffer.end());
-        }
-		write (fd, response.c_str(), response.size()); */
-    }
-	else
-		std::cout << "NO HAY FILE" << std::endl;
+
+int	Delete::DeleteResource()
+{
+	if (Utils::isDirectory(url.c_str()) == false && Utils::isFile(url.c_str()) == false)
+		return(Error(404, fd, server), 1);
+	else if(Utils::isDirectory(url.c_str()) == true)
+	{
+		if (DeleteFolder(url) == true)
+			return (sendResponseOk(), 0);
+		else
+			return (Error (500, fd, server), 1);
+
+	}
+	else if(Utils::isFile(url.c_str()) == true)
+	{
+		if(DeleteFile(url) == true)
+			return (sendResponseOk(), 0);
+		else
+			return (Error (500, fd, server), 1);
+	}
+
+	return (0);
+}
+
+void	Delete::sendResponseOk()
+{
+	response = "HTTP/1.1 200 OK\r\n";
+   	response += "Content-Type: text/html\r\n";
+  	response += "\r\n";
+
+    response += "<!DOCTYPE html>";
+    response += "<html lang=\"es\">";
+
+    response += "<!DOCTYPE html>\n";
+    response += "<html lang=\"es\">\n";
+    response += "<head>\n";
+    response += "    <meta charset=\"UTF-8\">\n";
+    response += "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    response += "    <title>Delete resources ok</title>\n";
+    response += "</head>\n";
+    response += "<body>\n";
+    response += "    <header>\n";
+    response += "        <h1>Resource deleted... or not...</h1>\n";
+    response += "        <h10>...Don`t stress yourself, it`s done... almost for sure...</h10>\n"; 
+    response += "    <main>\n";
+    response += "        <section>\n";
+    response += "            <br><br><img src=\"ok.jpg\">\n";
+    response += "        </section>\n";
+    response += "        <br><br><a href=\"load/index.html\">BACK</a>\n";
+    response += "    </main>\n";
+    response += "    <footer>\n";
+    response += "        <p>&copy; 2024. Todos los derechos reservados.</p>\n";
+    response += "    </footer>\n";
+    response += "</body>\n";
+    response += "</html>\n";
+
+	write (fd, response.c_str(), response.size());
 }
 
 Delete::~Delete(){}

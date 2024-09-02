@@ -1,9 +1,0 @@
-Hola
-
-que tal
-
-yo mu bien
-
-Sec-Fetch-Dest: document
-Sec-Fetch-Mode: navigate
-Sec-Fetch-Site: same-origin

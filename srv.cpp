@@ -26,7 +26,7 @@ srv::srv(std::string serverBlock)
                     if(arErr[0].error_page.find(it->first) != arErr[0].error_page.end())
                     {
                         ErrorRoot.insert(std::make_pair(it->first, arLoc[i]._root + arErr[0].error_page[it->first]));
-                        //std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
+                        std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
                     }
                 }
                 ++it;
@@ -142,16 +142,14 @@ bool srv::parseServerBlock(const std::string& s)
 {
     std::string line;
     std::istringstream stream(s);
-
+    std::string error;
     std::string listen ;
     size_t i = 0;
     while (std::getline(stream, line)) 
 	{
 		std::istringstream lineStream(line);
 		std::string key;
-
 		lineStream >> key;
-        //std::cout << MAGENTA << key << WHITE <<std::endl;
         if (key == "listen")
         {
             if(!listen.empty())
@@ -161,8 +159,6 @@ bool srv::parseServerBlock(const std::string& s)
             {
                 listen = listen.substr(0, listen.size() - 1);
             }
-
-                //std::cout << "listen:" << listen << std::endl;
                 while(listen[i]!= ':')
                 {
                     i++;
@@ -171,7 +167,6 @@ bool srv::parseServerBlock(const std::string& s)
                 {
                     _host = listen.substr(0, i - 0);
                     Utils::deletespaces(_host);
-                    //std::cout << CYAN << "_host=""\"" << _host << """\"" <<WHITE  <<std::endl;///
                 }
                 else
                     return(std::cout << RED << "twice host in server" << WHITE << std::endl,false);
@@ -180,7 +175,6 @@ bool srv::parseServerBlock(const std::string& s)
                 {
                     _port = listen.substr(i, listen.size() - i);
                     Utils::deletespaces(_port);
-                    //std::cout << CYAN << "_port=""\"" << _port << """\"" <<WHITE  <<std::endl;///
                 }
                 else
                     return(std::cout << RED << "twice port in server" << WHITE << std::endl,false);
@@ -201,22 +195,7 @@ bool srv::parseServerBlock(const std::string& s)
                 return(false);
         }
         if( key == "error_page")
-        {
-            std::string errorstring;
-            errorstring = line + '\n';
-            while (1)
-            {
-                if (!std::getline(stream, line))
-                    break;// Llegamos al final del stream, rompemos el bucle        
-                errorstring += line + '\n';
-                if (line.find('l') != std::string::npos)
-                {
-                    //std::cout << BLUE << errorstring << WHITE << std::endl;
-                    arErr.push_back(errorstring);
-                    break;
-                }
-            } 
-        }
+            error += line + "\n";
         if (key == "location")
         {
             std::string loc;
@@ -243,6 +222,8 @@ bool srv::parseServerBlock(const std::string& s)
         std::cout << "|" << _host << "|" << _port << "|" << _body << "|" << _Root << "|"<< std::endl;
         return(false);
     }
+    if(error.size() > 0)
+        arErr.push_back(error);
     if(arErr.empty())//para evitar el segfault en arErr
     {
         std::string s = "";
@@ -276,14 +257,12 @@ bool srv::checkstring()
 {
     if(!_host.empty() )
 	{
-        //std::cout << CYAN << "_host=""\"" << _host << """\"" <<WHITE  <<std::endl;///
         Utils::deletespaces(_host);
 		if(ipAddressToipNum(_host) == false)
 			return (false);
 	}
     if(!_port.empty() )
 	{
-        //std::cout << CYAN << "_port=""\"" << _port << """\"" <<WHITE  <<std::endl;///
         Utils::deletespaces(_port);
 		if(stringToSizeT(_port, _sizetPort) == false)
 			return(std::cout << "Error doing the conversion from _port to __sizetport" << std::endl,false);

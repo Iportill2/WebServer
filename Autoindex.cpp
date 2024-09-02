@@ -4,19 +4,20 @@
 
 Autoindex::Autoindex(srv& server, int fd, size_t i) 
 {
-    std::cout <<"Constructor de Autoindex" << std::endl;
+    //std::cout <<"Constructor de Autoindex" << std::endl;
     _i = i;
     _fd = fd;
     //directory_path = server.arLoc[i]._root;
-	std::cout << RED << server.arLoc[i]._root << WHITE <<"\n";
+	//std::cout << RED << "server.arLoc[i]._root=" << server.arLoc[i]._root << WHITE <<"\n";
 /*     if(!server.arErr.empty())
         error = server.ErrorRoot; */
+    //std::cout << YELLOW << "server.arLoc[i]._location=" << server.arLoc[i]._location <<  WHITE << std::endl;
     handle_request(server.arLoc[i]._root); 
    
 }
 Autoindex::~Autoindex()
 {
-    std::cout << "Destructor de Autoindex" << std::endl;
+    //std::cout << "Destructor de Autoindex" << std::endl;
 }
 void Autoindex::handle_request(const std::string& directory_path) 
 {
@@ -25,13 +26,13 @@ void Autoindex::handle_request(const std::string& directory_path)
 
     if (is_directory(directory_path)) 
 	{
-		std::cout << RED << "gereateautoindex" << WHITE <<"\n";
+		//std::cout << RED << "gereateautoindex" << WHITE <<"\n";
         response = generate_autoindex(directory_path);
 
 	}
     else 
     {
-		std::cout << RED << "NO gereateautoindex\n" << WHITE <<"\n";
+		//std::cout << RED << "NO gereateautoindex\n" << WHITE <<"\n";
         std::ifstream file( directory_path.c_str());
 
         if (file)
@@ -39,12 +40,12 @@ void Autoindex::handle_request(const std::string& directory_path)
             std::stringstream buffer;
             buffer << file.rdbuf();
             response = buffer.str();
-            std::cout<< RED << response << WHITE << std::endl;
+            //std::cout<< RED << response << WHITE << std::endl;
             file.close();
         }
         else
 		{
-			std::cout << RED << "HOLA\n" << WHITE <<"\n";
+			//std::cout << RED << "HOLA\n" << WHITE <<"\n";
             return; 
 		}
     }
@@ -89,10 +90,10 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     while ((entry = readdir(dir)) != NULL) 
     {
         std::string name = entry->d_name;
-/*         if (name == "." || name == "..")
+        if (name == "." /* || name == ".." */)
         {
             continue;
-        } */
+        }
         std::string full_path = directory_path + "/" + name;
 
         struct stat filestat;
@@ -111,12 +112,24 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
 
         if (is_directory(full_path)) 
         {
-            html << "<td><a href=\"" << name << "/\">" << name << "/</a></td>";
+            if(full_path[0] == '.' && full_path[1] == '/')
+            {
+                full_path = full_path.substr(1);
+                std::cout << YELLOW << "full_path=" << full_path << WHITE << std::endl;
+            }
+            html << "<td><a href=\"" << full_path << "/\">" << name << "/</a></td>";
             html << "<td>-</td>";  // Sin tamaño para directorios
+            //html << "<td>" << filestat.st_size << " bytes</td>";
         } 
         else 
         {
-            html << "<td><a href=\"" << name << "\">" << name << "</a></td>";
+            //std::cout << GREEN << full_path << std::endl;
+            if(full_path[0] == '.' && full_path[1] == '/')
+            {
+                std::cout << GREEN << "full_path=" << full_path << WHITE << std::endl;
+                full_path = full_path.substr(1);
+            }
+            html << "<td><a href=\"" << full_path  << "\">" << name << "</a></td>";
             html << "<td>" << filestat.st_size << " bytes</td>";
         }
 
@@ -126,5 +139,6 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
     closedir(dir);
 
     html << "</table></body></html>";
+    //std::cout << YELLOW << html.str() << WHITE << std::endl;
     return html.str();
 }

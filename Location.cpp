@@ -22,33 +22,47 @@ Location::~Location()
 
 bool Location::parselocationBlock(const std::string& locationBlock) 
  {
+
+    //std::cout << CYAN << locationBlock << WHITE << std::endl;
+
     std::string line;
     std::istringstream stream(locationBlock);
     std::string tmp;
 
     while (std::getline(stream, line)) 
 	{
-        
 		std::istringstream lineStream(line);
 		std::string key;
 
 		lineStream >> key;
+
+
         if (key == "location")
         {
-            if(setlocationconfig(_location,key, lineStream ) == false)
-                return(false);
+            if(!_location.empty())
+                return(std::cout << RED << "location twice" << WHITE << std::endl, 0);
+            lineStream >> _location;
+            if(_location[_location.size()-1] == '{')
+                _location = _location.substr(0, _location.size() - 1);
         }
-        if (key == "root")
+
+         if (key == "root")
         {
-            if(setlocationconfig(_root,key, lineStream ) == false)
-                return(false);
+            if(!_root.empty())
+                return(std::cout << RED << "root twice" << WHITE << std::endl,0);
+            lineStream >> _root;
+            if(_root[_root.size()-1] == ';')
+                _root = _root.substr(0, _root.size() - 1);
         }
         if (key == "file")
         {
-            if(setlocationconfig(_file,key, lineStream ) == false)
-                return(false);
+            if(!_file.empty())
+                return(std::cout << RED << "file twice" << WHITE << std::endl,0);
+            lineStream >> _file;
+            if(_file[_file.size()-1] == ';')
+                _file = _file.substr(0, _file.size() - 1);
         }
-        if (key == "methods;"  || key == "methods" )
+        if (key == "methods")///
         {
             std::string method;
             lineStream >> method;
@@ -63,7 +77,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 lineStream >> method;
 
                 while (!method.empty() && (method[method.size() - 1] == ';' || method[method.size() - 1] == '}'))
-                    method = method.substr(0, method.size() - 1);
+                        method = method.substr(0, method.size() - 1);
 
                 if(!method.empty())
                 {
@@ -72,7 +86,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
                 }
             }
         }
-        if ((key == "autoindex;" && _autoindex.empty()) || (key == "autoindex" && _autoindex.empty()))
+        if (key == "autoindex")
         {
             if(!_autoindex.empty())
                 return(std::cout << RED << "autoindex twice" << WHITE << std::endl,0);
@@ -80,7 +94,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             if(_autoindex[_autoindex.size()-1] == ';')
                 _autoindex = _autoindex.substr(0, _autoindex.size() - 1);
         }
-        if ((key == "cgi;" && _cgi.empty() )||( key == "cgi" && _cgi.empty()))
+        if (key == "cgi")
         {
             if(!_cgi.empty())
                 return(std::cout << RED << "cgi twice" << WHITE << std::endl,0);
@@ -88,21 +102,16 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             if(_cgi[_cgi.size()-1] == ';')
                 _cgi = _cgi.substr(0, _cgi.size() - 1);
         }
-        if ((key == "redirect;" && _redirect.empty()) || (key == "redirect" && _redirect.empty()))
+        if (key == "redirect" && _redirect.empty())
         {
             lineStream >> redirect_num;
             lineStream >> _redirect;
             if(_redirect[_redirect.size()-1] == ';')
                 _redirect = _redirect.substr(0, _redirect.size() - 1);
-		}
-        if((key == "internal;" && _internal.empty()) || (key == "internal" && _internal.empty()))
-            _internal = "on";
-
-
-
+            std::cout << "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
+		} 
 	}
-
-    return(true);
+    return(1);
 }
 
 std::string Location::toLowerCase(const std::string& str) 
@@ -110,16 +119,4 @@ std::string Location::toLowerCase(const std::string& str)
     std::string lowerStr = str;
     std::transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
     return lowerStr;
-}
-bool Location::setlocationconfig(std::string & variable,std::string print, std::istringstream & lineStream )
-{
-    std::string temp;
-    if(!variable.empty())
-        return(std::cout << RED << "twice "<< print <<" in server" << WHITE << std::endl,false);
-    lineStream >> temp;
-    if (temp[temp.size() - 1] == ';')
-        variable = temp.substr(0, temp.size() - 1);
-    else
-        variable = temp;
-    return(true);
 }

@@ -12,6 +12,7 @@ Config::Config(std::string configName)
 		std::cout << "if(config_routine(configName) == false)";    
         return;
 	}
+    
     if(checksrvloc() == false)
 	{
         std::cout << "if(checksrvloc() == false)";
@@ -205,6 +206,7 @@ bool Config::createSrv()
         size_t pos = sub.find("server");
         if (pos != std::string::npos) 
         {
+            
             srv newServer(sub);
             
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");

@@ -13,10 +13,8 @@ class Location
     std::string _autoindex;
     std::string _cgi;
     std::string _redirect;
-
-    std::string _internal;
-
     int redirect_num;
+
     bool lock_ok;
 
     std::vector <std::string> methods_vector;
@@ -36,6 +34,6 @@ class Location
 
     std::string toLowerCase(const std::string& str);
     void checkAndAddMethods(const std::string& input);
-    bool setlocationconfig(std::string & variable,std::string print, std::istringstream & lineStream );
+
 };
 #endif

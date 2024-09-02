@@ -3,26 +3,44 @@
 
 # include "dependences.hpp"
 # include "Error.hpp"
+# include "Request.hpp"
+# include "srv.hpp"
+
+class srv;
 
 class Cgi
 {
     private:
 
-    	std::string body;
-		std::string	value;
-		std::string result;
-		char 		res[128];
+    	Request                        *rq;
+        std::string                 url;
+		std::vector<std::string>    envVect;
+
+
+        std::string result;
+
+        char        **_env;
+        char 		res[128];
 		int			fd;
+        srv                         server;
+
+        int         inFd;
+        int         outFd;
+        int         inPipe[2];
+        int         outPipe[2];
 		
 
     public:
 
-        Cgi(std::string  bd, int f);
+        Cgi(Request *r, std::string  ur, int f, srv & serv);
         ~Cgi();
 
-        void 		parse();
+        void 		createGetEnv();
+        void 		createPostEnv();
+        void        setPost();
         void 		exec();
-        //std::string	getResult();
+        
+
 		void		sendResult();
 
 };

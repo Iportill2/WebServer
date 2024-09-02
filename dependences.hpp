@@ -6,41 +6,45 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:25:48 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/06/20 17:12:14 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:46:49 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEPENDECES_HPP
 # define DEPENDECES_HPP
 
-# include <algorithm>
-# include <arpa/inet.h>
-# include <cctype>
-# include <csignal>
-# include <cstdlib>
-# include <cstring>
-# include <dirent.h>
-# include <fcntl.h>
-# include <fstream>
-# include <iostream>
-# include <limits>
-# include <map>
-# include <netinet/in.h>
-# include <set>
-# include <signal.h>
-# include <sstream>
-# include <stdbool.h>
-# include <stack>
-# include <stdexcept>
 # include <stdio.h>
-# include <string>
-# include <sys/select.h>
 # include <sys/socket.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <sys/wait.h>
+# include <netinet/in.h>
+# include <iostream>
+# include <cstdlib>
+# include <fstream>
+# include <sstream>
 # include <unistd.h>
-# include <vector>
+# include <sys/select.h>
+# include <csignal>
+# include <cstring>
+
+# include <map>
+# include <vector> 
+# include <sys/stat.h>
+# include <stdbool.h>
+# include <signal.h>
+# include <sys/types.h>
+# include <string>
+# include <sstream>
+# include <algorithm>
+# include <stack>
+# include <arpa/inet.h>
+# include <stdexcept>
+# include <limits>
+# include <set>
+# include <fcntl.h>
+# include <sys/time.h>
+# include <sys/wait.h>
+# include <algorithm>
+# include <cctype>
+# include <dirent.h>
 //COLORES
 # define RED "\033[31m" ///////////
 # define RST "\033[0m" ////////////
@@ -60,7 +64,5 @@
 # define BOLDMAGENTA "\033[1m\033[35m" ///////////
 # define BOLDCYAN "\033[1m\033[36m" ///////////
 # define BOLDWHITE "\033[1m\033[37m" ///////////
-
-int autoindex(std::string path);
 
 #endif

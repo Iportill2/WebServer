@@ -1,25 +1,34 @@
 #pragma once
 
 # include "dependences.hpp"
+# include "Request.hpp"
+# include "Error.hpp"
+# include "srv.hpp"
 
 class Load
 {
     private:
 
-    	std::string body;
-		std::string	value;
-		std::string result;
-		char 		res[128];
+        Request   * rq;
 		int			fd;
-		
+        std::string _url;
+        srv         server;
+
+        // std::string	boundary_clave;
+        // std::string boundary_content;
+        // std::string file_name;
+        // std::string file_content;
+        // std::string content_type;
+        // std::string last_line;
+
+        bool        finish;
 
     public:
 
-        Load(std::string  bd, int f);
+        Load(Request * r, int f, std::string & url, srv & serv);
+
         ~Load();
 
-        void 		parse();
-        void 		exec();
-        //std::string	getResult();
-		void		sendResult();
+        
+        bool    createFile();
 };

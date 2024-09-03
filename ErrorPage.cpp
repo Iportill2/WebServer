@@ -50,7 +50,7 @@ void ErrorPage::printErrorPageDetails() {
 std::string ErrorPage::createHtml_in_mapValue(std::string text)
 {
     std::string httpResponse = "HTTP/1.1 " + text + "\r\n";
-   	httpResponse += "Content-Type: text/html\r\n";
+    httpResponse += "Content-Type: text/html\r\n";
     httpResponse += "\r\n";
 
     httpResponse += "<!DOCTYPE html>";
@@ -82,7 +82,10 @@ std::string ErrorPage::createHtml_in_mapValue(std::string text)
     httpResponse += "</head>";
     httpResponse += "<body>";
     httpResponse += "<h2>Error " + text + "</h2>";
-    httpResponse += "</body>";
+    httpResponse +="<p>Lo sentimos, la página que buscas no se ha encontrado.</p>";//esto igual se ppuede quitar por contexto
+    httpResponse +="<p>Es posible que la página haya sido eliminada, su nombre cambiado o no esté disponible temporalmente.</p>";//esto igual se ppuede quitar por contexto
+    httpResponse +="<a href=\"/\">Volver a la página de inicio</a>";
+    httpResponse +="</body>";
     httpResponse += "</html>"; 
     return httpResponse;
 }

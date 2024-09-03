@@ -89,7 +89,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         if (key == "autoindex")
         {
             if(!_autoindex.empty())
-                return(std::cout << RED << "autoindex twice" << WHITE << std::endl,0);
+                return(std::cout << RED << "autoindex twice" << WHITE << std::endl,false);
             lineStream >> _autoindex;
             if(_autoindex[_autoindex.size()-1] == ';')
                 _autoindex = _autoindex.substr(0, _autoindex.size() - 1);
@@ -97,7 +97,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         if (key == "cgi")
         {
             if(!_cgi.empty())
-                return(std::cout << RED << "cgi twice" << WHITE << std::endl,0);
+                return(std::cout << RED << "cgi twice" << WHITE << std::endl,false);
             lineStream >> _cgi;
             if(_cgi[_cgi.size()-1] == ';')
                 _cgi = _cgi.substr(0, _cgi.size() - 1);
@@ -105,6 +105,8 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         if (key == "redirect" && _redirect.empty())
         {
             lineStream >> redirect_num;
+            if(redirect_num < 301 || redirect_num > 304)
+                return(std::cout << RED << "Invalid redirect_num " << redirect_num<< WHITE << std::endl, false);
             lineStream >> _redirect;
             if(_redirect[_redirect.size()-1] == ';')
                 _redirect = _redirect.substr(0, _redirect.size() - 1);

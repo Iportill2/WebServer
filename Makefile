@@ -19,7 +19,7 @@ SRC_FILES = main.cpp \
             Autoindex.cpp \
             ErrorPage.cpp
 
-OBJS = $(SRC_FILES:.cpp=.o)
+OBJS = $(addprefix obj/, $(SRC_FILES:.cpp=.o))
 
 CGI_SRC = cgi-bin/multi.cpp
 CGI_OUT = cgi-bin/ia.out
@@ -27,27 +27,27 @@ CGI_OUT = cgi-bin/ia.out
 BAD_CGI_SRC = cgi-bin/bad_multi.cpp
 BAD_CGI_OUT = cgi-bin/bad_ia.out
 
-
 all: $(NAME) $(CGI_OUT) $(BAD_CGI_OUT)
 
-%.o: %.cpp
-	$(CPP) -c $(CFLAGS)  $^
+obj/%.o: %.cpp
+	mkdir -p obj
+	$(CPP) -c $(CFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
 	$(CPP) $(CFLAGS) $(OBJS) -o $(NAME)
 
 $(CGI_OUT): $(CGI_SRC)
 	$(CPP) $(CFLAGS) $^ -o $@
-	
+    
 $(BAD_CGI_OUT): $(BAD_CGI_SRC)
 	$(CPP) $(CFLAGS) $^ -o $@
-
 
 clean:
 	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME) $(CGI_OUT) $(BAD_CGI_OUT)
+	rmdir obj
 
 re: fclean all
 

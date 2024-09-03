@@ -2,7 +2,7 @@
 # include <sstream>
 # include <iostream>
 # include <unistd.h>
-
+# include <stdlib.h>
 int toInt(const std::string &str)
 {
     std::stringstream ss(str);

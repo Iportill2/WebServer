@@ -38,7 +38,7 @@ class srv
     srv(std::string serverBlock);
     ~srv();
 
-
+    bool check_Location_root();
    
 
 

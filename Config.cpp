@@ -37,7 +37,7 @@ Config::Config(std::string configName)
 	}
     if(getArrayOfServers().empty())
     {
-        std::cout << "getArrayOfServers().empty())";
+        //std::cout << "getArrayOfServers().empty())";
 		return;
     }
     ok = 1;

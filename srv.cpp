@@ -7,7 +7,17 @@ srv::srv()
     srv_ok = 1;
 }
 
-
+bool srv::check_Location_root()
+{
+    size_t i =0;
+    while(arLoc.size() > i)
+    {
+        if(arLoc[i]._location == "/")
+            return (true);
+        i++;
+    }
+    return(false);
+}
 srv::srv(std::string serverBlock)
 {
     srv_ok = parseServerBlock(serverBlock);
@@ -35,6 +45,15 @@ srv::srv(std::string serverBlock)
         }
     }
     readErrorRoot();
+	if(check_Location_root() == false)
+		srv_ok = false;
+
+	for(size_t i = 0; i < arLoc.size(); i++)//usamos el _Root del srv en caso de que la location no tenga root
+	{
+		if(arLoc[i]._root.empty())
+			arLoc[i]._root = _Root;
+	}
+
 }
 srv::~srv()
 {

@@ -7,7 +7,7 @@
 class srv;
 class Location;
 
-class Config :public Utils
+class Config : public Utils
 {
     protected:
     std::ifstream file;
@@ -40,7 +40,7 @@ class Config :public Utils
     std::string &  skip_p_t_esp(std::string &s);
     bool checkduplicateports();
     bool checkduplicateports_server_name();
-    
+    void clearArrayOfSrv();
 };
 
 #endif

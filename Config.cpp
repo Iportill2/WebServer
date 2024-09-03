@@ -3,36 +3,48 @@ Config::Config()
 {
     //std::cout << "Default Config Constructor" << std::endl;
 }
+void Config::clearArrayOfSrv() 
+{
+    array_of_srv.clear();
+}
 Config::Config(std::string configName)
 {
     ok = 0;
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == false)
 	{
-		std::cout << "if(config_routine(configName) == false)";    
+		std::cout << "if(config_routine(configName) == false)";
+        clearArrayOfSrv();   
         return;
 	}
     
     if(checksrvloc() == false)
 	{
         std::cout << "if(checksrvloc() == false)";
+        clearArrayOfSrv(); 
 		return;
 	}
 	if(checkduplicateports() == false)
 	{
         std::cout << "if(checkduplicateports() == false)";
+        clearArrayOfSrv(); 
 		return;
 	}
     if(checkduplicateports_server_name() == false)
+    {
+        clearArrayOfSrv(); 
         return;
+    }
     if(validatePort() == false)
 	{
         std::cout << "if(validatePort() == false)";
+        clearArrayOfSrv(); 
 		return;
 	}
 	if(getServerCount() == false)
 	{
         std::cout << "if(getServerCount() == false)";
+        clearArrayOfSrv(); 
 		return;
 	}
     if(getArrayOfServers().empty())

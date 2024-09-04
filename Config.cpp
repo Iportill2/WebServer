@@ -1,11 +1,9 @@
 #include "Config.hpp"
-Config::Config()
-{
-    //std::cout << "Default Config Constructor" << std::endl;
-}
+
 void Config::clearArrayOfSrv() 
 {
     array_of_srv.clear();
+    std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
 }
 Config::Config(std::string configName)
 {
@@ -14,7 +12,7 @@ Config::Config(std::string configName)
     if(config_routine(configName) == false)
 	{
 		std::cout << "if(config_routine(configName) == false)";
-        clearArrayOfSrv();   
+         
         return;
 	}
     
@@ -175,7 +173,7 @@ bool  Config::config_routine(std::string configName)
         if(pairbrackets(file_content) == false)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,false);
         if(createSrv() == false)
-            return(false);
+            return(clearArrayOfSrv(),false);
         return(true);
     } 
     else
@@ -218,7 +216,7 @@ bool Config::createSrv()
         size_t pos = sub.find("server");
         if (pos != std::string::npos) 
         {
-            
+            std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
             srv newServer(sub);
             
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");

@@ -19,7 +19,7 @@ class Config : public Utils
     int server_id ;
     public:
     int ok;
-    Config();
+    
     Config(std::string configName);
     ~Config();
 

@@ -26,13 +26,12 @@ class srv
 
     int locationCount;/// esto no esta ya en config???
     std::vector<Location> arLoc;
+    std::vector<ErrorPage> arErr;// podemos usar una  variable en vez de un vector
 
     //ErrorPage ErrPag;
-    std::vector<ErrorPage> arErr;// podemos usar una  variable en vez de un vector
     //ErrorPage arErr; 
     std::map<std::string, std::string> result;
 
-    bool srv_ok;
 
     srv();
     srv(std::string serverBlock);
@@ -61,6 +60,6 @@ class srv
 
     void readErrorRoot();  
     bool setserverconfig(std::string & variable,std::string print, std::istringstream & lineStream );
-
+    void clear_arLoc();
 };
 #endif

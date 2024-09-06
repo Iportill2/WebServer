@@ -1,7 +1,8 @@
 #include "Download.hpp"
 
-Download::Download(Request * r, std::string & ur, int f) : fd(f)
+Download::Download(Request * r, std::string & ur, int f, srv & server) : fd(f)
 {
+    _server = server;
 	rq = r;
 	url = ur;
 	Directory d(url);
@@ -52,7 +53,11 @@ void Download::sendFile()
 	if(Utils::isFile(path.c_str()))
 		std::cout << "It is a file" << std::endl;
 	else
-		std::cout << "Is not a file" << std::endl;
+    {
+        Error(404,fd, _server);
+        return;
+		//std::cout << "Is not a file" << std::endl;
+    }
 	 
     if (file)
 	{
@@ -76,7 +81,10 @@ void Download::sendFile()
 		write (fd, response.c_str(), response.size());
     }
 	else
-		std::cout << "There is no file" << std::endl;
+    {
+        Error(404,fd, _server);
+		//std::cout << "There is no file" << std::endl;
+    }
 }
 
 Download::~Download(){}

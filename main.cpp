@@ -33,6 +33,10 @@ int main(int argc, char **argv)
     }
     else if(argc == 2)
     {
+        std::cout << "-------------------------------" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
+        std::cout << "-------------------------------" << std::endl;
         Config confs(argv[1]);
     
         if (confs.getArrayOfServers().empty())

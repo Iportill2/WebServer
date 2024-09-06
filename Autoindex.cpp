@@ -1,12 +1,24 @@
 #include "Autoindex.hpp"
 #include "dependences.hpp"
 
-
+bool Autoindex::hasWritePermission(const char* filePath) 
+{
+    // Verifica si el archivo tiene permisos de escritura
+    if (access(filePath, W_OK) == 0) {
+        return true;  // Tiene permisos de escritura
+    } else {
+        // Si no tiene permisos, imprime el error
+        std::cerr << "Error: No tiene permisos de escritura en el archivo '"
+                  << filePath << "'. Error: " << strerror(errno) << std::endl;
+        return false;  // No tiene permisos de escritura
+    }
+}
 Autoindex::Autoindex(srv& server, int fd, size_t i) 
 {
     //std::cout <<"Constructor de Autoindex" << std::endl;
     _i = i;
     _fd = fd;
+    _server = server;
     //directory_path = server.arLoc[i]._root;
 	//std::cout << RED << "server.arLoc[i]._root=" << server.arLoc[i]._root << WHITE <<"\n";
 /*     if(!server.arErr.empty())
@@ -21,15 +33,15 @@ Autoindex::~Autoindex()
 }
 void Autoindex::handle_request(const std::string& directory_path) 
 {
-    std::string response;
+        std::string response;
     std::ostringstream oss;
+/*     
 
     if (is_directory(directory_path)) 
-	{
+	{ */
 		//std::cout << RED << "gereateautoindex" << WHITE <<"\n";
         response = generate_autoindex(directory_path);
-
-	}
+	/* }
     else 
     {
 		//std::cout << RED << "NO gereateautoindex\n" << WHITE <<"\n";
@@ -45,10 +57,19 @@ void Autoindex::handle_request(const std::string& directory_path)
         }
         else
 		{
-			//std::cout << RED << "HOLA\n" << WHITE <<"\n";
-            return; 
+            if(Autoindex::hasWritePermission(directory_path.c_str()) == false)
+            {
+                Error(403, _fd, _server);
+                return; 
+            }
+            else
+            {
+                Error(404, _fd, _server);
+                return;   
+            }
+
 		}
-    }
+    } */
 
     // metemos la info del html y del index que hemos creado para el index en un ostringstream
     oss << "HTTP/1.1 200 OK\r\n";
@@ -119,7 +140,7 @@ std::string Autoindex::generate_autoindex(const std::string& directory_path)
             }
             html << "<td><a href=\"" << full_path << "/\">" << name << "/</a></td>";
             html << "<td>-</td>";  // Sin tamaño para directorios
-            //html << "<td>" << filestat.st_size << " bytes</td>";
+            html << "<td>" << filestat.st_size << " bytes</td>";
         } 
         else 
         {

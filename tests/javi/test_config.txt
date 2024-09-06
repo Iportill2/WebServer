@@ -1,0 +1,79 @@
+Entre paréntesis los nombres de las imagenes, directorio grabs dentro de raiz
+
+1.) Abre con un directorio como archivo de configuración.
+No da errores pero no debería abrir, ¿no? - sin leaks (directoriopng)  -->@unai DONE!
+
+2.) Cambiamos el primer server a unos del puertos en teoría reservados.
+Failed to bind socket, permission denied. server up and running. Entra en bucle infinito al pedir la página del otro server, 8081, pero se acabó recuperando y sirviendo la página. ¿Debe de entrar en bucle cada vez que se reinicia el select? (nucle2, resol2, resol21, resol2çpng) -->@unai DONE!
+
+3.) Cambiando el segundo server a uno de los reservados.
+Sirve la página en 8080, el otro evidentemente no da nada porque no está webserver escuchando en ese puerto, error de conexión, o lo que haga el servicio en cuestión.-->@unai DONE!
+
+4.) Cambiamos el puerto a uno que está en uso por otro servicio.
+Mismo resultado al intentar conectar, sin embargo no se observa bucles al acceder al otro server, 8081, que sirve la página sin problema.-->@unai DONE!
+
+5.) Ahora el segundo server cambiado a puerto en uso.
+Conexión denegada para ese server, el primero funciona bien.
+
+6.) Los dos servers al mismo puerto, sea restringido o no.
+Error de parsing especificando que hay dos servers con el mismo puerto. El server no se levanta aunque haya un server configurado correctamente en otro puerto.
+
+7.) Comprobación de rango de número de puerto.
+Con puerto vacío, reservado o superior a 65535 da error de parsing, no levanta al haber un server con mal configuración de puerto listen.
+
+8.) Errores de ortografía.
+Entiendo que estos dan error de parsing y no levanta el webserver. Pruebas varias en principio bien.
+
+9.) Página de index vacía.
+No peta y sirve un directory listing. Entiendo que está correcto.
+
+10.) Página de index con nombre de archivo.
+No peta y descarga el archivo, correcto.
+
+11.) Página de index con nombre de archivo inexistente.
+No peta y sirve un directory listing. Entiendo que está correcto.
+
+12.) Dos locations iguales.
+Sirve el primero con sus características.
+
+13.) Sin location /.
+Sirve lo que haya en server index.
+
+14.) Sin location cgi.
+Directory listing y descarga del archivo.
+
+15.) Cambiar la IP que viene después de localhost.
+Parece no tener efecto, evidentemente no se puede acceder a esa IP.
+
+16.) Sin upload path.
+Responde éxito en grabar en ./uploads/"nombre del archivo". Sin embargo, esa ruta está fuera del root_path, de hecho en la ruta del webserver (uploads), cambiar ruta por defecto. Comprobar al final qué tamaño de subida de archivo queremos y de donde lo está cojiendo.
+
+17.) Etiqueta server sin nada más.
+Crea el server, con las características de la imagen (server). De todas maneras, ya sabíamos que en 0 no responde o no debería enlazar. ¿Sería mejor que aunque no haga nada tampoco lo muestre?
+
+18.) 17 con location.
+También dice que lo crea, aunque no se pueda llegar a esa teórica localización. Recomendación: tragar el caso de server en blanco.
+
+19.) Duplicidad del anterior server vacío.
+Duplicado. Misma recomendación.
+
+20.) Añadir método no implementado, ejemplo PUT, en los métodos permitidos del server.
+Respuesta del servidor de método no permitido. No se levanta el webserver. Quizás debería levantar el server permitiendo la respuesta HTTP de not implemented para esas situaciones. Se puede considerar que no es un error de configuración, es simplemente que ese método no está implementado, que no es lo mismo que no permitido.
+
+21.) Añadir método no implementado, ejemplo PUT, en los métodos permitidos del location.
+Mismo que 20.) Respuesta exacta del webserver, method not valid.
+
+22.) Server con más métodos permitidos que una location. Ejemplo DELETE para el server, sin DELETE para flies.
+Location no lo permite. Entiendo correcto.
+
+23.) Intento de borrado del mismo archivo desde dos navegadores diferentes.
+Éxito en el primero, error en el segundo, correcto. Rec: ¿Refrescar el directory listing después de fallo igual que en éxito?
+
+24.) Repetición de la misma etiqueta, ejemplo AUTOINDEX ON y AUTOINDEX OFF.
+Sobrescribe con la última. ¿Es el comportamiento deseado?
+
+25.) Etiqueta server dentro de server.
+Error, no levanta el webserver.
+
+26.) Location fuera del root_path de su server.
+Muestra el location. Es lo correcto?

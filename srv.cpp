@@ -2,9 +2,15 @@
 #include "srv.hpp"
 #include "Config.hpp"
 #include "Utils.hpp"
+
+void srv::clear_arLoc() 
+{
+    arLoc.clear();
+    std::cout << RED << "arLoc.clear();" << std::endl << "arLoc.size()=" << arLoc.size() << WHITE << std::endl;
+}
 srv::srv()
 {
-    srv_ok = 1;
+
 }
 
 bool srv::check_Location_root()
@@ -20,9 +26,12 @@ bool srv::check_Location_root()
 }
 srv::srv(std::string serverBlock)
 {
-    srv_ok = parseServerBlock(serverBlock);
-    if(srv_ok == false)
+    if(parseServerBlock(serverBlock) == false)
+    {
+        clear_arLoc();
         return;
+    }
+    //srv_ok = parseServerBlock(serverBlock);
     if(!arErr.empty() && !arErr[0].error_page.empty() && !arLoc.empty())
     {
         size_t i = 0;
@@ -46,7 +55,7 @@ srv::srv(std::string serverBlock)
     }
     readErrorRoot();
 	if(check_Location_root() == false)
-		srv_ok = false;
+		clear_arLoc();
 
 	for(size_t i = 0; i < arLoc.size(); i++)//usamos el _Root del srv en caso de que la location no tenga root
 	{
@@ -248,7 +257,7 @@ bool srv::parseServerBlock(const std::string& s)
         std::string s = "";
         arErr.push_back(s);
     }
-	if(checkstring() == 0)
+	if(checkstring() == false)
         return false;
 
     return(1);

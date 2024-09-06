@@ -7,24 +7,23 @@ void Config::clearArrayOfSrv()
 }
 Config::Config(std::string configName)
 {
-    ok = 0;
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == false)
 	{
-		std::cout << "if(config_routine(configName) == false)";
+		std::cout << "if(config_routine(configName) == false)"<< std::endl;
          
         return;
 	}
     
     if(checksrvloc() == false)
 	{
-        std::cout << "if(checksrvloc() == false)";
+        std::cout << "if(checksrvloc() == false)" << std::endl;
         clearArrayOfSrv(); 
 		return;
 	}
 	if(checkduplicateports() == false)
 	{
-        std::cout << "if(checkduplicateports() == false)";
+        std::cout << "if(checkduplicateports() == false)"<< std::endl;
         clearArrayOfSrv(); 
 		return;
 	}
@@ -35,13 +34,13 @@ Config::Config(std::string configName)
     }
     if(validatePort() == false)
 	{
-        std::cout << "if(validatePort() == false)";
+        std::cout << "if(validatePort() == false)"<< std::endl;
         clearArrayOfSrv(); 
 		return;
 	}
 	if(getServerCount() == false)
 	{
-        std::cout << "if(getServerCount() == false)";
+        std::cout << "if(getServerCount() == false)"<< std::endl;
         clearArrayOfSrv(); 
 		return;
 	}
@@ -50,7 +49,6 @@ Config::Config(std::string configName)
         //std::cout << "getArrayOfServers().empty())";
 		return;
     }
-    ok = 1;
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
@@ -104,9 +102,33 @@ bool Config::checkduplicateports()
     return true;
 }
 
-bool Config::checksrvloc()
+bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de los methods
 {
+
+    if(array_of_srv.size() == 0)
+        return(std::cout << "array_of_srv.size() == 0" << std::endl,false);
+    
     size_t i = 0;
+    while (i < array_of_srv.size())
+    {
+        if(array_of_srv[i].arLoc.size() == 0)
+           return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        size_t e = 0;
+        while (e < array_of_srv[i].arLoc.size())
+        {
+/*             if(array_of_srv[i].arLoc[e].methods_vector.size() == 0)
+                return(std::cout << "(array_of_srv["<< i << "].arLoc["<< e << "].methods_vector.size() == 0" << std::endl,false); 
+ */
+/*             
+            size_t u = 0;
+            while (u < array_of_srv[i].arLoc[e].methods_vector.size())
+                ++u; */
+            ++e;
+        }
+        ++i;
+    }
+    return true;
+/*     size_t i = 0;
     while (i < array_of_srv.size())
     {
         if(array_of_srv[i].srv_ok == false)
@@ -121,7 +143,7 @@ bool Config::checksrvloc()
         }
         ++i;
     }
-    return true;
+    return true; */
 }
 bool Config::pairbrackets(const std::string s)
 {
@@ -173,7 +195,7 @@ bool  Config::config_routine(std::string configName)
         if(pairbrackets(file_content) == false)
             return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,false);
         if(createSrv() == false)
-            return(clearArrayOfSrv(),false);
+            return(false);
         return(true);
     } 
     else
@@ -213,18 +235,16 @@ bool Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
-        size_t pos = sub.find("server");
+        size_t pos = sub.find("server");//usar server { y darle -2 ??
         if (pos != std::string::npos) 
         {
-            std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
+            //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
             srv newServer(sub);
-            
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
-            if(newServer.srv_ok == 1)
-                array_of_srv.push_back(newServer);
+            array_of_srv.push_back(newServer);
         } 
         else 
-            return(std::cout << "sub didnt contain the word server" << std::endl,0);
+            return(std::cout << "sub didnt contain the word server" << std::endl,false);
     
     }
     return(true);

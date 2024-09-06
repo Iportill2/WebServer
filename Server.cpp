@@ -16,16 +16,7 @@ int Server::sign = 1;
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
-	/* size_t i =0;
-	while(i < servers.size())
-	{
-		if(servers[i].srv_ok == 0)
-		{
-			std::cout << "ERROR srv_ok\n";
-			return;
-		}
-		i++;
-	} */
+
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
 	printServers();

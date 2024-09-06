@@ -80,7 +80,7 @@ bool	Respons::checkMethod()
 			return true;
 	}
 	if (server.arLoc[_loc]._redirect.empty() == false)
-	return true;
+		return true;
 
 	return false;
 }
@@ -112,7 +112,7 @@ bool	Respons::manageData()
 	{
 		if(it->first == "page" && it->second == "download")
 		{
-			Download d(rq, _url, fd);
+			Download d(rq, _url, fd, server);
 			d.sendForm();
 			return true;
 		}
@@ -124,7 +124,7 @@ bool	Respons::manageData()
 	{
 		if(it->first == "page" && it->second == "setdownload")
 		{
-			Download d(rq, _url, fd);
+			Download d(rq, _url, fd, server);
 			d.sendFile();
 			return true;
 		}
@@ -180,7 +180,7 @@ int	Respons::getResponse()
 {
 	if (manageData() == true)
 		return 0;
-	//std::cout << "URL:" << _url << std::endl;
+	std::cout <<RED << "URL:" << _url <<WHITE<< std::endl;
 	if(Utils::isDirectory(_url.c_str()) == true)
 		return (Error (403, fd, server), 1);
 	if(Utils::isFile(_url.c_str()) == false)
@@ -296,7 +296,7 @@ int	Respons::createRespons() //ENTRADA------------------------
 
 	if(server.arLoc[_loc]._redirect.empty() == false)
 		return (redirect(server.arLoc[_loc]._redirect), 0);
-	if(server.arLoc[_loc].getAutoindex() == "on" && Utils::isDirectory(_url.c_str()) == true)//igual meterle que sea directorio...
+	if(server.arLoc[_loc].getAutoindex() == "on" && Utils::isDirectory(_url.c_str()) == true)
 		return (Autoindex (server, fd, _loc), 0);
 
 	/* if(Utils::isDirectory(_url.c_str()) == true)

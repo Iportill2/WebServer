@@ -23,6 +23,7 @@ Location::~Location()
 bool Location::parselocationBlock(const std::string& locationBlock) 
  {
 
+
     //std::cout << CYAN << locationBlock << WHITE << std::endl;
 
     std::string line;
@@ -113,6 +114,16 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             std::cout << "redirect"<< "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
 		} 
 	}
+
+    if(_location.empty())
+        return(std::cout << RED << "_location is empty()"<< WHITE << std::endl,false);
+    if(_location[_location.size()-1] == '/' && _location.size() > 1 ) //le quita la / a las location menos a "/"
+    {
+        _location = _location.substr(0,_location.size() -1);
+        std::cout << MAGENTA << "_location=" <<_location << WHITE << std::endl;
+
+    }
+
     return(1);
 }
 

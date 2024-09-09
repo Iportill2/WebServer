@@ -34,7 +34,7 @@ srv::srv(std::string serverBlock)
     //srv_ok = parseServerBlock(serverBlock);
     if(  !arErr.empty() && !arErr[0].error_page.empty() && !arLoc.empty())
     {
-        std::cout << RED << "ha entrado " << std::endl << WHITE;
+        //std::cout << RED << "ha entrado " << std::endl << WHITE;
         size_t i = 0;
         while(i < arLoc.size() )
         {

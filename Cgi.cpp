@@ -102,7 +102,7 @@ void Cgi::exec()
         pid_t res = waitpid(id, &status, WNOHANG);
 	   	for (int i = 0; i < 5 && res == 0; i++)
 		{
-			std::cerr << "res = " << res << "  Esperamos 100 milisegundos" << std::endl;
+			//std::cerr << "res = " << res << "  Esperamos 100 milisegundos" << std::endl;
        		usleep(100000); // Espera 100 milisegundos
 			res = waitpid(id, &status, WNOHANG);
 		}
@@ -110,7 +110,7 @@ void Cgi::exec()
 		{
             // Si el proceso hijo no ha terminado, lo matamos
             kill(id, SIGKILL);
-            //std::cerr << std::endl << RED << "Child procces Timeout" << WHITE << std::endl;
+            std::cerr << std::endl << RED << "Child procces Timeout" << WHITE << std::endl;
 			Error (500, fd, server);// el misterio del bucle infinito...
         } else if (res > 0)
 		{

@@ -9,6 +9,8 @@ Respons::~Respons() {}
 
 int		Respons::cgiResponse()
 {
+	if(server.arLoc[_loc].getCgi() != "on")
+        return (Error(403, fd, server), 1);
 	Cgi c(rq, _url, fd, server);
 	if (rq->getMethod() == "get")
 		c.createGetEnv();

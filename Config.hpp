@@ -40,6 +40,7 @@ class Config : public Utils
     bool checkduplicateports();
     bool checkduplicateports_server_name();
     void clearArrayOfSrv();
+    int findCharInString(const std::string& str, char c);
 };
 
 #endif

@@ -201,9 +201,50 @@ bool  Config::config_routine(std::string configName)
     else
         return std::cout << "Archivo no abierto" << std::endl,false;
 }
+int Config::findCharInString(const std::string& str, char c) {
+    std::size_t found = str.find(c);
 
-
+    if (found != std::string::npos) {
+        return static_cast<int>(found);
+    } else {
+        return -1;  // Devuelve -1 si el carácter no se encuentra
+    }
+}
 bool Config::createSrv()
+{
+    std::istringstream f(this->file_content);
+    std::string word;
+    std::string text;
+    std::stack<char> stak;
+	std::string key;
+
+    std::getline(f, word, ' ');
+    std::istringstream lineStream(word);
+	lineStream >> key;
+
+    if(key == "server" )
+    {
+        std::string temp;
+        lineStream >> temp;
+        text += temp;
+        
+    }
+    else if(findCharInString(key, '{') == -1)
+        return(false);
+    else if(findCharInString(key, '{') != -1)
+    {
+        stak.push('{');
+    }
+    while (std::getline(f, word, ' ')&& !stak.empty()) 
+    {
+        if(word == "server" )
+        // Hacer algo con la palabra
+        text += word;
+        std::cout << word << std::endl;
+    }
+    return(true);
+}
+/* bool Config::createSrv()
 {
     size_t tmp;
     std::istringstream f(this->file_content);
@@ -238,7 +279,7 @@ bool Config::createSrv()
         size_t pos = sub.find("server");//usar server { y darle -2 ??
         if (pos != std::string::npos) 
         {
-            //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
+            std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
             srv newServer(sub);
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
             array_of_srv.push_back(newServer);
@@ -248,7 +289,7 @@ bool Config::createSrv()
     
     }
     return(true);
-}
+} */
 
 
 bool Config::getServerCount()

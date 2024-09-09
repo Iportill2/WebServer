@@ -54,7 +54,7 @@ void Download::sendFile()
 		std::cout << "It is a file" << std::endl;
 	else
     {
-        Error(404,fd, _server);
+        Error(501,fd, _server);
         return;
 		//std::cout << "Is not a file" << std::endl;
     }
@@ -82,7 +82,7 @@ void Download::sendFile()
     }
 	else
     {
-        Error(404,fd, _server);
+        Error(501,fd, _server);
 		//std::cout << "There is no file" << std::endl;
     }
 }

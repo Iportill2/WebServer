@@ -119,7 +119,7 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
 
             return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
         }
-        std::cout << CYAN << "J" << WHITE << std::endl;
+        //std::cout << CYAN << "J" << WHITE << std::endl;
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
         {

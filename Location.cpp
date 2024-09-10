@@ -112,10 +112,10 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             //std::cout << MAGENTA <<"|" << _redirect << "|" <<WHITE << std::endl;
             if(_redirect.empty() || _redirect == ";")
                 return(std::cout << "_redirect.empty() || _redirect == ;" << std::endl, false);
-            std::cout << RED << "_redirect="<<_redirect << WHITE << std::endl;
+            //std::cout << RED << "_redirect="<<_redirect << WHITE << std::endl;
             if(_redirect[_redirect.size()-1] == ';')
                 _redirect = _redirect.substr(0, _redirect.size() - 1);
-            std::cout << "redirect"<< "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
+            //std::cout << "redirect"<< "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
 		} 
 	}
 
@@ -124,7 +124,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
     if(_location[_location.size()-1] == '/' && _location.size() > 1 ) //le quita la / a las location menos a "/"
     {
         _location = _location.substr(0,_location.size() -1);
-        std::cout << MAGENTA << "_location=" <<_location << WHITE << std::endl;
+        //std::cout << MAGENTA << "_location=" <<_location << WHITE << std::endl;
 
     }
 

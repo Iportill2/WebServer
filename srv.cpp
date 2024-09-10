@@ -246,7 +246,7 @@ bool srv::parseServerBlock(const std::string& s)
             }
         }
 	}
-    if(_host.empty() || _port.empty() || _body.empty() || _Root.empty())
+    if(_host.empty() || _port.empty() || _body.empty() || _Root.empty() || _server_name.empty())
     {
         std::cout << "|" << _host << "|" << _port << "|" << _body << "|" << _Root << "|"<< std::endl;
         return(false);

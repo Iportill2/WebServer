@@ -5,8 +5,9 @@ void Config::clearArrayOfSrv()
     array_of_srv.clear();
     std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
 }
-Config::Config(std::string configName)
+Config::Config(std::string configName) 
 {
+    srvCount = 0;
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == false)
 	{
@@ -306,12 +307,12 @@ bool Config::getServerCount()
 
     while ((pos = file_content.find("server", pos)) != std::string::npos) 
     {
-        this->srvCount++;
+        srvCount++;
         pos += 6; // Longitud de la cadena "Server"
     }
     if (this->srvCount > 0) 
     {
-        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<srvCount << WHITE << std::endl;
         return true;
     }
     else

@@ -1,8 +1,9 @@
 #include "Delete.hpp"
 
-Delete::Delete(std::string & ur, int f) : fd(f)
+Delete::Delete(std::string & ur, int f, srv & serv) : fd(f)
 {
 	url = ur;
+	server = serv;
 }
 
 bool	Delete::DeleteFile(std::string ur)
@@ -41,14 +42,32 @@ bool		Delete::DeleteFolder(std::string ur)
 
 int	Delete::DeleteResource()
 {
+	struct stat infoArchivo;
+
+    // Usar la función stat para obtener información del archivo
+    if (stat(url.c_str(), &infoArchivo) != 0) {
+        std::cerr << "No se pudo acceder a la información del archivo." << std::endl;
+		Error (403, fd, server);
+        return 1;
+    }
+
+    // Verificar si el archivo tiene permiso de lectura para el usuario
+    if (infoArchivo.st_mode & S_IRUSR) {
+        std::cout << "El archivo tiene permiso de lectura para el propietario." << std::endl;
+    } else {
+        std::cout << "El archivo NO tiene permiso de lectura para el propietario." << std::endl;
+        Error (403, fd, server);
+        return 1;
+    }
+
 	if (Utils::isDirectory(url.c_str()) == false && Utils::isFile(url.c_str()) == false)
-		return(Error(404, fd), 1);
+		return(Error(404, fd, server), 1);
 	else if(Utils::isDirectory(url.c_str()) == true)
 	{
 		if (DeleteFolder(url) == true)
 			return (sendResponseOk(), 0);
 		else
-			return (Error (500, fd), 1);
+			return (Error (500, fd, server), 1);
 
 	}
 	else if(Utils::isFile(url.c_str()) == true)
@@ -56,7 +75,7 @@ int	Delete::DeleteResource()
 		if(DeleteFile(url) == true)
 			return (sendResponseOk(), 0);
 		else
-			return (Error (500, fd), 1);
+			return (Error (500, fd, server), 1);
 	}
 
 	return (0);

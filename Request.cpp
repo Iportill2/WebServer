@@ -120,7 +120,7 @@ void    Request::stractGetData()
 
 void    Request::stractPostData()
 {
-    std::cout << "BODY:*" << body << "*" << std::endl;
+    //std::cout << "BODY:*" << body << "*" << std::endl;
     if (body.empty() == false)
         procesData(body);
 }

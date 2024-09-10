@@ -1,7 +1,7 @@
 
 # include "Load.hpp"
 
-Load::Load(Request * r, int f, std::string & url) : rq(r), fd(f), _url(url)
+Load::Load(Request * r, int f, std::string & url, srv & serv) : rq(r), fd(f), _url(url), server(serv)
 {
     //createTextFile();
 }
@@ -21,10 +21,10 @@ bool    Load::createFile()
         file.close();
     }
     else
-        return (Error(500, fd), false);
+        return (Error(500, fd, server), false);
     
     if (file.fail())
-        return (Error(500, fd), false);
+        return (Error(500, fd, server), false);
 
     return true;
 }

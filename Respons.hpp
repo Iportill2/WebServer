@@ -36,7 +36,7 @@ class Respons
 
 		int		createRespons();
 		void	setBestLocation();
-		void	redirect(std::string & url);
+		void	redirect(Location & loc);
 		bool	manageData();
 		
 		int		getResponse();

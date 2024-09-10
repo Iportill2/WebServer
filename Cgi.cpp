@@ -1,7 +1,7 @@
 
 #include "Cgi.hpp"
 
-Cgi::Cgi(Request *r, std::string  ur, int f) : rq(r), url(ur), fd(f)
+Cgi::Cgi(Request *r, std::string  ur, int f,  srv & serv) : rq(r), url(ur), fd(f), server (serv)
 {
     std::cout << "url en cgi: " << "\"" << url << "\"" << std::endl;
 	inFd = dup(0);
@@ -111,7 +111,7 @@ void Cgi::exec()
             // Si el proceso hijo no ha terminado, lo matamos
             kill(id, SIGKILL);
             std::cerr << std::endl << RED << "Child procces Timeout" << WHITE << std::endl;
-			Error (500, fd);// el misterio del bucle infinito...
+			Error (500, fd, server);// el misterio del bucle infinito...
         } else if (res > 0)
 		{
             // Si el hijo terminó, seguimos con el flujo
@@ -128,10 +128,11 @@ void Cgi::exec()
         dup2(inFd, 0);
         dup2(outFd, 1);
 
+        delete [] args;
 		if(result.empty() == false && res != 0) 
             sendResult();
 		else if(res != 0)
-			Error (500, fd);
+			Error (500, fd, server);
     }
 
 }

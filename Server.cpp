@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/09/01 14:24:42 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:34:16 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,17 @@ int Server::sign = 1;
 
 Server::Server(std::vector<srv> & srv) : servers(srv)
 {
+
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
 	printServers();
 	serverSet();
 	Mselect();
+}
+	
+void	Server::clearMemory()
+{
+	std::cout << "rq = " << rq.size() << std::endl;
 }
 
 void	Server::serverSet()
@@ -75,7 +81,7 @@ void	Server::Mselect()
 	struct timeval timeout;
 	
 	//------------------------------------
-	
+
 	while(sign)
 	{
 		FD_ZERO(&readyfdsRead);
@@ -131,6 +137,8 @@ void	Server::Mselect()
 						int newSocket = accept(i, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
 						//fcntl(newSocket, F_SETFL, O_NONBLOCK);
 						
+						if (rq.find(newSocket) != rq.end())
+							delete(rq[newSocket]);
 						Request * r = new Request;
 						rq[newSocket] = r;
 						
@@ -200,6 +208,7 @@ void	Server::Mselect()
 			}
 		}
 	}
+	clearMemory();
 }
 void	Server::Respond(int i)
 {
@@ -211,7 +220,7 @@ void	Server::Respond(int i)
 
 Server::~Server()
 {
-	//std::cout << "Server destructor called!" << std::endl;
+	std::cout << "Server destructor called!" << std::endl;
 	close (sock);
 	
 	std::map<int, Request *>::iterator iti;
@@ -220,17 +229,21 @@ Server::~Server()
 	iti = rq.begin();
 	ito = rq.end();
 
+	std::cout << "rq en server destructor = " << rq.size() << std::endl;
+
 	while(iti != ito)
 	{
-		
+		std::cout << "Server delete called!" << std::endl;	
 		delete(iti->second);
 		iti++;
 	}
+	std::cout << "rq en server destructor tras borrar = " << rq.size() << std::endl;
 }
 
 void	Server::signalHandler(int i)
 {
 	(void)i;
+	
 	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
 	sign = 0;
 }

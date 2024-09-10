@@ -3,6 +3,7 @@
 # include "dependences.hpp"
 # include "Request.hpp"
 # include "Error.hpp"
+# include "srv.hpp"
 
 class Load
 {
@@ -11,6 +12,7 @@ class Load
         Request   * rq;
 		int			fd;
         std::string _url;
+        srv         server;
 
         // std::string	boundary_clave;
         // std::string boundary_content;
@@ -23,7 +25,7 @@ class Load
 
     public:
 
-        Load(Request * r, int f, std::string & url);
+        Load(Request * r, int f, std::string & url, srv & serv);
 
         ~Load();
 

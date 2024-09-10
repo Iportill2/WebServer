@@ -7,7 +7,7 @@
 class srv;
 class Location;
 
-class Config :public Utils
+class Config : public Utils
 {
     protected:
     std::ifstream file;
@@ -15,11 +15,10 @@ class Config :public Utils
 
     int srvCount;
     int locationCount;
-    std::vector<srv> array_of_srv;
-    
+    std::vector<srv > array_of_srv;
     int server_id ;
-public:
-    Config();
+    public:
+
     Config(std::string configName);
     ~Config();
 
@@ -29,10 +28,8 @@ public:
     
     // int countSubstring(const std::string& str, const std::string& sub);
 	// size_t size(const char *s);
-    void createSrv();
+    bool createSrv();
 
-    void printArrayOfSrv() const;
-    /////
     bool validatePort();
 
     std::vector<srv> & getArrayOfServers();
@@ -41,7 +38,8 @@ public:
     bool checksrvloc();
     std::string &  skip_p_t_esp(std::string &s);
     bool checkduplicateports();
-    
+    bool checkduplicateports_server_name();
+    void clearArrayOfSrv();
 };
 
 #endif

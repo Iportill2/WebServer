@@ -1,66 +1,149 @@
 #include "Config.hpp"
-Config::Config()
+
+void Config::clearArrayOfSrv() 
 {
-    //std::cout << "Default Config Constructor" << std::endl;
+    array_of_srv.clear();
+    //std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
 }
 Config::Config(std::string configName)
 {
     //std::cout << "Config Constructor" << std::endl;
-    if(config_routine(configName) == 1)
-        if(checksrvloc() == 1)
-            if(checkduplicateports() == 1)
-            	if(validatePort() == 1)
-                    if(getServerCount() == 1)
-                        printArrayOfSrv();
+    if(config_routine(configName) == false)
+	{
+		std::cout << "if(config_routine(configName) == false)"<< std::endl;
+         
+        return;
+	}
+    
+    if(checksrvloc() == false)
+	{
+        //std::cout << "if(checksrvloc() == false)" << std::endl;
+        clearArrayOfSrv(); 
+		return;
+	}
+	if(checkduplicateports() == false)
+	{
+        std::cout << "if(checkduplicateports() == false)"<< std::endl;
+        clearArrayOfSrv(); 
+		return;
+	}
+    if(checkduplicateports_server_name() == false)
+    {
+        clearArrayOfSrv(); 
+        return;
+    }
+    if(validatePort() == false)
+	{
+        std::cout << "if(validatePort() == false)"<< std::endl;
+        clearArrayOfSrv(); 
+		return;
+	}
+	if(getServerCount() == false)
+	{
+        std::cout << "if(getServerCount() == false)"<< std::endl;
+        clearArrayOfSrv(); 
+		return;
+	}
+    if(getArrayOfServers().empty())
+    {
+        //std::cout << "getArrayOfServers().empty())";
+		return;
+    }
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
 {
     //std::cout << "Config Destructor" << std::endl;
 }
-bool Config::checkduplicateports()
+
+bool Config::checkduplicateports_server_name()
 {
     size_t i = 1;
     size_t e = 0;
     while(i < array_of_srv.size())
     {
+        e = 0;
         while(e < i)
         {
-            if (array_of_srv[i]._port == array_of_srv[e]._port)
+            if ((array_of_srv[i]._port == array_of_srv[e]._port) && (array_of_srv[i]._server_name == array_of_srv[e]._server_name))
             {
-                return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,0;
+                std::cout << "i=" << i <<"/" << "e=" << e << std::endl;
+                std::cout << array_of_srv[i]._port << "=" <<array_of_srv[e]._port << std::endl;
+                std::cout << array_of_srv[i]._server_name << "=" <<array_of_srv[e]._server_name << std::endl;
+                return std::cout << RED << "checkduplicateports_server_name()" << WHITE << std::endl,false;
             }
             e++;
         }
-        e = 0;
         i++;
     }
-    return 1;
+    return true;
+}
+bool Config::checkduplicateports()
+{
+    size_t i = 1;
+    size_t e = 0;
+    //std::cout << RED << "@"<< array_of_srv[e]._port << WHITE << std::endl;
+    while(i < array_of_srv.size())
+    {
+        e = 0;
+        while(e < i)
+        {
+            if ((array_of_srv[i]._port == array_of_srv[e]._port) && (array_of_srv[i]._host == array_of_srv[e]._host))
+            {
+                std::cout << "i=" << i <<"/" << "e=" << e << std::endl;
+                std::cout << array_of_srv[i]._port << "=" <<array_of_srv[e]._port << std::endl;
+                std::cout << array_of_srv[i]._host << "=" <<array_of_srv[e]._host << std::endl;
+                return std::cout << RED << "Dupicate port in config" << WHITE << std::endl,false;
+            }
+            e++;
+        }
+        i++;
+    }
+    return true;
 }
 
-bool Config::checksrvloc()
+bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de los methods
 {
+
+    if(array_of_srv.size() == 0)
+        return(std::cout << "array_of_srv.size() == 0" << std::endl,false);
+    
     size_t i = 0;
     while (i < array_of_srv.size())
     {
-        if(array_of_srv[i].srv_ok == 0)
-            return(std::cout << RED << "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE << std::endl,0);
-        //std::cout << GREEN<< "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE<< std::endl;
+        if(array_of_srv[i].arLoc.size() == 0)
+           return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        size_t e = 0;
+        while (e < array_of_srv[i].arLoc.size())
+        {
+/*             if(array_of_srv[i].arLoc[e].methods_vector.size() == 0)
+                return(std::cout << "(array_of_srv["<< i << "].arLoc["<< e << "].methods_vector.size() == 0" << std::endl,false); 
+ */
+/*             
+            size_t u = 0;
+            while (u < array_of_srv[i].arLoc[e].methods_vector.size())
+                ++u; */
+            ++e;
+        }
+        ++i;
+    }
+    return true;
+/*     size_t i = 0;
+    while (i < array_of_srv.size())
+    {
+        if(array_of_srv[i].srv_ok == false)
+            return(std::cout << RED << "array_of_srv[" << i << "].srv_ok="<< array_of_srv[i].srv_ok << WHITE << std::endl,false);
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
         {
             size_t u = 0;
             while (u < array_of_srv[i].arLoc[e].methods_vector.size())
-            {
-               // std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
                 ++u;
-            }
             ++e;
         }
         ++i;
     }
-    //std::cout << YELLOW << array_of_srv[3].arLoc[0]._location << WHITE << std::endl;
-    return 1;
+    return true; */
 }
 bool Config::pairbrackets(const std::string s)
 {
@@ -82,47 +165,16 @@ bool Config::pairbrackets(const std::string s)
         }
     }
     if(brackets.empty())
-        return(1);
-    return 0;
+        return(true);
+    return false;
 }
-void Config::printArrayOfSrv() const
-{
-    // std::cout << "Number of srv: " << array_of_srv.size() << std::endl;
-    // for (size_t i = 0; i < array_of_srv.size(); ++i)
-    // {
-    //     std::cout << BLUE << "srv:" << RED << "\"" << (i + 1) << "\"" << std::endl;
-    //     std::cout << BLUE << "Host:" << RED << "\""<< array_of_srv[i].getHost() << "\""<< std::endl;
-    //     std::cout << BLUE << "Port:" << RED << "\""<< array_of_srv[i].getPort() << "\""<< std::endl;
-    //     std::cout << BLUE << "Server Name:"<< RED  << "\""<< array_of_srv[i].getServerName() << "\""<< std::endl;
-    //     std::cout << BLUE << "Body Size:" << RED << "\""<< array_of_srv[i].getBodySize() << "\""<< std::endl;
-    //     std::cout << BLUE << "Root:" << RED << "\""<< array_of_srv[i].getRoot() << "\""<<  std::endl;
-    //     std::cout << std::endl << BLUE << "ipNum:" << RED << "\""<< array_of_srv[i]._ipNum << "\""<<  std::endl;
-    //     std::cout << BLUE << "sizetPort:" << RED << "\""<< array_of_srv[i]._sizetPort << "\""<<  std::endl;
-    //     std::cout << BLUE << "sizetBody:" << RED << "\""<< array_of_srv[i]._sizetBody << "\""<<  std::endl;
-    //    // Add more print statements for other srv data as needed
-    //     for(size_t e = 0 ; e < array_of_srv[i].arLoc.size(); ++e)
-    //     {
-    //         std::cout << GREEN   << "location num:" << RED << "\""<< e << "\""<< std::endl;
-    //         std::cout << MAGENTA << "location:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getLocation() << "\"" << std::endl;
-    //         std::cout << MAGENTA << "root:" << YELLOW << "\""<< array_of_srv[i].arLoc[e].getRoot() << "\""<< std::endl;
-    //         std::cout << MAGENTA << "file:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getFile() << "\""<< std::endl;
-    //         std::cout << MAGENTA << "methods:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getMethods() << "\""<< std::endl;
-    //         std::cout << MAGENTA << "autoindex:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e].getAutoindex() << "\""<< std::endl;
-    //         std::cout << MAGENTA << "cgi:"<< YELLOW << "\""<< array_of_srv[i].arLoc[e]._cgi << "\""<< std::endl;
-    //         std::cout << MAGENTA << "redirect 302:"<< YELLOW  << "\""<< array_of_srv[i].arLoc[e]._redirect << "\""<< WHITE << std::endl << std::endl; 
-    //         for(size_t u = 0 ; u < array_of_srv[i].arLoc[e].methods_vector.size() ; ++u)
-    //         {
-    //             std::cout << CYAN << "Methods[" << u << "]" << MAGENTA << array_of_srv[i].arLoc[e].methods_vector[u] << WHITE << std::endl;
-    //         }
-    //     }
-    // }
-}
+
 
 bool Config::openFile(std::string Configname)
 {
     this->file.open(Configname.c_str(), std::ios::in);
     if (this->file.is_open() == false) 
-        return 0;
+        return false;
     std::stringstream buffer;
     buffer << file.rdbuf();
 
@@ -130,7 +182,7 @@ bool Config::openFile(std::string Configname)
     this->file_content = buffer.str();
     //std::cout << this->Config_data << std::endl;//para printear el contenido del archivo
     file.close();
-    return 1;
+    return true;
 }
 
 
@@ -138,25 +190,20 @@ bool  Config::config_routine(std::string configName)
 {
     if(openFile(configName) == true)
     {
-        
-/*         std::cout << file_content.size() << std::endl;
-        std::cout << file_content << std::endl; */
-
         if(file_content.empty())
-            return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,0);
-        if(pairbrackets(file_content) == 0)
-            return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,0);
-        //std::cout << "pepe" << std::endl;
-        createSrv();
-       // std::cout << "peep" << std::endl;
-        return(1);
+            return(std::cout << RED << "File is Empty!"<< WHITE << std::endl ,false);
+        if(pairbrackets(file_content) == false)
+            return(std::cout << RED << "Bad brackets configuration, please check your config file" << WHITE << std::endl,false);
+        if(createSrv() == false)
+            return(false);
+        return(true);
     } 
     else
-        return 0;
+        return std::cout << "Archivo no abierto" << std::endl,false;
 }
 
 
-void Config::createSrv()
+bool Config::createSrv()
 {
     size_t tmp;
     std::istringstream f(this->file_content);
@@ -164,16 +211,13 @@ void Config::createSrv()
     std::string serverBlock;
     size_t i =0;
     std::stack<char> stak;
-    
     while(i < file_content.size())
     {
         tmp = i;
         while(i < file_content.size() && file_content[i] != '{' && file_content[i] != '}')
             i++;
-
         if(i == file_content.size())
             break;
-
         if(file_content[i] == '{')
             stak.push('{');
         else if (file_content[i] == '}')
@@ -191,10 +235,19 @@ void Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
-        srv newServer(sub);
-        newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
-        array_of_srv.push_back(newServer);
+        size_t pos = sub.find("server");//usar server { y darle -2 ??
+        if (pos != std::string::npos) 
+        {
+            //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
+            srv newServer(sub);
+            newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+            array_of_srv.push_back(newServer);
+        } 
+        else 
+            return(std::cout << "sub didnt contain the word server" << std::endl,false);
+    
     }
+    return(true);
 }
 
 
@@ -221,10 +274,10 @@ bool Config::getServerCount()
     if (this->srvCount > 0) 
     {
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
-        return 1;
+        return true;
     }
     else
-        return 0;
+        return std::cout << RED << "Server count is less than 0" << WHITE << std::endl,0;
 }
 ///////////////////////
 /*
@@ -240,13 +293,15 @@ bool Config::validatePort()
     size_t i = 0;
     while(i < array_of_srv.size())
     {
+        if(array_of_srv[i]._sizetPort == 0)
+            return(std::cout << array_of_srv[i]._sizetPort << std::endl,false);
         if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
-            std::cout << BLUE << "Port: " << GREEN << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
+            std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
         else
-            return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,0;
+            return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,false;
         ++i;
     }
-    return 1;
+    return true;
 }
 std::vector<srv> & Config::getArrayOfServers()
 {
@@ -262,4 +317,5 @@ std::string & Config::skip_p_t_esp(std::string &s)
     s = s.substr(start);
     return s;
 }
+
 

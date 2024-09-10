@@ -2,9 +2,10 @@
 # define SRV_HPP
 #include "dependences.hpp"
 #include "Location.hpp"
+#include "ErrorPage.hpp"
 
 class Location;
-
+class ErrorPage;
 
 class srv 
 {
@@ -14,23 +15,29 @@ class srv
     std::string _server_name;
     std::string _body;
     std::string _Root;
-    uint32_t    _ipNum;
+    uint32_t _ipNum;
 
     size_t _sizetPort;
     size_t _sizetBody;
 
-    int locationCount;
-    std::vector<Location> arLoc;
 
+    //std::string ErrorRoot;
+    std::map <int, std::string> ErrorRoot;
+
+    int locationCount;/// esto no esta ya en config???
+    std::vector<Location> arLoc;
+    std::vector<ErrorPage> arErr;// podemos usar una  variable en vez de un vector
+
+    //ErrorPage ErrPag;
+    //ErrorPage arErr; 
     std::map<std::string, std::string> result;
 
-    bool srv_ok;
 
-    srv(){};
+    srv();
     srv(std::string serverBlock);
     ~srv();
 
-
+    bool check_Location_root();
    
 
 
@@ -43,17 +50,16 @@ class srv
 	///locations
 	std::vector<Location> & getlocations();
 
-    /// 
     unsigned long ipToDecimal(const std::string& ip);
     bool checkstring();
-    bool ipAddressToipNum(std::string IpAddress);
-
+    bool ipAddressToipNum(std::string ipAddress);
     void findAndExtractRoot(const std::string& serverBlock, size_t pos); 
 
-
-    void deletespaces(std::string &s);
     bool parseServerBlock(const std::string& s) ;
-    bool stringToSizeT(const std::string& s, size_t &n);     
+    bool stringToSizeT(const std::string& s, size_t &n);   
 
+    void readErrorRoot();  
+    bool setserverconfig(std::string & variable,std::string print, std::istringstream & lineStream );
+    void clear_arLoc();
 };
 #endif

@@ -3,6 +3,7 @@
 # include "dependences.hpp"
 # include "Directory.hpp"
 # include "Error.hpp"
+# include "srv.hpp"
 
 class Delete
 {
@@ -12,10 +13,11 @@ class Delete
 		std::string					url;
 		std::string 				response;
 		std::vector<std::string>	dir;
+		srv							server;
 
     public:
 
-		Delete(std::string & ur, int f);
+		Delete(std::string & ur, int f, srv & serv);
 		~Delete();
 
 		int		DeleteResource();

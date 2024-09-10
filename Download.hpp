@@ -3,7 +3,8 @@
 # include "dependences.hpp"
 # include "Directory.hpp"
 # include "Request.hpp"
-
+# include "Error.hpp"
+class Error;
 class Download
 {
     private:
@@ -13,10 +14,11 @@ class Download
 		std::string 				response;
 		std::vector<std::string>	dir;
 		Request			        	*rq;
+		srv 						_server;
 
     public:
 
-		Download(Request * r, std::string & ur, int f);
+		Download(Request * r, std::string & ur, int f, srv &server);
 		~Download();
 
 		void	sendForm();

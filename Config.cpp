@@ -11,14 +11,13 @@ Config::Config(std::string configName)
     if(config_routine(configName) == false)
 	{
 		std::cout << "if(config_routine(configName) == false)"<< std::endl;
-        
          
         return;
 	}
-    std::cout << CYAN<< "XXX" << std::endl;
     
     if(checksrvloc() == false)
 	{
+        
         std::cout << "if(checksrvloc() == false)" << std::endl;
         clearArrayOfSrv(); 
 		return;
@@ -108,13 +107,18 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
 {
 
     if(array_of_srv.size() == 0)
+    {
         return(std::cout << "array_of_srv.size() == 0" << std::endl,false);
+    }
     
     size_t i = 0;
     while (i < array_of_srv.size())
     {
         if(array_of_srv[i].arLoc.size() == 0)
-           return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        {
+
+            return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        }
         std::cout << CYAN << "J" << WHITE << std::endl;
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
@@ -226,7 +230,8 @@ bool Config::checkServerBalance(const std::string& str) {
         }
 
         if (i <= str.size() - 6) { // 6 is the length of "Server"
-            if (str.substr(i, 6) == "Server") {
+            if (str.substr(i, 6) == "server" && (i+6 >= str.size() || str[i+6] != '_'))
+            {
                 foundServer = true;
                 if (balance != 0) {
                     return false;
@@ -277,7 +282,7 @@ bool Config::createSrv()
         //std::cout << RED << "SUB=" << sub << WHITE<< std::endl;
         if(checkServerBalance(sub) == false)
             return(std::cout << "Invalid Server configuration" << std::endl,false);
-        size_t pos = sub.find("Server");//usar server { y darle -2 ??
+        size_t pos = sub.find("server");//usar server { y darle -2 ??
 
         //std::cout << YELLOW << "POS=" << pos << WHITE<< std::endl;
         if (pos != std::string::npos) 
@@ -299,7 +304,7 @@ bool Config::getServerCount()
 {
     size_t  pos = 0;
 
-    while ((pos = file_content.find("Server", pos)) != std::string::npos) 
+    while ((pos = file_content.find("server", pos)) != std::string::npos) 
     {
         this->srvCount++;
         pos += 6; // Longitud de la cadena "Server"

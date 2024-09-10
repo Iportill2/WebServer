@@ -11,11 +11,12 @@ Config::Config(std::string configName)
     if(config_routine(configName) == false)
 	{
 		std::cout << "if(config_routine(configName) == false)"<< std::endl;
+        std::cout << CYAN<< "XXX" << std::endl;
          
         return;
 	}
     
-/*     if(checksrvloc() == false)
+    if(checksrvloc() == false)
 	{
         std::cout << "if(checksrvloc() == false)" << std::endl;
         clearArrayOfSrv(); 
@@ -48,7 +49,7 @@ Config::Config(std::string configName)
     {
         //std::cout << "getArrayOfServers().empty())";
 		return;
-    } */
+    }
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
@@ -211,67 +212,7 @@ int Config::findCharInString(const std::string& str, char c) {
         return -1;  // Devuelve -1 si el carácter no se encuentra
     }
 }
-/* bool Config::createSrv()
-{
-    std::istringstream f(this->file_content);
-    std::string word;
-    std::stack<char> stak;
-    std::string key;
 
-    std::getline(f, word);
-    std::istringstream lineStream(word);
-    lineStream >> key;
-    std::cout << YELLOW << key << WHITE << std::endl;
-    while(getline(f,word))
-    {
-        std::string text;
-        if(key == "server" )
-        {
-            lineStream >> key;
-            if(findCharInString(word, '{') != -1)
-                stak.push('{');
-            text += key;
-            std::cout << MAGENTA << key << WHITE << std::endl;
-            std::cout << MAGENTA << "E" << WHITE << std::endl;
-            while (std::getline(f, word)&& !stak.empty()) 
-            {
-                text += word;
-                if(findCharInString(word, '{') != -1) // Cambia 'key' a 'word'
-                    stak.push('{');
-                else if(findCharInString(word, '}') != -1) // Cambia 'key' a 'word'
-                    stak.pop();
-            }
-            std::cout << "text="<< text << std::endl;
-            srv newServer(text);
-            newServer.locationCount = 1;
-            array_of_srv.push_back(newServer);
-
-        }
-        else if(findCharInString(key, '{') != -1)//devuelve -1 si { no se encuentra en el string
-        {
-            stak.push('{');
-            text += key;
-
-            std::cout << MAGENTA << "A" << WHITE << std::endl;
-            while (std::getline(f, word)&& !stak.empty()) 
-            {
-                text += word;
-                if(findCharInString(word, '{') != -1) // Cambia 'key' a 'word'
-                    stak.push('{');
-                else if(findCharInString(word, '}') != -1) // Cambia 'key' a 'word'
-                    stak.pop();
-            }
-            std::cout << "text="<< text << std::endl;
-            srv newServer(text);
-            newServer.locationCount = 1;
-            array_of_srv.push_back(newServer);
-
-        }
-
-
-    }
-    return(true);
-} */
 bool Config::checkServerBalance(const std::string& str) {
     int balance = 0;
     bool foundServer = false;
@@ -332,12 +273,12 @@ bool Config::createSrv()
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
 
-        std::cout << RED << "SUB=" << sub << WHITE<< std::endl;
+        //std::cout << RED << "SUB=" << sub << WHITE<< std::endl;
         if(checkServerBalance(sub) == false)
             return(std::cout << "Invalid Server configuration" << std::endl,false);
         size_t pos = sub.find("Server");//usar server { y darle -2 ??
 
-        std::cout << YELLOW << "POS=" << pos << WHITE<< std::endl;
+        //std::cout << YELLOW << "POS=" << pos << WHITE<< std::endl;
         if (pos != std::string::npos) 
         {
             //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
@@ -355,24 +296,13 @@ bool Config::createSrv()
 
 bool Config::getServerCount()
 {
-    int server = 0;
-    int server_name = 0;
     size_t  pos = 0;
-    //std::string::size_type pos = 0;
 
-    while ((pos = file_content.find("server", pos)) != std::string::npos) 
+    while ((pos = file_content.find("Server", pos)) != std::string::npos) 
     {
-        ++server;
+        this->srvCount++;
         pos += 6; // Longitud de la cadena "Server"
     }
-    pos = 0;
-    while ((pos = file_content.find("server_name", pos)) != std::string::npos) 
-    {
-        ++server_name;
-        pos += 11; // Longitud de la cadena "Server"
-    }
-    this->srvCount = server - server_name;
-
     if (this->srvCount > 0) 
     {
         std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;

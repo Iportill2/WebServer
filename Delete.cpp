@@ -42,8 +42,31 @@ bool		Delete::DeleteFolder(std::string ur)
 
 int	Delete::DeleteResource()
 {
-	if (Utils::isDirectory(url.c_str()) == false && Utils::isFile(url.c_str()) == false)
-		return(Error(404, fd, server), 1);
+	struct stat infoArchivo;
+
+    // Llamar a stat para intentar obtener información sobre el archivo
+    if (stat(url.c_str(), &infoArchivo) != 0)
+	{
+        if (errno == EACCES)
+		{
+            std::cerr << "Error: No se tienen permisos para acceder al directorio o archivo." << std::endl;
+			return(Error(403, fd, server), 1);
+        }
+		else if (errno == ENOENT)
+		{
+            std::cerr << "Error: El archivo o directorio no existe." << std::endl;
+			return(Error(404, fd, server), 1);
+        }
+		else
+		{
+            std::cerr << "Error desconocido: " << strerror(errno) << std::endl;
+			return(Error(405, fd, server), 1);
+        }
+    }
+
+	/* if (Utils::isDirectory(url.c_str()) == false && Utils::isFile(url.c_str()) == false)
+		return(Error(404, fd, server), 1); */
+
 	else if(Utils::isDirectory(url.c_str()) == true)
 	{
 		if (DeleteFolder(url) == true)

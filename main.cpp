@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     {
         std::cout << std::endl << YELLOW << "Configuration file not provided." << std::endl;
         std::cout << GREEN <<"Loading default configuration..."<< WHITE  << std::endl;
-        Config confs("conf/1.conf");
+        Config confs("conf/default.conf");
         if (confs.getArrayOfServers().empty())
         {
             std::cout << RED << "Default configuration failed. Bye, bye." << WHITE << std::endl << std::endl;
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         {
 			std::cout << std::endl << RED << "Configuration file failed." << std::endl;
        		std::cout << GREEN <<"Loading default configuration..."<< WHITE  << std::endl;
-			Config confsDef("conf/1.conf");
+			Config confsDef("conf/default.conf");
             if (confsDef.getArrayOfServers().empty())
        		{
             	std::cout << RED << "Default configuration failed. Bye, bye." << WHITE << std::endl << std::endl;

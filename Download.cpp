@@ -48,8 +48,28 @@ void Download::sendFile()
 
 	std::string path = url + "/" + fileName;
 	std::cout << "PATH:" << path << std::endl;
-	std::ifstream file(path.c_str(), std::ios::binary);
 
+    struct stat infoArchivo;
+
+    // Usar la función stat para obtener información del archivo
+    if (stat(path.c_str(), &infoArchivo) != 0) {
+        Error (403, fd, _server);
+        std::cerr << "No se pudo acceder a la información del archivo." << std::endl;
+        return;
+    }
+
+    // Verificar si el archivo tiene permiso de lectura para el usuario
+    if (infoArchivo.st_mode & S_IRUSR) {
+        std::cout << "El archivo tiene permiso de lectura para el propietario." << std::endl;
+    } else {
+        std::cout << "El archivo NO tiene permiso de lectura para el propietario." << std::endl;
+        Error (403, fd, _server);
+        return;
+    }
+
+
+
+	std::ifstream file(path.c_str(), std::ios::binary);
 	if(Utils::isFile(path.c_str()))
 		std::cout << "It is a file" << std::endl;
 	else

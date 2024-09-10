@@ -11,10 +11,11 @@ Config::Config(std::string configName)
     if(config_routine(configName) == false)
 	{
 		std::cout << "if(config_routine(configName) == false)"<< std::endl;
-        std::cout << CYAN<< "XXX" << std::endl;
+        
          
         return;
 	}
+    std::cout << CYAN<< "XXX" << std::endl;
     
     if(checksrvloc() == false)
 	{

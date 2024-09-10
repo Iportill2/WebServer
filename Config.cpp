@@ -15,7 +15,7 @@ Config::Config(std::string configName)
         return;
 	}
     
-    if(checksrvloc() == false)
+/*     if(checksrvloc() == false)
 	{
         std::cout << "if(checksrvloc() == false)" << std::endl;
         clearArrayOfSrv(); 
@@ -48,7 +48,7 @@ Config::Config(std::string configName)
     {
         //std::cout << "getArrayOfServers().empty())";
 		return;
-    }
+    } */
     //std::cout << BLUE << array_of_srv[0].arLoc[0].getFile() << "|" << WHITE << std::endl;
 }
 Config::~Config()
@@ -113,6 +113,7 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
     {
         if(array_of_srv[i].arLoc.size() == 0)
            return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        std::cout << CYAN << "J" << WHITE << std::endl;
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
         {
@@ -210,41 +211,68 @@ int Config::findCharInString(const std::string& str, char c) {
         return -1;  // Devuelve -1 si el carácter no se encuentra
     }
 }
-bool Config::createSrv()
+/* bool Config::createSrv()
 {
     std::istringstream f(this->file_content);
     std::string word;
-    std::string text;
     std::stack<char> stak;
-	std::string key;
+    std::string key;
 
-    std::getline(f, word, ' ');
+    std::getline(f, word);
     std::istringstream lineStream(word);
-	lineStream >> key;
+    lineStream >> key;
+    std::cout << YELLOW << key << WHITE << std::endl;
+    while(getline(f,word))
+    {
+        std::string text;
+        if(key == "server" )
+        {
+            lineStream >> key;
+            if(findCharInString(word, '{') != -1)
+                stak.push('{');
+            text += key;
+            std::cout << MAGENTA << key << WHITE << std::endl;
+            std::cout << MAGENTA << "E" << WHITE << std::endl;
+            while (std::getline(f, word)&& !stak.empty()) 
+            {
+                text += word;
+                if(findCharInString(word, '{') != -1) // Cambia 'key' a 'word'
+                    stak.push('{');
+                else if(findCharInString(word, '}') != -1) // Cambia 'key' a 'word'
+                    stak.pop();
+            }
+            std::cout << "text="<< text << std::endl;
+            srv newServer(text);
+            newServer.locationCount = 1;
+            array_of_srv.push_back(newServer);
 
-    if(key == "server" )
-    {
-        std::string temp;
-        lineStream >> temp;
-        text += temp;
-        
-    }
-    else if(findCharInString(key, '{') == -1)
-        return(false);
-    else if(findCharInString(key, '{') != -1)
-    {
-        stak.push('{');
-    }
-    while (std::getline(f, word, ' ')&& !stak.empty()) 
-    {
-        if(word == "server" )
-        // Hacer algo con la palabra
-        text += word;
-        std::cout << word << std::endl;
+        }
+        else if(findCharInString(key, '{') != -1)//devuelve -1 si { no se encuentra en el string
+        {
+            stak.push('{');
+            text += key;
+
+            std::cout << MAGENTA << "A" << WHITE << std::endl;
+            while (std::getline(f, word)&& !stak.empty()) 
+            {
+                text += word;
+                if(findCharInString(word, '{') != -1) // Cambia 'key' a 'word'
+                    stak.push('{');
+                else if(findCharInString(word, '}') != -1) // Cambia 'key' a 'word'
+                    stak.pop();
+            }
+            std::cout << "text="<< text << std::endl;
+            srv newServer(text);
+            newServer.locationCount = 1;
+            array_of_srv.push_back(newServer);
+
+        }
+
+
     }
     return(true);
-}
-/* bool Config::createSrv()
+} */
+bool Config::createSrv()
 {
     size_t tmp;
     std::istringstream f(this->file_content);
@@ -276,7 +304,7 @@ bool Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
-        size_t pos = sub.find("server");//usar server { y darle -2 ??
+        size_t pos = sub.find("Server");//usar server { y darle -2 ??
         if (pos != std::string::npos) 
         {
             std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
@@ -289,7 +317,7 @@ bool Config::createSrv()
     
     }
     return(true);
-} */
+}
 
 
 bool Config::getServerCount()

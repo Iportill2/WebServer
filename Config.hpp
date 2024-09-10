@@ -41,6 +41,7 @@ class Config : public Utils
     bool checkduplicateports_server_name();
     void clearArrayOfSrv();
     int findCharInString(const std::string& str, char c);
+    bool checkServerBalance(const std::string& str);
 };
 
 #endif

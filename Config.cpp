@@ -272,6 +272,33 @@ int Config::findCharInString(const std::string& str, char c) {
     }
     return(true);
 } */
+bool Config::checkServerBalance(const std::string& str) {
+    int balance = 0;
+    bool foundServer = false;
+
+    for (size_t i = 0; i < str.size(); ++i) {
+        if (str[i] == '{') {
+            ++balance;
+        } else if (str[i] == '}') {
+            --balance;
+        }
+
+        if (i <= str.size() - 6) { // 6 is the length of "Server"
+            if (str.substr(i, 6) == "Server") {
+                foundServer = true;
+                if (balance != 0) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    if (!foundServer && balance == 0) {
+        return false;
+    }
+
+    return true;
+}
 bool Config::createSrv()
 {
     size_t tmp;
@@ -304,10 +331,16 @@ bool Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
+
+        std::cout << RED << "SUB=" << sub << WHITE<< std::endl;
+        if(checkServerBalance(sub) == false)
+            return(std::cout << "Invalid Server configuration" << std::endl,false);
         size_t pos = sub.find("Server");//usar server { y darle -2 ??
+
+        std::cout << YELLOW << "POS=" << pos << WHITE<< std::endl;
         if (pos != std::string::npos) 
         {
-            std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
+            //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
             srv newServer(sub);
             newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
             array_of_srv.push_back(newServer);

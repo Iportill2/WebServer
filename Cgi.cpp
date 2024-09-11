@@ -128,6 +128,7 @@ void Cgi::exec()
         dup2(inFd, 0);
         dup2(outFd, 1);
 
+        delete [] args;
 		if(result.empty() == false && res != 0) 
             sendResult();
 		else if(res != 0)

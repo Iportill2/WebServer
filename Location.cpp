@@ -106,7 +106,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
         if (key == "redirect" && _redirect.empty())
         {
             lineStream >> redirect_num;
-            if(redirect_num !=  "301" &&  redirect_num != "302")
+            if(redirect_num !=  "301" &&  redirect_num != "302"&& redirect_num !=  "303")
                 return(std::cout << RED << "Invalid redirect_num " << redirect_num<< WHITE << std::endl, false);
             lineStream >> _redirect;
             //std::cout << MAGENTA <<"|" << _redirect << "|" <<WHITE << std::endl;
@@ -116,7 +116,7 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             if(_redirect[_redirect.size()-1] == ';')
                 _redirect = _redirect.substr(0, _redirect.size() - 1);
             //std::cout << "redirect"<< "|"<< redirect_num << "|" << _redirect << "|"<< std::endl;
-		} 
+        }
 	}
 
     if(_location.empty())

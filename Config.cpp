@@ -1,13 +1,12 @@
 #include "Config.hpp"
 
-void Config::clearArrayOfSrv() 
+void Config::clearArrayOfSrv()
 {
     array_of_srv.clear();
     std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
 }
-Config::Config(std::string configName) 
+Config::Config(std::string configName)  : srvCount(0)
 {
-    srvCount = 0;
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == false)
 	{
@@ -120,7 +119,6 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
 
             return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
         }
-        //std::cout << CYAN << "J" << WHITE << std::endl;
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
         {
@@ -290,7 +288,7 @@ bool Config::createSrv()
         {
             //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
             srv newServer(sub);
-            newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+            newServer.locationCount = Utils::countSubstring(file_content.substr(tmp, i - tmp), "location");
             array_of_srv.push_back(newServer);
         } 
         else 
@@ -304,15 +302,22 @@ bool Config::createSrv()
 bool Config::getServerCount()
 {
     size_t  pos = 0;
-
+    int server_name = 0;
     while ((pos = file_content.find("server", pos)) != std::string::npos) 
     {
-        srvCount++;
+        this->srvCount++;
         pos += 6; // Longitud de la cadena "Server"
     }
+    pos = 0;
+    while ((pos = file_content.find("server_name", pos)) != std::string::npos) 
+    {
+        server_name++;
+        pos += 11; // Longitud de la cadena "Server"
+    }
+    this->srvCount = this->srvCount - server_name;
     if (this->srvCount > 0) 
     {
-        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<srvCount << WHITE << std::endl;
+        //std::cout << "Servers: " << GREEN << srvCount << WHITE << std::endl;
         return true;
     }
     else
@@ -329,17 +334,19 @@ que estés ejecutando Nginx como root (lo cual no se recomienda por razones de s
 */
 bool Config::validatePort()
 {
+    std::cout << std::endl;
     size_t i = 0;
     while(i < array_of_srv.size())
     {
         if(array_of_srv[i]._sizetPort == 0)
             return(std::cout << array_of_srv[i]._sizetPort << std::endl,false);
         if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
-            std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
+            std::cout << "Server " << i + 1 << "  Port: " << GREEN << array_of_srv[i]._sizetPort << WHITE << " active"  << std::endl;
         else
             return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,false;
         ++i;
     }
+    std::cout << std::endl;
     return true;
 }
 std::vector<srv> & Config::getArrayOfServers()

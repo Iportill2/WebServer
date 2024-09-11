@@ -120,14 +120,14 @@ void    Request::stractGetData()
 
 void    Request::stractPostData()
 {
-    std::cout << "BODY:*" << body << "*" << std::endl;
+    //std::cout << "BODY:*" << body << "*" << std::endl;
     if (body.empty() == false)
         procesData(body);
 }
 
 void Request::parse()
 {
-    std::cout << std::endl << YELLOW << buffer << WHITE << std::endl;
+    //std::cout << std::endl << YELLOW << buffer << WHITE << std::endl;
 
     std::string line;
     std::istringstream stream(buffer);

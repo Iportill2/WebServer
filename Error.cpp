@@ -3,7 +3,6 @@
 
 Error::Error(int er, int fdescriptor, srv & server)
 {
-    //std::cout << "\nE\n";
     sendError(server, er, fdescriptor);
 }
 

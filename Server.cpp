@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/09/02 17:28:43 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:31:07 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,14 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
-	printServers();
+	//printServers();
 	serverSet();
 	Mselect();
 }
-
-/* bool Server::checkdefaultsettings(std::string ip,srv &s)
+	
+/* void	Server::clearMemory()
 {
-	if(s.ipAddressToipNum(ip) == false)
-		return(std::cout << "s.ipAddressToipNum(ip)\n", false);
-	if( Utils::isDirectory(s._Root.c_str()) == false)
-		return(std::cout << "directoryExists(s._Root)\n", false);
-	size_t i = 0;
-	while(i < s.arLoc.size())
-	{
-		if(s.arLoc[i]._redirect.empty())
-		{
-			if(Utils::isDirectory(s.arLoc[i]._root.c_str()) == false)
-				return(std::cout << "directoryExists(l"<< i << "._root)\n", false);
-			if(Utils::isFile(s.arLoc[i]._file.c_str()) == false)
-				return(std::cout << "fileExists(l"<< i << "._file)\n", false);
-			if(s.arLoc[i].methods_vector.size() < 1)
-				return(std::cout << "l"<< i <<".methods_vector.size() == 1\n",false);
-		}	
-		i++;
-	}
-	return(true);
+	std::cout << "rq = " << rq.size() << std::endl;
 } */
 
 void	Server::serverSet()
@@ -99,7 +81,7 @@ void	Server::Mselect()
 	struct timeval timeout;
 	
 	//------------------------------------
-	
+
 	while(sign)
 	{
 		FD_ZERO(&readyfdsRead);
@@ -107,7 +89,7 @@ void	Server::Mselect()
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		//std::cout  << "👾 " << std::flush;
+		std::cout  << "👾 " << std::flush;
 		
     	timeout.tv_sec = 0;
     	timeout.tv_usec = 500000;
@@ -141,7 +123,7 @@ void	Server::Mselect()
 				
 			if (FD_ISSET(i, &readyfdsRead))
 			{
-				std::cout << std::endl << GREEN << "Select selecciona fd de lectura " << i <<  WHITE << std::endl;
+				//std::cout << std::endl << GREEN << "Select selecciona fd de lectura " << i <<  WHITE << std::endl;
 				isServerSock = 0;
 				
 				std::map<int, int>::iterator it = serversMap.begin();
@@ -149,12 +131,14 @@ void	Server::Mselect()
 		
 				while (it != out)
 				{
-					std::cout << std::endl << "Mira si el fd " << i << " es una llamada " << std::endl;
+					//std::cout << std::endl << "Mira si el fd " << i << " es una llamada " << std::endl;
 					if (i == it->first)
 					{
 						int newSocket = accept(i, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
 						//fcntl(newSocket, F_SETFL, O_NONBLOCK);
 						
+						if (rq.find(newSocket) != rq.end())
+							delete(rq[newSocket]);
 						Request * r = new Request;
 						rq[newSocket] = r;
 						
@@ -164,7 +148,7 @@ void	Server::Mselect()
 						if (newSocket > maxFD)
 							maxFD = newSocket;
 						isServerSock = 1;
-						std::cout << std::endl << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;
+						std::cout << std::endl << YELLOW << "Client call at Server " << serversMap[i] + 1 << ", newSocket for communication created with fd " << newSocket << WHITE << std::endl;
 						i = maxFD + 1;
 						
 						break;
@@ -173,12 +157,11 @@ void	Server::Mselect()
 				}
 				if (!isServerSock)
 				{
-					std::cout << std::endl << GREEN <<"No es llamada es comunicacion, LEE la peticion del socket " << i << WHITE << std::endl;
+					std::cout << std::endl << CYAN <<"Server " << serversMap[readMap[i]] + 1 << " READS REQUEST of client with fd " << i << WHITE << std::endl;
 					
 					memset(buffer, 0, sizeof(buffer));
                     int bytes = recv(i, buffer, sizeof(buffer) - 1, 0);
 					fcntl(i, F_SETFL, O_NONBLOCK);
-					std::cout << "bytes: " << bytes << std::endl;
 					
 					if (bytes == 0 || bytes == -1)
 					{
@@ -187,6 +170,8 @@ void	Server::Mselect()
 						else if (bytes == -1)
 							std::cout << RED << "Error in socket " << i << "closed connection. Client removed" << WHITE << std::endl;
 						FD_CLR(i, &activefdsRead);
+						if (rq[i] != NULL)
+							delete rq[i];
 						rq.erase(i);
 						close (i);
 					}
@@ -196,11 +181,10 @@ void	Server::Mselect()
 						rq[i]->firstRead = false;
 						if (rq[i]->getBoundary().empty() || rq[i]->part.find(rq[i]->boundaryEnd) != std::string::npos)
 						{
-							std::cout << "LA BOLA ENTRO" << std::endl;
 							rq[i]->parse();
 							FD_SET(i, &activefdsWrite);
 							FD_CLR(i, &activefdsRead);
-							std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
+							//std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
 						}
 					}
 					i = maxFD + 1;
@@ -208,22 +192,23 @@ void	Server::Mselect()
 			}
 			else if (FD_ISSET(i, &readyfdsWrite))
 			{
-				std::cout << std::endl << GREEN << "Select selecciona fd de escritura " << i << " y es respondido!!!" << WHITE << std::endl;
+				std::cout << std::endl << GREEN << "Server " << serversMap[readMap[i]] + 1 << " SENDS RESPONSE to client with fd " << i << WHITE << std::endl;
 				Respond(i);
 				rq.erase(i);
 				readMap.erase(i);
 				FD_CLR(i, &activefdsWrite);
 				close (i);
 				i = maxFD + 1;
-				std::cout << "......................................." << std::endl;
+				/* std::cout << "......................................." << std::endl;
 				std::cout << "......................................." << std::endl;
 				//std::cout << "Requests activas: " << rq.size() << std::endl;
 				std::cout << "......................................." << std::endl;
 				std::cout << "......................................." << std::endl;
-				std::cout << "......................................." << std::endl;
+				std::cout << "......................................." << std::endl; */
 			}
 		}
 	}
+	//clearMemory();
 }
 void	Server::Respond(int i)
 {
@@ -236,7 +221,7 @@ void	Server::Respond(int i)
 Server::~Server()
 {
 	//std::cout << "Server destructor called!" << std::endl;
-	close (sock);
+	//close (sock);
 	
 	std::map<int, Request *>::iterator iti;
 	std::map<int, Request *>::iterator ito;
@@ -244,17 +229,21 @@ Server::~Server()
 	iti = rq.begin();
 	ito = rq.end();
 
+	//std::cout << "rq en server destructor = " << rq.size() << std::endl;
+
 	while(iti != ito)
 	{
-		
+		std::cout << "Server delete called!" << std::endl;	
 		delete(iti->second);
 		iti++;
 	}
+	//std::cout << "rq en server destructor tras borrar = " << rq.size() << std::endl;
 }
 
 void	Server::signalHandler(int i)
 {
 	(void)i;
+	
 	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
 	sign = 0;
 }

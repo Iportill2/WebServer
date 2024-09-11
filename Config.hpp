@@ -7,7 +7,7 @@
 class srv;
 class Location;
 
-class Config : public Utils
+class Config
 {
     protected:
     std::ifstream file;

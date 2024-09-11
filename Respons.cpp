@@ -5,12 +5,13 @@
 
 Respons::Respons(Request * request, srv & sv, int fDescriptor) : rq(request), server(sv), fd(fDescriptor){}
 
-Respons::~Respons() {}
+Respons::~Respons() {delete rq;}
 
 int		Respons::cgiResponse()
 {
 	if(server.arLoc[_loc].getCgi() != "on")
-        return (Error(403, fd, server), 1);
+		return (Error(403, fd, server), 1);
+
 	Cgi c(rq, _url, fd, server);
 	if (rq->getMethod() == "get")
 		c.createGetEnv();
@@ -64,14 +65,17 @@ bool	Respons::checkServerName()
 
 bool	Respons::checkAuthorized()
 {
-	std::cout << "url:" << _url << std::endl;
+	//std::cout << "----url:" << _url << std::endl;
 	size_t point = _url.find('.');//cuidao si no lo encuentra
 	if (point != std::string::npos)
 		_extension = _url.substr(point);
+	else
+		return true;
 	//std::cout << "Extension = " << "\"" <<  _extension  << "\"" << std::endl;
 
-	/* if(_extension != ".html" && _extension != ".jpg" && _extension != ".png" && _extension != ".ico" && _extension != ".out")
-		return 0; */
+	if(_extension != ".html" && _extension != ".jpg" && _extension != ".png" && _extension != ".ico" && _extension != ".out")
+		return false;
+
 	return true;
 }
 bool	Respons::checkMethod()
@@ -116,6 +120,7 @@ bool	Respons::manageData()
 		{
 			Download d(rq, _url, fd, server);
 			d.sendForm();
+			//delete rq;
 			return true;
 		}
 		it++;
@@ -182,7 +187,7 @@ int	Respons::getResponse()
 {
 	if (manageData() == true)
 		return 0;
-	std::cout <<RED << "URL:" << _url <<WHITE<< std::endl;
+	//std::cout <<RED << "URL:" << _url <<WHITE<< std::endl;
 	if(Utils::isDirectory(_url.c_str()) == true)
 		return (Error (403, fd, server), 1);
 	if(Utils::isFile(_url.c_str()) == false)
@@ -225,13 +230,24 @@ int	Respons::postResponse()
 }
 
 
-void	Respons::redirect(std::string & url)
+void	Respons::redirect(Location & loc)
 {
-	std::string httpResponse = "HTTP/1.1 302 Found\r\n";
-    httpResponse += "Location: " + url + "\r\n";
+	//std::cout << "loc.getRedirect302():" << loc.getRedirect302() << std::endl;
+
+	std::string httpResponse = "HTTP/1.1 " + Utils::status(Utils::toInt(loc.redirect_num)) + "\r\n";
+    httpResponse += "Location: " + loc.getRedirect302() + "\r\n";
     httpResponse += "Content-Length: 0\r\n";
     httpResponse += "Connection: close\r\n";
     httpResponse += "\r\n";
+
+	/* std::string status = Utils::status(Utils::toInt(loc.redirect_num));
+	std::cout << "status:" << status << std::endl;
+	//std::string httpResponse = "HTTP/1.1 302 Found\r\n";
+	std::string httpResponse = "HTTP/1.1 " + status + "\r\n";
+    httpResponse += "Location: " + loc.getRedirect302() + "\r\n";
+    httpResponse += "Content-Length: 0\r\n";
+    httpResponse += "Connection: close\r\n";
+    httpResponse += "\r\n"; */
 
 	write (fd, httpResponse.c_str(), httpResponse.size());
 }
@@ -239,10 +255,10 @@ void	Respons::redirect(std::string & url)
 
 void	Respons::setBestLocation()
 {
-	std::cout << "Uri:" <<  rq->getUri() << std::endl << std::endl;
+	/* std::cout << "Uri:" <<  rq->getUri() << std::endl << std::endl;
 	for (size_t i = 0; i < server.arLoc.size(); i++)
 		std::cout << "loc " << i + 1 << " :" << server.arLoc[i].getLocation() << RED << " *" << WHITE << 
-		" file:" << server.arLoc[i].getFile() << RED << " *" << WHITE <<" Root:"<< server.arLoc[i].getRoot() << std::endl;
+		" file:" << server.arLoc[i].getFile() << RED << " *" << WHITE <<" Root:"<< server.arLoc[i].getRoot() << std::endl; */
 
 	
 
@@ -288,7 +304,7 @@ int	Respons::createRespons() //ENTRADA------------------------
 {
 	setBestLocation();
 
-	//std::cout << "url:" << _url << std::endl;
+	//std::cout << "*-*-*-*-*cgi:" << server.arLoc[_loc].getCgi() << std::endl;
 
 	if (checkServerName() == false)
 		return (Error (400, fd, server), 1);
@@ -297,7 +313,7 @@ int	Respons::createRespons() //ENTRADA------------------------
 		return (Error (405, fd, server), 1);
 
 	if(server.arLoc[_loc]._redirect.empty() == false)
-		return (redirect(server.arLoc[_loc]._redirect), 0);
+		return (redirect(server.arLoc[_loc]), 0);
 	if(server.arLoc[_loc].getAutoindex() == "on" && Utils::isDirectory(_url.c_str()) == true)
 		return (Autoindex (server, fd, _loc), 0);
 

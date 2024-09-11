@@ -1,11 +1,11 @@
 #include "Config.hpp"
 
-void Config::clearArrayOfSrv() 
+void Config::clearArrayOfSrv()
 {
     array_of_srv.clear();
-    //std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
+    std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
 }
-Config::Config(std::string configName)
+Config::Config(std::string configName)  : srvCount(0)
 {
     //std::cout << "Config Constructor" << std::endl;
     if(config_routine(configName) == false)
@@ -17,7 +17,8 @@ Config::Config(std::string configName)
     
     if(checksrvloc() == false)
 	{
-        //std::cout << "if(checksrvloc() == false)" << std::endl;
+        
+        std::cout << "if(checksrvloc() == false)" << std::endl;
         clearArrayOfSrv(); 
 		return;
 	}
@@ -106,13 +107,18 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
 {
 
     if(array_of_srv.size() == 0)
+    {
         return(std::cout << "array_of_srv.size() == 0" << std::endl,false);
+    }
     
     size_t i = 0;
     while (i < array_of_srv.size())
     {
         if(array_of_srv[i].arLoc.size() == 0)
-           return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        {
+
+            return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+        }
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())
         {
@@ -201,8 +207,44 @@ bool  Config::config_routine(std::string configName)
     else
         return std::cout << "Archivo no abierto" << std::endl,false;
 }
+int Config::findCharInString(const std::string& str, char c) {
+    std::size_t found = str.find(c);
 
+    if (found != std::string::npos) {
+        return static_cast<int>(found);
+    } else {
+        return -1;  // Devuelve -1 si el carácter no se encuentra
+    }
+}
 
+bool Config::checkServerBalance(const std::string& str) {
+    int balance = 0;
+    bool foundServer = false;
+
+    for (size_t i = 0; i < str.size(); ++i) {
+        if (str[i] == '{') {
+            ++balance;
+        } else if (str[i] == '}') {
+            --balance;
+        }
+
+        if (i <= str.size() - 6) { // 6 is the length of "Server"
+            if (str.substr(i, 6) == "server" && (i+6 >= str.size() || str[i+6] != '_'))
+            {
+                foundServer = true;
+                if (balance != 0) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    if (!foundServer && balance == 0) {
+        return false;
+    }
+
+    return true;
+}
 bool Config::createSrv()
 {
     size_t tmp;
@@ -235,12 +277,18 @@ bool Config::createSrv()
         if (tmp + length > file_content.size())
             length = file_content.size() - tmp;
         std::string sub = file_content.substr(tmp, length);
+
+        //std::cout << RED << "SUB=" << sub << WHITE<< std::endl;
+        if(checkServerBalance(sub) == false)
+            return(std::cout << "Invalid Server configuration" << std::endl,false);
         size_t pos = sub.find("server");//usar server { y darle -2 ??
+
+        //std::cout << YELLOW << "POS=" << pos << WHITE<< std::endl;
         if (pos != std::string::npos) 
         {
             //std::cout << CYAN << "sub=" << sub << WHITE<<std::endl;
             srv newServer(sub);
-            newServer.locationCount = countSubstring(file_content.substr(tmp, i - tmp), "location");
+            newServer.locationCount = Utils::countSubstring(file_content.substr(tmp, i - tmp), "location");
             array_of_srv.push_back(newServer);
         } 
         else 
@@ -253,27 +301,16 @@ bool Config::createSrv()
 
 bool Config::getServerCount()
 {
-    int server = 0;
-    int server_name = 0;
     size_t  pos = 0;
-    //std::string::size_type pos = 0;
 
     while ((pos = file_content.find("server", pos)) != std::string::npos) 
     {
-        ++server;
+        this->srvCount++;
         pos += 6; // Longitud de la cadena "Server"
     }
-    pos = 0;
-    while ((pos = file_content.find("server_name", pos)) != std::string::npos) 
-    {
-        ++server_name;
-        pos += 11; // Longitud de la cadena "Server"
-    }
-    this->srvCount = server - server_name;
-
     if (this->srvCount > 0) 
     {
-        std::cout << BLUE << "Cantidad de servidores: " << YELLOW <<this->srvCount << WHITE << std::endl;
+        //std::cout << "Servers: " << GREEN << srvCount << WHITE << std::endl;
         return true;
     }
     else
@@ -290,17 +327,19 @@ que estés ejecutando Nginx como root (lo cual no se recomienda por razones de s
 */
 bool Config::validatePort()
 {
+    std::cout << std::endl;
     size_t i = 0;
     while(i < array_of_srv.size())
     {
         if(array_of_srv[i]._sizetPort == 0)
             return(std::cout << array_of_srv[i]._sizetPort << std::endl,false);
         if(array_of_srv[i]._sizetPort > 1023 && array_of_srv[i]._sizetPort < 65535)
-            std::cout << BLUE << "Port: " << RED << array_of_srv[i]._sizetPort << " OK!" << WHITE << std::endl;
+            std::cout << "Server " << i + 1 << "  Port: " << GREEN << array_of_srv[i]._sizetPort << WHITE << " active"  << std::endl;
         else
             return std::cout << CYAN << "validatePort() error the value of port is "<< RED << array_of_srv[i]._sizetPort << CYAN <<" should be betwen 1023 to 65535"<< WHITE << std::endl,false;
         ++i;
     }
+    std::cout << std::endl;
     return true;
 }
 std::vector<srv> & Config::getArrayOfServers()

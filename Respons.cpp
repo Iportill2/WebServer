@@ -65,7 +65,7 @@ bool	Respons::checkServerName()
 
 bool	Respons::checkAuthorized()
 {
-	std::cout << "----url:" << _url << std::endl;
+	//std::cout << "----url:" << _url << std::endl;
 	size_t point = _url.find('.');//cuidao si no lo encuentra
 	if (point != std::string::npos)
 		_extension = _url.substr(point);
@@ -232,7 +232,7 @@ int	Respons::postResponse()
 
 void	Respons::redirect(Location & loc)
 {
-	std::cout << "loc.getRedirect302():" << loc.getRedirect302() << std::endl;
+	//std::cout << "loc.getRedirect302():" << loc.getRedirect302() << std::endl;
 
 	std::string httpResponse = "HTTP/1.1 " + Utils::status(Utils::toInt(loc.redirect_num)) + "\r\n";
     httpResponse += "Location: " + loc.getRedirect302() + "\r\n";

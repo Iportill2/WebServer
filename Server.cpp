@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/09/10 15:34:16 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/09/11 12:31:07 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ Server::Server(std::vector<srv> & srv) : servers(srv)
 
 	signal(SIGINT, signalHandler);
 	signal(SIGTERM, &signalHandler);
-	printServers();
+	//printServers();
 	serverSet();
 	Mselect();
 }
 	
-void	Server::clearMemory()
+/* void	Server::clearMemory()
 {
 	std::cout << "rq = " << rq.size() << std::endl;
-}
+} */
 
 void	Server::serverSet()
 {
@@ -89,7 +89,7 @@ void	Server::Mselect()
 		readyfdsRead = activefdsRead;
 		readyfdsWrite = activefdsWrite;
 
-		//std::cout  << "👾 " << std::flush;
+		std::cout  << "👾 " << std::flush;
 		
     	timeout.tv_sec = 0;
     	timeout.tv_usec = 500000;
@@ -123,7 +123,7 @@ void	Server::Mselect()
 				
 			if (FD_ISSET(i, &readyfdsRead))
 			{
-				std::cout << std::endl << GREEN << "Select selecciona fd de lectura " << i <<  WHITE << std::endl;
+				//std::cout << std::endl << GREEN << "Select selecciona fd de lectura " << i <<  WHITE << std::endl;
 				isServerSock = 0;
 				
 				std::map<int, int>::iterator it = serversMap.begin();
@@ -131,7 +131,7 @@ void	Server::Mselect()
 		
 				while (it != out)
 				{
-					std::cout << std::endl << "Mira si el fd " << i << " es una llamada " << std::endl;
+					//std::cout << std::endl << "Mira si el fd " << i << " es una llamada " << std::endl;
 					if (i == it->first)
 					{
 						int newSocket = accept(i, (struct sockaddr *)&ad, (socklen_t*)&sizeOfAddress);
@@ -148,7 +148,7 @@ void	Server::Mselect()
 						if (newSocket > maxFD)
 							maxFD = newSocket;
 						isServerSock = 1;
-						std::cout << std::endl << "el fd " << i << " es una llamada, crea socket de comunicacion " << newSocket << std::endl;
+						std::cout << std::endl << YELLOW << "Client call at Server " << serversMap[i] + 1 << ", newSocket for communication created with fd " << newSocket << WHITE << std::endl;
 						i = maxFD + 1;
 						
 						break;
@@ -157,12 +157,11 @@ void	Server::Mselect()
 				}
 				if (!isServerSock)
 				{
-					std::cout << std::endl << GREEN <<"No es llamada es comunicacion, LEE la peticion del socket " << i << WHITE << std::endl;
+					std::cout << std::endl << CYAN <<"Server " << serversMap[readMap[i]] + 1 << " READS REQUEST of client with fd " << i << WHITE << std::endl;
 					
 					memset(buffer, 0, sizeof(buffer));
                     int bytes = recv(i, buffer, sizeof(buffer) - 1, 0);
 					fcntl(i, F_SETFL, O_NONBLOCK);
-					std::cout << "bytes: " << bytes << std::endl;
 					
 					if (bytes == 0 || bytes == -1)
 					{
@@ -171,6 +170,8 @@ void	Server::Mselect()
 						else if (bytes == -1)
 							std::cout << RED << "Error in socket " << i << "closed connection. Client removed" << WHITE << std::endl;
 						FD_CLR(i, &activefdsRead);
+						if (rq[i] != NULL)
+							delete rq[i];
 						rq.erase(i);
 						close (i);
 					}
@@ -180,11 +181,10 @@ void	Server::Mselect()
 						rq[i]->firstRead = false;
 						if (rq[i]->getBoundary().empty() || rq[i]->part.find(rq[i]->boundaryEnd) != std::string::npos)
 						{
-							std::cout << "LA BOLA ENTRO" << std::endl;
 							rq[i]->parse();
 							FD_SET(i, &activefdsWrite);
 							FD_CLR(i, &activefdsRead);
-							std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
+							//std::cout << std::endl << "fd " << i << " pasa a la cola de WRITE!!!" << std::endl;
 						}
 					}
 					i = maxFD + 1;
@@ -192,23 +192,23 @@ void	Server::Mselect()
 			}
 			else if (FD_ISSET(i, &readyfdsWrite))
 			{
-				std::cout << std::endl << GREEN << "Select selecciona fd de escritura " << i << " y es respondido!!!" << WHITE << std::endl;
+				std::cout << std::endl << GREEN << "Server " << serversMap[readMap[i]] + 1 << " SENDS RESPONSE to client with fd " << i << WHITE << std::endl;
 				Respond(i);
 				rq.erase(i);
 				readMap.erase(i);
 				FD_CLR(i, &activefdsWrite);
 				close (i);
 				i = maxFD + 1;
-				std::cout << "......................................." << std::endl;
+				/* std::cout << "......................................." << std::endl;
 				std::cout << "......................................." << std::endl;
 				//std::cout << "Requests activas: " << rq.size() << std::endl;
 				std::cout << "......................................." << std::endl;
 				std::cout << "......................................." << std::endl;
-				std::cout << "......................................." << std::endl;
+				std::cout << "......................................." << std::endl; */
 			}
 		}
 	}
-	clearMemory();
+	//clearMemory();
 }
 void	Server::Respond(int i)
 {
@@ -220,8 +220,8 @@ void	Server::Respond(int i)
 
 Server::~Server()
 {
-	std::cout << "Server destructor called!" << std::endl;
-	close (sock);
+	//std::cout << "Server destructor called!" << std::endl;
+	//close (sock);
 	
 	std::map<int, Request *>::iterator iti;
 	std::map<int, Request *>::iterator ito;
@@ -229,7 +229,7 @@ Server::~Server()
 	iti = rq.begin();
 	ito = rq.end();
 
-	std::cout << "rq en server destructor = " << rq.size() << std::endl;
+	//std::cout << "rq en server destructor = " << rq.size() << std::endl;
 
 	while(iti != ito)
 	{
@@ -237,7 +237,7 @@ Server::~Server()
 		delete(iti->second);
 		iti++;
 	}
-	std::cout << "rq en server destructor tras borrar = " << rq.size() << std::endl;
+	//std::cout << "rq en server destructor tras borrar = " << rq.size() << std::endl;
 }
 
 void	Server::signalHandler(int i)

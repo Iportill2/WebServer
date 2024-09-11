@@ -7,7 +7,7 @@
 class srv;
 class Location;
 
-class Config : public Utils
+class Config
 {
     protected:
     std::ifstream file;
@@ -40,6 +40,8 @@ class Config : public Utils
     bool checkduplicateports();
     bool checkduplicateports_server_name();
     void clearArrayOfSrv();
+    int findCharInString(const std::string& str, char c);
+    bool checkServerBalance(const std::string& str);
 };
 
 #endif

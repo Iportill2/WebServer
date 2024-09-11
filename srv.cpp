@@ -46,7 +46,7 @@ srv::srv(std::string serverBlock)
                     if(arErr[0].error_page.find(it->first) != arErr[0].error_page.end())
                     {
                         ErrorRoot.insert(std::make_pair(it->first, arLoc[i]._root + arErr[0].error_page[it->first]));
-                        std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
+                        //std::cout << YELLOW << "Key: " << it->first << ", Value: " << it->second << WHITE << std::endl;
                     }
                 }
                 ++it;
@@ -246,7 +246,7 @@ bool srv::parseServerBlock(const std::string& s)
             }
         }
 	}
-    if(_host.empty() || _port.empty() || _body.empty() || _Root.empty())
+    if(_host.empty() || _port.empty() || _body.empty() || _Root.empty()  || _server_name.empty())
     {
         std::cout << "|" << _host << "|" << _port << "|" << _body << "|" << _Root << "|"<< std::endl;
         return(false);

@@ -6,7 +6,7 @@
 /*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:08:45 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/09/10 12:36:02 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:53:02 by jgoikoet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ class Server
         void			my_select();
         void            Mselect();
         void            serverSet();
-        void            clearMemory();
+        //void            clearMemory();
 
 		static int sign;
 		static void	signalHandler(int i);

@@ -127,7 +127,7 @@ void    Request::stractPostData()
 
 void Request::parse()
 {
-    std::cout << std::endl << YELLOW << buffer << WHITE << std::endl;
+    //std::cout << std::endl << YELLOW << buffer << WHITE << std::endl;
 
     std::string line;
     std::istringstream stream(buffer);

@@ -61,13 +61,13 @@ void Download::sendFile()
     // Verificar si el archivo tiene permiso de lectura para el usuario
     if (infoArchivo.st_mode & S_IRUSR) {
         std::cout << "El archivo tiene permiso de lectura para el propietario." << std::endl;
-    } else {
+    }
+    else 
+    {
         std::cout << "El archivo NO tiene permiso de lectura para el propietario." << std::endl;
         Error (403, fd, _server);
         return;
     }
-
-
 
 	std::ifstream file(path.c_str(), std::ios::binary);
 	if(Utils::isFile(path.c_str()))

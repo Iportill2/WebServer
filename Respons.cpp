@@ -215,7 +215,7 @@ int	Respons::postResponse()
 		return (Error (403, fd, server), 1);
 	if(Utils::isFile(_url.c_str()) == false)
 		return (Error (404, fd, server), 1);
-	std::cout << "Extension:" << _extension << std::endl;
+	//std::cout << "Extension:" << _extension << std::endl;
 	if (_extension == ".html")
 		htmlRespond();
 	else if(_extension == ".jpg")

@@ -47,7 +47,7 @@ void Download::sendFile()
 	}
 
 	std::string path = url + "/" + fileName;
-	std::cout << "PATH:" << path << std::endl;
+	//std::cout << "PATH:" << path << std::endl;
 
     struct stat infoArchivo;
 
@@ -60,18 +60,18 @@ void Download::sendFile()
 
     // Verificar si el archivo tiene permiso de lectura para el usuario
     if (infoArchivo.st_mode & S_IRUSR) {
-        std::cout << "El archivo tiene permiso de lectura para el propietario." << std::endl;
+        std::cout << "" << std::endl;
     }
     else 
     {
-        std::cout << "El archivo NO tiene permiso de lectura para el propietario." << std::endl;
+        //std::cout << "El archivo NO tiene permiso de lectura para el propietario." << std::endl;
         Error (403, fd, _server);
         return;
     }
 
 	std::ifstream file(path.c_str(), std::ios::binary);
 	if(Utils::isFile(path.c_str()))
-		std::cout << "It is a file" << std::endl;
+		std::cout << "" << std::endl;
 	else
     {
         Error(501,fd, _server);

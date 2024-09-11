@@ -11,7 +11,7 @@ bool    Load::createFile()
 {
     std::string path = _url + "/" + rq->getUpFileName();
     //std::string path = "uploaded_files/" + rq->getUpFileName();
-    std::cout << "path:" << path << std::endl;
+    //std::cout << "path:" << path << std::endl;
 
     std::ofstream file(path.c_str(), std::ios::out | std::ios::binary);
 

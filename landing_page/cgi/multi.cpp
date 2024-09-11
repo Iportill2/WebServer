@@ -32,16 +32,16 @@ int main ()
 
     if (getenv("QUERY_STRING"))
 	{
-		std::cerr << std::endl << "*******GET**********" << std::endl;
+		//std::cerr << std::endl << "*******GET**********" << std::endl;
         number =  getenv("QUERY_STRING");
 	}
     else
 	{
-		std::cerr << std::endl << "*******POST**********" << std::endl;
+		//std::cerr << std::endl << "*******POST**********" << std::endl;
         number = getStdInput();
 	}
 
-    std::cerr << std::endl << "QUERY_STRING en cgi = " << number << std::endl;
+    //std::cerr << std::endl << "QUERY_STRING en cgi = " << number << std::endl;
     //std::cerr << std::endl << "Resultado = " << toInt(number) * 2 << std::endl;
 	sendResult(toInt(number) * 2);
 

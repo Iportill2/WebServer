@@ -1,8 +1,0 @@
------------------------------103882992121349762683729355154
-Content-Disposition: form-data; name="file"; filename="curl.txt"
-Content-Type: text/plain
-
-curl http://localhost:8030/lolo -X POST -H "Content-Type: plain/text" --data "BODY IS HERE write something
-shorter or longer than body limit"
-
------------------------------103882992121349762683729355154--

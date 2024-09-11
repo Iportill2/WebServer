@@ -3,7 +3,7 @@
 void Config::clearArrayOfSrv()
 {
     array_of_srv.clear();
-    std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
+    //std::cout << RED << "array_of_srv.clear();" << std::endl << "array_of_srv.size()=" << array_of_srv.size() << WHITE << std::endl;
 }
 Config::Config(std::string configName)  : srvCount(0)
 {
@@ -18,7 +18,7 @@ Config::Config(std::string configName)  : srvCount(0)
     if(checksrvloc() == false)
 	{
         
-        std::cout << "if(checksrvloc() == false)" << std::endl;
+        //std::cout << "if(checksrvloc() == false)" << std::endl;
         clearArrayOfSrv(); 
 		return;
 	}
@@ -108,7 +108,7 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
 
     if(array_of_srv.size() == 0)
     {
-        return(std::cout << "array_of_srv.size() == 0" << std::endl,false);
+        return(false);
     }
     
     size_t i = 0;
@@ -117,7 +117,7 @@ bool Config::checksrvloc()///cambiar por el iterador por size y arreglar lo de l
         if(array_of_srv[i].arLoc.size() == 0)
         {
 
-            return(std::cout << "(array_of_srv[" << i << "].arLoc.size() == 0" << std::endl,false); 
+            return(false); 
         }
         size_t e = 0;
         while (e < array_of_srv[i].arLoc.size())

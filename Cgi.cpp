@@ -3,7 +3,7 @@
 
 Cgi::Cgi(Request *r, std::string  ur, int f,  srv & serv) : rq(r), url(ur), fd(f), server (serv)
 {
-    std::cout << "url en cgi: " << "\"" << url << "\"" << std::endl;
+    //std::cout << "url en cgi: " << "\"" << url << "\"" << std::endl;
 	inFd = dup(0);
     outFd = dup(1);
 }
@@ -15,7 +15,7 @@ Cgi::~Cgi()
 
 void	Cgi::setPost()
 {
-	std::cerr << "SETPost...................................." << std::endl;
+	//std::cerr << "SETPost...................................." << std::endl;
 
 	pipe(inPipe);
 	dup2(inPipe[1], 1);

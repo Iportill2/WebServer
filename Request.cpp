@@ -89,7 +89,7 @@ void    Request::procesData(std::string dat)
     std::map<std::string, std::string>::iterator it = data.begin();
     while (it != data.end())
     {
-        std::cout << "clave:" << it->first << "---Valor:" << it->second << std::endl;
+        //std::cout << "clave:" << it->first << "---Valor:" << it->second << std::endl;
         it++;
     }
 }
@@ -114,8 +114,8 @@ void    Request::stractGetData()
     if (dat.empty() == false)
         procesData(dat);
 
-    std::cout << "Uri:" << uri  << std::endl;
-    std::cout << "Data:" << dat  << std::endl;
+    //std::cout << "Uri:" << uri  << std::endl;
+    //std::cout << "Data:" << dat  << std::endl;
 }
 
 void    Request::stractPostData()

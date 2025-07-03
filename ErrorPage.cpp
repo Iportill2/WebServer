@@ -101,7 +101,7 @@ void ErrorPage::inidefaultErMap()
     std::string _400 = "400 Bad Request";
     std::string _401 = "401 Unauthorized";
     std::string _403 = "403 Forbidden";
-    std::string _404 = "404 Not Found PATATA";
+    std::string _404 = "404 Not Found";
     std::string _405 = "405 Method Not Allowed";
     std::string _406 = "406 Not Acceptable";
     std::string _408 = "408 Request Timeout";

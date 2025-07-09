@@ -101,7 +101,15 @@ bool Location::parselocationBlock(const std::string& locationBlock)
             lineStream >> _cgi;
             if(_cgi[_cgi.size()-1] == ';')
                 _cgi = _cgi.substr(0, _cgi.size() - 1);
-        }
+        }////////////
+        if (key == "exe")
+        /* {
+            if(!_exe.empty())
+                return(std::cout << RED << "exe twice" << WHITE << std::endl,0);
+            lineStream >> _exe;
+            if(_exe[_exe.size()-1] == ';')
+                _exe = _exe.substr(0, _exe.size() - 1);
+        } */
         if (key == "redirect" && _redirect.empty())
         {
             lineStream >> redirect_num;

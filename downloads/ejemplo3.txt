@@ -1,0 +1,5 @@
+Este es el tercer archivo de ejemplo creado para probar la funcionalidad de eliminación.
+
+Este archivo debería aparecer junto con los otros dos en el selector de la página de eliminación.
+
+Fecha de creación: 8 de julio de 2025

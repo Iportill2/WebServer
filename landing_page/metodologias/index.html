@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebServ - Metodologías de Desarrollo</title>
+    <link rel="icon" href="/42favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            display: block;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #090979);
+        }
+
+        .header {
+            padding: 40px 50px;
+            text-align: center;
+            background: rgba(142, 68, 173, 0.08);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 40px 50px;
+        }
+
+        .methodology-section {
+            margin-bottom: 40px;
+        }
+
+        .methodology-card {
+            background: rgba(142, 68, 173, 0.08);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #8e44ad;
+            margin-bottom: 25px;
+        }
+
+        .methodology-card h3 {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .methodology-card p {
+            color: #5d6d7e;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .practice-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(142, 68, 173, 0.2);
+        }
+
+        .practice-item h4 {
+            color: #8e44ad;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .practice-item p {
+            color: #34495e;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #8e44ad, #9b59b6);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(142, 68, 173, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(142, 68, 173, 0.08);
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            .header, .content {
+                padding: 30px 25px;
+            }
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Metodologías de Desarrollo</h1>
+            <p class="subtitle">Prácticas y estándares aplicados en WebServ</p>
+        </header>
+        
+        <main class="content">
+            <div class="methodology-section">
+                <div class="methodology-card">
+                    <h3>🔄 Desarrollo Ágil</h3>
+                    <p>WebServ fue desarrollado siguiendo principios ágiles que garantizan calidad y adaptabilidad:</p>
+                    
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <h4>Iteraciones Cortas</h4>
+                            <p>Desarrollo incremental con entregas frecuentes y validación continua.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Testing Continuo</h4>
+                            <p>Pruebas automatizadas y validación constante de funcionalidades.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Refactoring</h4>
+                            <p>Mejora continua del código manteniendo la funcionalidad.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Code Review</h4>
+                            <p>Revisión colaborativa del código para mantener estándares de calidad.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card">
+                    <h3>📐 Principios SOLID</h3>
+                    <p>Aplicación de principios de diseño orientado a objetos para código mantenible:</p>
+                    
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <h4>Single Responsibility</h4>
+                            <p>Cada clase tiene una responsabilidad específica y bien definida.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Open/Closed</h4>
+                            <p>Abierto para extensión, cerrado para modificación.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Liskov Substitution</h4>
+                            <p>Las subclases pueden sustituir a sus clases base.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Dependency Inversion</h4>
+                            <p>Dependencia de abstracciones, no de implementaciones concretas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="methodology-card">
+                    <h3>🛠️ Estándares de Código</h3>
+                    <p>Aplicación consistente de estándares de codificación en C++:</p>
+                    
+                    <div class="practices-grid">
+                        <div class="practice-item">
+                            <h4>Norminette</h4>
+                            <p>Cumplimiento estricto de las normas de codificación de 42.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>RAII Pattern</h4>
+                            <p>Gestión automática de recursos mediante constructores/destructores.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Exception Safety</h4>
+                            <p>Código robusto con manejo adecuado de excepciones.</p>
+                        </div>
+                        <div class="practice-item">
+                            <h4>Memory Management</h4>
+                            <p>Uso eficiente y seguro de la memoria sin leaks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="/landing_page/" class="back-link">🏠 Volver al Menú</a>
+        </main>
+        
+        <footer class="footer">
+            <p>© 2024 WebServ - Desarrollo profesional con metodologías modernas</p>
+        </footer>
+    </div>
+</body>
+</html>
+

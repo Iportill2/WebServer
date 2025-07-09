@@ -7,7 +7,3 @@ Host: localhost:8080
 Accept-Encoding: gzip, deflate, br
 Connection: keep-alive
 Content-Length: 59
-
-habia una vez
-un barkito txikitito
-ke era un poco subnorml.

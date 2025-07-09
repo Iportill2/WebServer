@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iker <iker@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 17:00:00 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/08/26 12:43:41 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:41:14 by iker             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int main(int argc, char **argv)
     {
         std::cout << std::endl << YELLOW << "Configuration file not provided." << std::endl;
         std::cout << GREEN <<"Loading default configuration..."<< WHITE  << std::endl;
-        Config confs("conf/1.conf");
+        Config confs("conf/default.conf");
         if (confs.getArrayOfServers().empty())
         {
             std::cout << RED << "Default configuration failed. Bye, bye." << WHITE << std::endl << std::endl;
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
         {
 			std::cout << std::endl << RED << "Configuration file failed." << std::endl;
        		std::cout << GREEN <<"Loading default configuration..."<< WHITE  << std::endl;
-			Config confsDef("conf/1.conf");
+			Config confsDef("conf/default.conf");
             if (confsDef.getArrayOfServers().empty())
        		{
             	std::cout << RED << "Default configuration failed. Bye, bye." << WHITE << std::endl << std::endl;
@@ -58,11 +58,3 @@ int main(int argc, char **argv)
     return (0);
 }
 
-/* #include "Directory.hpp"
-
-int main()
-{
-    Directory d("uploaded_files");
-
-    return 0;
-} */

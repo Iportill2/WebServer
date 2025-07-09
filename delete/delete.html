@@ -3,11 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar Archivo</title>
+    <title>Eliminar Archivo - WebServ</title>
+    <link rel="icon" href="/42favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            padding: 50px;
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #090979);
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        form {
+            margin: 30px 0;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        select {
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            width: 60%;
+            max-width: 300px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(90deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(231, 76, 60, 0.4);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(45deg, #2980b9, #3498db);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+        
+        .loading-message {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        
+        .no-files-message {
+            color: #e74c3c;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+    </style>
     <script>
+        // Función para cargar los archivos disponibles en la carpeta downloads
+        function loadAvailableFiles() {
+            const selectElement = document.getElementById('fileSelect');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const noFilesMessage = document.getElementById('noFilesMessage');
+            const deleteButton = document.getElementById('deleteButton');
+            
+            // Mostrar mensaje de carga y ocultar el mensaje de no hay archivos
+            loadingMessage.style.display = 'block';
+            noFilesMessage.style.display = 'none';
+            deleteButton.disabled = true;
+            
+            // Limpiar el selector
+            selectElement.innerHTML = '';
+            
+            // Añadir la primera opción predeterminada
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Selecciona un archivo';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            selectElement.appendChild(defaultOption);
+            
+            // Hacer una solicitud GET para obtener la lista de archivos
+            fetch('/uploaded_files/', {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.error('Error en la respuesta:', response.status, response.statusText);
+                        throw new Error(`Error al cargar la lista de archivos: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // Depuración: mostrar el HTML recibido en la consola
+                    console.log("HTML recibido:", html);
+                    
+                    // Parsear el HTML para extraer los enlaces a archivos
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const links = doc.querySelectorAll('a');
+                    
+                    // Depuración: mostrar los enlaces encontrados
+                    console.log("Enlaces encontrados:", links.length);
+                    links.forEach(link => console.log(link.getAttribute('href')));
+                    
+                    let filesFound = false;
+                    
+                    // Iterar sobre los enlaces y añadir opciones al selector
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        // Ignorar enlaces que no son archivos (como "../")
+                        if (href && !href.endsWith('/')) {
+                            filesFound = true;
+                            const option = document.createElement('option');
+                            // Guardamos solo el nombre del archivo, sin la ruta completa
+                            option.value = href;
+                            option.textContent = href;
+                            selectElement.appendChild(option);
+                        }
+                    });
+                    
+                    // Ocultar mensaje de carga
+                    loadingMessage.style.display = 'none';
+                    
+                    // Mostrar mensaje si no hay archivos
+                    if (!filesFound) {
+                        noFilesMessage.style.display = 'block';
+                        deleteButton.disabled = true;
+                    } else {
+                        deleteButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loadingMessage.style.display = 'none';
+                    noFilesMessage.style.display = 'block';
+                    noFilesMessage.textContent = 'Error al cargar la lista de archivos: ' + error.message;
+                    deleteButton.disabled = true;
+                });
+        }
+        
         function deleteFile() {
             // Obtener el archivo seleccionado del formulario
-            const selectedFile = document.getElementById("fileSelect").value;
+            const selectElement = document.getElementById("fileSelect");
+            const selectedFile = selectElement.value;
+            const deleteButton = document.getElementById('deleteButton');
+
+            // Si no hay archivo seleccionado, no hacer nada
+            if (!selectedFile) {
+                alert('Por favor, selecciona un archivo para eliminar.');
+                return;
+            }
 
             // Confirmar la eliminación
             const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar ${selectedFile}?`);
@@ -16,24 +254,64 @@
                 return;
             }
 
-            // Crear la solicitud DELETE
-            fetch(`/uploaded_files/${selectedFile}`, {
+            // Deshabilitar el botón y cambiar su texto durante la eliminación
+            deleteButton.disabled = true;
+            deleteButton.innerHTML = '⏳ Eliminando...';
+
+            // Extraer solo el nombre del archivo de la ruta completa
+            const fileNameOnly = selectedFile.split('/').pop();
+            
+            // Usar el método DELETE directamente en la URL del archivo
+            fetch(`/uploaded_files/${fileNameOnly}`, {
                 method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert(`El archivo ${fileNameOnly} ha sido eliminado correctamente.`);
+                    // Recargar la lista de archivos
+                    loadAvailableFiles();
+                    // Restaurar el botón
+                    deleteButton.disabled = false;
+                    deleteButton.innerHTML = '🗑️ Eliminar Archivo';
+                } else {
+                    alert(`Error al eliminar el archivo ${fileNameOnly}. Código: ${response.status}`);
+                    // Rehabilitar el botón en caso de error
+                    deleteButton.disabled = false;
+                    deleteButton.innerHTML = '🗑️ Eliminar Archivo';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(`Error de conexión: ${error}`);
+                // Rehabilitar el botón en caso de error
+                deleteButton.disabled = false;
+                deleteButton.innerHTML = '🗑️ Eliminar Archivo';
             });
         }
+        
+        // Cargar la lista de archivos cuando se carga la página
+        window.onload = loadAvailableFiles;
     </script>
 </head>
 <body>
-    <h1>Eliminar Archivo</h1>
-    <form onsubmit="event.preventDefault(); deleteFile();">
-        <label for="fileSelect">Selecciona un archivo para eliminar:</label>
-        <select id="fileSelect" name="fileSelect">
-            <option value="archivo1.txt">archivo1.txt</option>
-            <option value="archivo2.txt">archivo2.txt</option>
-            <option value="archivo3.txt">archivo3.txt</option>
-        </select>
-        <br><br>
-        <button type="submit">Eliminar Archivo</button>
-    </form>
+    <div class="main-container">
+        <h1 class="title">Eliminar Archivo</h1>
+        
+        <form onsubmit="event.preventDefault(); deleteFile();">
+            <label for="fileSelect">Selecciona un archivo para eliminar:</label>
+            <p id="loadingMessage" class="loading-message">Cargando archivos disponibles...</p>
+            <p id="noFilesMessage" class="no-files-message" style="display: none;">No hay archivos disponibles para eliminar.</p>
+            <select id="fileSelect" name="fileSelect">
+                <!-- Las opciones se cargarán dinámicamente -->
+            </select>
+            <br>
+            <button id="deleteButton" type="submit">🗑️ Eliminar Archivo</button>
+        </form>
+        
+        <div class="action-buttons">
+            <a href="/landing_page/" class="btn">🏠 Volver al Menú</a>
+            <a href="/" class="btn btn-secondary">🏠 Página de Inicio</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,214 @@
+
+
+
+
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebServ - Demostración Técnica</title>
+    <link rel="icon" href="/42favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            display: block;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #090979);
+        }
+
+        .header {
+            padding: 40px 50px;
+            text-align: center;
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 40px 50px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tech-card {
+            background: rgba(52, 152, 219, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .tech-card h3 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tech-card p {
+            color: #5d6d7e;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .tech-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tech-card li {
+            color: #34495e;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tech-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(52, 152, 219, 0.05);
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            .header, .content {
+                padding: 30px 25px;
+            }
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Demostración Técnica</h1>
+            <p class="subtitle">Capacidades avanzadas del servidor HTTP WebServ</p>
+        </header>
+        
+        <main class="content">
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3>🚀 Arquitectura</h3>
+                    <p>WebServ está construido con una arquitectura robusta en C++ que garantiza:</p>
+                    <ul>
+                        <li>Manejo eficiente de múltiples conexiones</li>
+                        <li>Gestión optimizada de memoria</li>
+                        <li>Procesamiento asíncrono de requests</li>
+                        <li>Escalabilidad horizontal</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>🔧 Configuración</h3>
+                    <p>Sistema de configuración flexible que permite:</p>
+                    <ul>
+                        <li>Múltiples virtual hosts</li>
+                        <li>Configuración de rutas personalizadas</li>
+                        <li>Gestión de errores customizada</li>
+                        <li>Límites de tamaño configurable</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>🛡️ Seguridad</h3>
+                    <p>Implementaciones de seguridad incluyen:</p>
+                    <ul>
+                        <li>Validación estricta de requests</li>
+                        <li>Prevención de ataques comunes</li>
+                        <li>Manejo seguro de archivos</li>
+                        <li>Control de acceso por directorio</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-card">
+                    <h3>⚡ Rendimiento</h3>
+                    <p>Optimizaciones para máximo rendimiento:</p>
+                    <ul>
+                        <li>Parsing eficiente de HTTP</li>
+                        <li>Caché inteligente de recursos</li>
+                        <li>Compresión automática</li>
+                        <li>Keep-alive connections</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <a href="/landing_page/" class="back-link">🏠 Volver al Menú</a>
+        </main>
+        
+        <footer class="footer">
+            <p>© 2024 WebServ - Servidor HTTP de Alto Rendimiento</p>
+        </footer>
+    </div>
+</body>
+</html>

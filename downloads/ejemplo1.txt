@@ -1,0 +1,5 @@
+Este es un archivo de ejemplo creado para probar la funcionalidad de eliminación de archivos.
+
+La página de eliminación de archivos debería mostrar este archivo en el menú desplegable.
+
+Fecha de creación: 8 de julio de 2025

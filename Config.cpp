@@ -15,29 +15,29 @@ Config::Config(std::string configName)
     
     if(checksrvloc() == false)
 	{
-        std::cout << "if(checksrvloc() == false)";
+        //std::cout << "if(checksrvloc() == false)";
 		return;
 	}
 	if(checkduplicateports() == false)
 	{
-        std::cout << "if(checkduplicateports() == false)";
+        //std::cout << "if(checkduplicateports() == false)";
 		return;
 	}
     if(checkduplicateports_server_name() == false)
         return;
     if(validatePort() == false)
 	{
-        std::cout << "if(validatePort() == false)";
+        //std::cout << "if(validatePort() == false)";
 		return;
 	}
 	if(getServerCount() == false)
 	{
-        std::cout << "if(getServerCount() == false)";
+        //std::cout << "if(getServerCount() == false)";
 		return;
 	}
     if(getArrayOfServers().empty())
     {
-        std::cout << "getArrayOfServers().empty())";
+        //std::cout << "getArrayOfServers().empty())";
 		return;
     }
     ok = 1;

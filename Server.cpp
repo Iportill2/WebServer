@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jgoikoet <jgoikoet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iker <iker@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 18:17:56 by jgoikoet          #+#    #+#             */
-/*   Updated: 2024/09/02 17:28:43 by jgoikoet         ###   ########.fr       */
+/*   Updated: 2025/07/09 11:21:15 by iker             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ Server::~Server()
 void	Server::signalHandler(int i)
 {
 	(void)i;
-	std::cout << std::endl << "crtl + c pulsado. cerramos puerto italiano al pie de las montañas" << std::endl;
+	std::cout << std::endl << "crtl + c pulsado. Programa Webserv detenido" << std::endl;
 	sign = 0;
 }
 

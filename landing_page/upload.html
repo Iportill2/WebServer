@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebServ - Subir Archivo</title>
+    <link rel="icon" href="/42favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            padding: 50px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #090979);
+        }
+
+        .header-section {
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .upload-form {
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 2px dashed rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .upload-form:hover {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.12);
+        }
+
+        .file-input-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .file-input-label {
+            display: block;
+            font-size: 1.2rem;
+            color: #34495e;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .file-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .submit-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(45deg, #2980b9, #1f639c);
+        }
+
+        .submit-button:active {
+            transform: translateY(0);
+        }
+
+        .info-section {
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .info-title {
+            font-size: 1.1rem;
+            color: #27ae60;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .info-text {
+            color: #5a6c7d;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: rgba(52, 152, 219, 0.1);
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-button:hover {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .nav-button.primary {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .nav-button.primary:hover {
+            background: linear-gradient(45deg, #229954, #27ae60);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .upload-form {
+                padding: 25px;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-button {
+                width: 100%;
+                max-width: 250px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h1 class="title">📤 Subir Archivo</h1>
+            <p class="subtitle">Carga archivos al servidor WebServ de forma segura</p>
+        </div>
+
+        <div class="info-section">
+            <div class="info-title">ℹ️ Información del Sistema</div>
+            <div class="info-text">
+                Puedes subir cualquier tipo de archivo. El archivo se guardará en el directorio de uploads del servidor y podrás acceder a él posteriormente.
+            </div>
+        </div>
+
+        <form class="upload-form" action="/upload" method="post" enctype="multipart/form-data">
+            <div class="upload-icon">📁</div>
+            
+            <div class="file-input-container">
+                <label for="file" class="file-input-label">Selecciona un archivo para subir:</label>
+                <input type="file" id="file" name="file" class="file-input" required>
+            </div>
+            
+            <button type="submit" class="submit-button">
+                🚀 Subir Archivo
+            </button>
+        </form>
+
+        <div class="navigation-buttons">
+            <a href="/landing_page" class="nav-button">📋 Volver al Menú</a>
+            <a href="/uploaded_files" class="nav-button">📂 Ver Archivos Subidos</a>
+            <a href="/" class="nav-button primary">🏠 Página de Inicio</a>
+        </div>
+
+        <div class="footer">
+            <p>© 2024 WebServ - Sistema de subida de archivos</p>
+        </div>
+    </div>
+
+    <script>
+    // Mejorar la experiencia del usuario con el input de archivo
+    const fileInput = document.getElementById('file');
+    const form = document.querySelector('.upload-form');
+    
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            const fileName = e.target.files[0].name;
+            const fileSize = (e.target.files[0].size / 1024 / 1024).toFixed(2);
+            
+            // Crear o actualizar el mensaje de archivo seleccionado
+            let statusDiv = document.querySelector('.file-status');
+            if (!statusDiv) {
+                statusDiv = document.createElement('div');
+                statusDiv.className = 'file-status';
+                statusDiv.style.cssText = `
+                    background: rgba(39, 174, 96, 0.1);
+                    border: 1px solid rgba(39, 174, 96, 0.3);
+                    border-radius: 8px;
+                    padding: 10px;
+                    margin-top: 15px;
+                    color: #27ae60;
+                    font-size: 0.9rem;
+                `;
+                fileInput.parentNode.appendChild(statusDiv);
+            }
+            
+            statusDiv.innerHTML = `
+                ✅ Archivo seleccionado: <strong>${fileName}</strong><br>
+                📏 Tamaño: ${fileSize} MB
+            `;
+        }
+    });
+    
+    // Prevenir la redirección y manejar la subida con AJAX
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Evita la redirección
+        
+        const submitButton = document.querySelector('.submit-button');
+        const originalText = submitButton.innerHTML;
+        
+        // Mostrar estado de carga
+        submitButton.innerHTML = '⏳ Subiendo...';
+        submitButton.disabled = true;
+        submitButton.style.opacity = '0.7';
+        
+        // Crear FormData para el archivo
+        const formData = new FormData(form);
+        
+        // Realizar la petición AJAX
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Subida exitosa
+                showMessage('✅ ¡Archivo subido exitosamente!', 'success');
+                form.reset(); // Limpiar el formulario
+                
+                // Limpiar el estado del archivo
+                const statusDiv = document.querySelector('.file-status');
+                if (statusDiv) {
+                    statusDiv.remove();
+                }
+            } else {
+                // Error en la subida
+                showMessage('❌ Error al subir el archivo. Inténtalo de nuevo.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('❌ Error de conexión. Verifica tu conexión a internet.', 'error');
+        })
+        .finally(() => {
+            // Restaurar el botón
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
+            submitButton.style.opacity = '1';
+        });
+    });
+    
+    // Función para mostrar mensajes de estado
+    function showMessage(message, type) {
+        // Remover mensaje anterior si existe
+        const existingMessage = document.querySelector('.upload-message');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'upload-message';
+        
+        const bgColor = type === 'success' ? 'rgba(39, 174, 96, 0.1)' : 'rgba(231, 76, 60, 0.1)';
+        const borderColor = type === 'success' ? '#27ae60' : '#e74c3c';
+        const textColor = type === 'success' ? '#27ae60' : '#e74c3c';
+        
+        messageDiv.style.cssText = `
+            background: ${bgColor};
+            border: 1px solid ${borderColor};
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            color: ${textColor};
+            font-size: 1rem;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        `;
+        
+        messageDiv.innerHTML = message;
+        
+        // Insertar el mensaje después del formulario
+        form.parentNode.insertBefore(messageDiv, form.nextSibling);
+        
+        // Remover el mensaje después de 5 segundos
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.remove();
+                    }
+                }, 300);
+            }
+        }, 5000);
+    }
+    
+    // Añadir estilos para las animaciones
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+</body>
+</html>
